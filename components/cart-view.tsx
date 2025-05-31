@@ -76,7 +76,7 @@ export function CartView({ cart, products, totalAmount, onUpdateQuantity, onChec
                   <Button variant='outline' size='icon' onClick={() => onUpdateQuantity(item.id, item.quantity - 1)}>
                     {item.quantity === 1 ? <Trash2 className='h-4 w-4' /> : <Minus className='h-4 w-4' />}
                   </Button>
-                  <span className='mx-4 text-lg font-medium'>{item.quantity}</span>
+                  <span className='w-10 text-center text-lg font-medium'>{item.quantity}</span>
                   <Button variant='outline' size='icon' onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}>
                     <Plus className='h-4 w-4' />
                   </Button>
