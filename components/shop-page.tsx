@@ -15,7 +15,9 @@ export function ShopPage() {
   const { categories, products, cart, isLoading, error, addToCart, updateCartQuantity, clearCart } = usePOSData();
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    <div className='flex justify-center items-center w-screen h-screen'>
+      <LoadingSpinner />
+    </div>;
   }
 
   if (error) {

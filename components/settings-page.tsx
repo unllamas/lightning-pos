@@ -70,7 +70,11 @@ export function SettingsPage() {
 
   // Mostrar loading mientras cargan las configuraciones
   if (settingsLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className='flex justify-center items-center w-screen h-screen'>
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
@@ -129,12 +133,12 @@ export function SettingsPage() {
         {/* Clear Local Storage */}
         <Card className='border-red-200'>
           <CardHeader className='pb-3'>
-            <CardTitle className='text-lg text-red-600'>Clear Local Storage</CardTitle>
+            <CardTitle className='text-lg text-red-600'>Clear Storage</CardTitle>
           </CardHeader>
           <CardContent>
             <p className='text-sm text-gray-600 mb-4'>
-              This will clear all locally stored data including your settings, products, categories, and cart. This
-              action cannot be undone.
+              This will clear all stored data including your Settings, Products, Categories, and Cart. This action
+              cannot be undone.
             </p>
             <Button variant='destructive' className='w-full' onClick={clearAllLocalData}>
               Clear All Data

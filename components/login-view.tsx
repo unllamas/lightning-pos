@@ -53,7 +53,9 @@ export function LoginView() {
 
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
-    return <LoadingSpinner />;
+    <div className='flex justify-center items-center w-screen h-screen'>
+      <LoadingSpinner />
+    </div>;
   }
 
   // Mostrar pantalla de éxito
