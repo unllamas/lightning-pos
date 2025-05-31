@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Edit } from 'lucide-react';
+import { ChevronLeft, Pencil } from 'lucide-react';
 
 import { usePOSData } from '@/hooks/use-pos-data';
 
@@ -44,7 +44,7 @@ export function ShopPage() {
           </div>
           <Button variant='outline' size='icon' asChild>
             <Link href='/shop/edit'>
-              <Edit className='h-4 w-4' />
+              <Pencil className='h-4 w-4' />
               <span className='sr-only'>Edit</span>
             </Link>
           </Button>

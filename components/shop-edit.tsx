@@ -574,7 +574,7 @@ export function ShopEdit({}: ShopEditProps) {
       {/* Product Modal */}
       {isProductModalOpen && (
         <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-          <div className='bg-white rounded-lg p-6 w-full max-w-md mx-4'>
+          <div className='bg-white rounded-lg p-4 w-full max-w-md mx-4'>
             <h3 className='text-lg font-medium mb-4'>{editingProduct?.isNew ? 'Add Product' : 'Edit Product'}</h3>
 
             <div className='space-y-4'>
@@ -594,13 +594,13 @@ export function ShopEdit({}: ShopEditProps) {
                     {getCurrencySymbol()}
                   </span>
                   <Input
+                    className='border-0 rounded-none flex-1 focus-visible:ring-transparent'
                     type='number'
-                    value={editingProduct?.price || 0}
+                    value={editingProduct?.price || ''}
                     onChange={(e) =>
                       setEditingProduct((prev) => (prev ? { ...prev, price: Number(e.target.value) || 0 } : null))
                     }
                     placeholder='0'
-                    className='border-0 rounded-none flex-1 focus:ring-0'
                   />
                   <span className='px-3 py-2 bg-gray-50 border-l border-gray-300 text-gray-700'>
                     {settings.currency}
@@ -609,7 +609,7 @@ export function ShopEdit({}: ShopEditProps) {
               </div>
             </div>
 
-            <div className='flex justify-end space-x-3 mt-6'>
+            <div className='flex justify-end gap-2 mt-6'>
               <Button
                 className='w-full'
                 variant='outline'
