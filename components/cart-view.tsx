@@ -37,16 +37,16 @@ export function CartView({ cart, products, totalAmount, onUpdateQuantity, onChec
 
   return (
     <div className='flex flex-col h-screen'>
-      <header className='py-4 bg-white border-b shadow-sm'>
+      <header className='py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='flex items-center'>
-            <Button variant='outline' size='icon' className='mr-2' asChild>
+            <Button variant='default' size='icon' className='mr-2' asChild>
               <Link href='/shop'>
                 <ChevronLeft className='h-6 w-6' />
                 <span className='sr-only'>Back</span>
               </Link>
             </Button>
-            <h1 className='text-xl font-medium'>Cart</h1>
+            <h1 className='text-xl font-medium text-white'>Cart</h1>
           </div>
         </div>
       </header>

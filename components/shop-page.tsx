@@ -33,18 +33,18 @@ export function ShopPage() {
 
   return (
     <div className='w-full mx-auto min-h-screen flex flex-col bg-gray-100'>
-      <header className='py-4 flex bg-white border-b shadow-sm'>
+      <header className='py-4 flex bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
           <div className='flex items-center'>
-            <Button className='mr-2' variant='outline' size='icon' asChild>
+            <Button className='mr-2' variant='default' size='icon' asChild>
               <Link href='/app'>
                 <ChevronLeft className='h-4 w-4' />
                 <span className='sr-only'>Back</span>
               </Link>
             </Button>
-            <h1 className='text-xl font-medium'>{'Shop'}</h1>
+            <h1 className='text-xl font-medium text-white'>{'Shop'}</h1>
           </div>
-          <Button variant='outline' size='icon' asChild>
+          <Button variant='default' size='icon' asChild>
             <Link href='/shop/edit'>
               <Pencil className='h-4 w-4' />
               <span className='sr-only'>Edit</span>

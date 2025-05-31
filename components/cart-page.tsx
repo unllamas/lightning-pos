@@ -22,7 +22,9 @@ export function CartPage() {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    <div className='flex justify-center items-center w-screen h-screen'>
+      <LoadingSpinner />
+    </div>;
   }
 
   if (error) {

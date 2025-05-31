@@ -80,13 +80,13 @@ export function SettingsPage() {
   return (
     <div className='w-full min-h-screen bg-gray-100 flex flex-col'>
       {/* Header */}
-      <header className='py-4 bg-white border-b shadow-sm'>
+      <header className='py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center w-full max-w-md mx-auto px-4'>
-          <Button variant='outline' size='icon' onClick={() => router.push('/app')} className='mr-2'>
+          <Button variant='default' size='icon' onClick={() => router.push('/app')} className='mr-2'>
             <ChevronLeft className='h-4 w-4' />
             <span className='sr-only'>Back</span>
           </Button>
-          <h1 className='text-xl font-medium'>Settings</h1>
+          <h1 className='text-xl font-medium text-white'>Settings</h1>
           {showSaveSuccess && (
             <div className='ml-auto flex items-center text-green-600 animate-in fade-in slide-in-from-top-4 duration-300'>
               <CheckCircle className='h-4 w-4 mr-1' />

@@ -352,15 +352,15 @@ export function ShopEdit({}: ShopEditProps) {
 
   return (
     <div className='flex flex-col w-full h-screen'>
-      <header className='py-4 flex items-center justify-between bg-white border-b shadow-sm'>
+      <header className='py-4 flex items-center justify-between bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center w-full max-w-md mx-auto px-4'>
-          <Button variant='outline' size='icon' className='mr-2' asChild>
+          <Button variant='default' size='icon' className='mr-2' asChild>
             <Link href='/shop'>
               <ChevronLeft className='h-4 w-4' />
               <span className='sr-only'>Back</span>
             </Link>
           </Button>
-          <h1 className='text-xl font-medium'>Edit mode</h1>
+          <h1 className='text-xl font-medium text-white'>Edit mode</h1>
 
           {/* Feedback visual */}
           {feedback && (

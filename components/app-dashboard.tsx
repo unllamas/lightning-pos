@@ -41,9 +41,9 @@ export function AppDashboard() {
   return (
     <div className='w-full mx-auto min-h-screen bg-gray-100 flex flex-col'>
       {/* Header */}
-      <header className='w-full py-4 bg-white border-b shadow-sm'>
+      <header className='w-full py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
-          <Button variant='outline' onClick={handleLogout} className='mr-2'>
+          <Button variant='default' onClick={handleLogout} className='mr-2'>
             <div className='flex gap-2 items-center justify-center min-w-0'>
               {isAuthenticated && lightningAddress ? (
                 <>
@@ -60,7 +60,7 @@ export function AppDashboard() {
               <span className='sr-only'>Log out</span>
             </div>
           </Button>
-          <Button size='icon' variant='outline' asChild>
+          <Button size='icon' variant='default' asChild>
             <Link href='/settings'>
               <Settings className='h-4 w-4' />
             </Link>
