@@ -552,7 +552,7 @@ export function ShopEdit({}: ShopEditProps) {
                     {/* Add new product button */}
                     <div className='flex justify-center mt-3 ml-6'>
                       <Button className='w-full py-2' onClick={() => openProductModal(null, category.id)}>
-                        + Add Product
+                        Add Product
                       </Button>
                     </div>
                   </>

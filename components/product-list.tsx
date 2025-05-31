@@ -202,7 +202,7 @@ export function ProductList({
               <Trash2 className='h-4 w-4' />
             </Button>
             <Button className='flex-1' onClick={onCartClick}>
-              View cart
+              View Cart
             </Button>
           </div>
         </div>
