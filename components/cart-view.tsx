@@ -66,9 +66,9 @@ export function CartView({ cart, products, totalAmount, onUpdateQuantity, onChec
                     {getCurrencySymbol()}
                     {item.product?.price.toLocaleString()} {settings.currency} x {item.quantity}
                   </div>
-                  <div className='font-bold'>
+                  <div>
                     {getCurrencySymbol()}
-                    {((item.product?.price || 0) * item.quantity).toLocaleString()} {settings.currency}
+                    <b>{((item.product?.price || 0) * item.quantity).toLocaleString()}</b> {settings.currency}
                   </div>
                 </div>
 
@@ -93,9 +93,9 @@ export function CartView({ cart, products, totalAmount, onUpdateQuantity, onChec
             <>
               <div className='flex justify-between items-center mb-4'>
                 <span className='font-medium'>Subtotal</span>
-                <span className='font-bold text-xl'>
+                <span className='text-xl'>
                   {getCurrencySymbol()}
-                  {calculatedTotal.toLocaleString()} {settings.currency}
+                  <b>{calculatedTotal.toLocaleString()}</b> {settings.currency}
                 </span>
               </div>
               <Button className='w-full' onClick={onCheckout}>

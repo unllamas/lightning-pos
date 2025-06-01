@@ -79,7 +79,7 @@ export function ProductList({
         </div>
       </div>
 
-      <div className='relative flex-1 overflow-auto w-full max-w-md mx-auto p-4'>
+      <div className='relative overflow-auto flex-1 flex flex-col gap-4 w-full max-w-md mx-auto p-4'>
         {categories.length === 0 ? (
           <div className='flex flex-col items-center justify-center h-full p-8'>
             <p className='text-gray-500 text-center'>There are no categories available</p>
@@ -128,9 +128,9 @@ export function ProductList({
                           <div className='flex justify-between items-center'>
                             <div>
                               <div className='text-sm'>{product.name}</div>
-                              <div className='font-bold'>
+                              <div>
                                 {getCurrencySymbol()}
-                                {product.price.toLocaleString()} {settings.currency}
+                                <b>{product.price.toLocaleString()}</b> {settings.currency}
                               </div>
                             </div>
 

@@ -56,9 +56,9 @@ export function PaymentQRDisplay({
           <span>Waiting for payment</span>
         </div>
 
-        <div className='text-3xl font-bold mb-2'>
+        <div className='text-3xl mb-2'>
           {getCurrencySymbol()}
-          {new Intl.NumberFormat().format(amount)} {settings.currency}
+          <b>{new Intl.NumberFormat().format(amount)}</b> {settings.currency}
         </div>
 
         {amountInSats && (
