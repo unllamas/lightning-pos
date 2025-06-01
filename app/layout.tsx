@@ -1,5 +1,7 @@
 import type React from 'react';
 import type { Metadata } from 'next';
+import Script from 'next/script';
+
 import { Space_Mono } from 'next/font/google';
 
 import './globals.css';
@@ -62,6 +64,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel='icon' type='image/svg+xml' href='/iso-white.svg?height=32&width=32' />
         <link rel='manifest' href='/manifest.json' />
         <link rel='shortcut icon' href='/iso.svg?height=32&width=32' />
+
+        <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}`} />
+        <Script id='google-analytics'>
+          {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+      
+        gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}');
+      `}
+        </Script>
       </head>
       <body className={`${spaceMono.className} select-none`}>
         {children}
