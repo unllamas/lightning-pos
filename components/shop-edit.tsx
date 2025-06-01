@@ -366,11 +366,11 @@ export function ShopEdit({}: ShopEditProps) {
           {feedback && (
             <div
               className={`ml-auto flex items-center text-sm ${
-                feedback.type === 'success' ? 'text-green-600' : 'text-red-600'
+                feedback.type === 'success' ? 'text-green-500' : 'text-red-500'
               } animate-in fade-in slide-in-from-top-4 duration-300`}
             >
               <CheckCircle className='h-4 w-4 mr-1' />
-              <span>{'Sync'}</span>
+              <span>{'Saved'}</span>
             </div>
           )}
         </div>

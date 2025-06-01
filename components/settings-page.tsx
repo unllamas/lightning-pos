@@ -88,7 +88,7 @@ export function SettingsPage() {
           </Button>
           <h1 className='text-xl font-medium text-white'>Settings</h1>
           {showSaveSuccess && (
-            <div className='ml-auto flex items-center text-green-600 animate-in fade-in slide-in-from-top-4 duration-300'>
+            <div className='ml-auto flex items-center text-green-500 animate-in fade-in slide-in-from-top-4 duration-300'>
               <CheckCircle className='h-4 w-4 mr-1' />
               <span className='text-sm'>Saved</span>
             </div>
