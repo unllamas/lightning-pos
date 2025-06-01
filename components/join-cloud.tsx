@@ -40,7 +40,7 @@ export function JoinCloud() {
                 size='sm'
                 className='w-full bg-orange-500 text-white hover:bg-orange-600 font-medium border-0'
               >
-                Join the list
+                See More
               </Button>
             </div>
           </div>

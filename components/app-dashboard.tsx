@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Calculator, Store, Settings, X, User } from 'lucide-react';
 
 import { useLightningAuth } from '@/hooks/use-lightning-auth';
@@ -8,7 +9,6 @@ import { useLightningAuth } from '@/hooks/use-lightning-auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { JoinCloud } from '@/components/join-cloud';
-import Link from 'next/link';
 
 export function AppDashboard() {
   const router = useRouter();
@@ -69,7 +69,7 @@ export function AppDashboard() {
       </header>
 
       <div className='flex flex-col gap-4 w-full max-w-md mx-auto p-4'>
-        {/* <JoinCloud /> */}
+        {process.env.NODE_ENV === 'development' && <JoinCloud />}
 
         {/* Main Content */}
         <div className='flex-1 flex flex-col gap-4'>
