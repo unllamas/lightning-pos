@@ -563,7 +563,7 @@ export function ShopEdit({}: ShopEditProps) {
         </div>
       </div>
 
-      <div className='mt-auto py-4 flex gap-4 bg-white'>
+      <div className='flex gap-4 py-4 bg-white border-t'>
         <div className='flex gap-1 w-full max-w-md mx-auto px-4'>
           <Button variant='outline' className='flex-1' asChild>
             <Link href='/shop'>Back</Link>
