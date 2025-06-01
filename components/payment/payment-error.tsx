@@ -30,9 +30,9 @@ export function PaymentError({ error, amount }: PaymentErrorProps) {
 
         <div className='text-center'>
           <div className='text-gray-500 mb-2'>Amount</div>
-          <div className='text-2xl font-bold mb-4'>
+          <div className='text-2xl mb-4'>
             {getCurrencySymbol()}
-            {amount.toLocaleString()} {settings.currency}
+            <b>{amount.toLocaleString()}</b> {settings.currency}
           </div>
         </div>
       </div>
