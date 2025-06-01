@@ -149,12 +149,10 @@ export function SettingsPage() {
         {/* Additional Settings Placeholder */}
         <Card className='opacity-50'>
           <CardHeader className='pb-3'>
-            <CardTitle className='text-lg text-gray-500'>More settings</CardTitle>
+            <CardTitle className='text-lg text-gray-500'>Comming Soon</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className='text-sm text-gray-400'>
-              Coming soon: Lightning Network settings, themes, notifications and more.
-            </p>
+            <p className='text-sm text-gray-400'>Tips, languages, themes and more.</p>
           </CardContent>
         </Card>
       </div>
