@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
+
+import { useLightningAuth } from '@/hooks/use-lightning-auth';
+
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import { PWAInstallBanner } from '@/components/pwa-install-banner';
-import { useLightningAuth } from '@/hooks/use-lightning-auth';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { AlertCircle, CheckCircle } from 'lucide-react';
-import Link from 'next/link';
 
 export function LoginView() {
   const router = useRouter();
@@ -66,7 +68,7 @@ export function LoginView() {
           <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
             <CheckCircle className='h-8 w-8 text-green-600' />
           </div>
-          <h1 className='text-2xl font-bold mb-2'>Welcome back!</h1>
+          <h1 className='text-2xl font-bold mb-2'>Welcome!</h1>
           <p className='text-gray-600'>Logged in as {lightningAddress}</p>
         </div>
       </div>
@@ -121,7 +123,9 @@ export function LoginView() {
         >
           {isValidating ? (
             <>
-              <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2'></div>
+              <div className='animate-spin rounded-full h-4 w-4'>
+                <LoaderCircle className='h-4 w-4' />
+              </div>
               Validating...
             </>
           ) : (
