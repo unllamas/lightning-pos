@@ -82,7 +82,9 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    <div className='flex justify-center items-center w-screen h-screen'>
+      <LoadingSpinner />
+    </div>;
   }
 
   if (!isLoading && error) {
