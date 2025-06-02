@@ -1,9 +1,11 @@
 'use client';
 
 import type React from 'react';
-
 import { Cloud, FolderSyncIcon as Sync, BarChart3, Shield } from 'lucide-react';
+
 import { useSwipeCarousel } from '@/hooks/use-swipe-carousel';
+
+import { Logo } from '@/components/ui/logo';
 
 interface Slide {
   id: string;
@@ -17,9 +19,9 @@ interface Slide {
 const slides: Slide[] = [
   {
     id: 'cloud',
-    title: 'Coming soon Cloud',
+    title: 'Coming soon',
     description: 'Access your point of sale with real-time synchronization.',
-    icon: Cloud,
+    icon: Logo,
     bgColor: 'bg-gradient-to-br from-orange-400 to-red-500',
     iconBg: '',
   },
