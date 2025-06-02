@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { Copy, CheckCircle } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import { useSettings } from '@/hooks/use-settings';
 
+import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 interface PaymentQRDisplayProps {
@@ -66,8 +66,8 @@ export function PaymentQRDisplay({
         )}
 
         {process.env.NODE_ENV === 'development' && lightningInvoice && (
-          <div className='w-full mt-4'>
-            <Button variant='outline' onClick={copyInvoice} className='w-full flex items-center justify-center gap-2'>
+          <div className='w-full mb-4'>
+            <Button variant='outline' onClick={copyInvoice} className='w-full'>
               {copied ? (
                 <>
                   <CheckCircle className='h-4 w-4 text-green-600' />
