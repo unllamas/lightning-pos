@@ -119,7 +119,6 @@ Dashboard → Settings → Currency Configuration
 ### Phase 3: Advanced Features
 
 * Advanced sales reports
-* NFC support for Android
 * Printer integration
 * Analysis of best-selling products
 
