@@ -95,7 +95,7 @@ export function LoginView() {
         <PWAInstallBanner />
         <div className='space-y-3'>
           <Input
-            type='text'
+            type='email'
             placeholder='you@lightning.address'
             value={inputAddress}
             onChange={(e) => {
