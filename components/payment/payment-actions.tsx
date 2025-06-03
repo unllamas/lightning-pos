@@ -20,7 +20,7 @@ interface PaymentActionsProps {
 
 export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsProps) {
   const { toast } = useToast();
-  const { isAvailable, permission, status: scanStatus, scan, stop } = useCard();
+  const { isAvailable, status: scanStatus, scan, stop } = useCard();
 
   // Local states
   const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.IDLE);
@@ -110,13 +110,6 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
         <Button variant='outline' className='w-full' onClick={onCancel}>
           Cancel
         </Button>
-
-        {/* Botón para simular pago exitoso - solo en desarrollo o si no hay verificación automática
-        {(process.env.NODE_ENV === "development" || !verifyUrl) && (
-          <Button className="bg-green-600 hover:bg-green-700 text-white" onClick={onCompletePayment}>
-            {verifyUrl ? "Simulate Payment" : "Mark as Paid"}
-          </Button>
-        )} */}
       </div>
     </div>
   );
