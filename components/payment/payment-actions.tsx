@@ -59,31 +59,39 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
     }
   }, [processRegularPayment, scan]);
 
+  // on card scanStatus change
   useEffect(() => {
     switch (scanStatus) {
       case ScanCardStatus.SCANNING:
-        setCardStatus(LNURLWStatus.SCANNING);
         toast({
           title: '',
           description: `Available for NFC scanning`,
         });
+        setCardStatus(LNURLWStatus.SCANNING);
         break;
       case ScanCardStatus.REQUESTING:
-        setCardStatus(LNURLWStatus.REQUESTING);
         toast({
           title: '',
           description: `Procesing...`,
         });
+        setCardStatus(LNURLWStatus.REQUESTING);
         break;
       case ScanCardStatus.ERROR:
-        setCardStatus(LNURLWStatus.ERROR);
         toast({
           title: 'Oops',
           description: `Error in: ${error}`,
         });
+        setCardStatus(LNURLWStatus.ERROR);
         break;
     }
   }, [scanStatus]);
+
+  // on Mount
+  useEffect(() => {
+    return () => {
+      stop();
+    };
+  }, []);
 
   return (
     <div className='relative z-0 w-full py-4 bg-white border-t'>

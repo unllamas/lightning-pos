@@ -11,6 +11,7 @@ import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 import { PaymentView } from '@/components/payment-view';
 import { PaymentSuccess } from '@/components/payment-success';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { PrintOrder } from '@/types/print';
 
 interface PaymentPageProps {
   orderId: string;
@@ -27,7 +28,7 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
   const [paymentStatus, setPaymentStatus] = useState<'selecting' | 'pending' | 'success'>('selecting');
   const [tipOption, setTipOption] = useState<'with-tip' | 'without-tip' | null>(null);
   const [finalAmount, setFinalAmount] = useState(0);
-  // const [printOrder, setPrintOrder] = useState<PrintOrder | null>(null);
+  const [printOrder, setPrintOrder] = useState<PrintOrder | null>(null);
 
   const subtotal = cart.reduce((sum, item) => {
     const product = products.find((p) => p.id === item.id);
@@ -61,7 +62,8 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
           orderId,
         };
 
-        print(printOrder);
+        setPrintOrder(printOrder);
+        // print(printOrder);
 
         // Limpiar carrito y cambiar estado
         setPaymentStatus('success');
@@ -123,7 +125,7 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
       )}
 
       {paymentStatus === 'success' && (
-        <PaymentSuccess amount={finalAmount} printOrder={undefined} onBackToShop={handleBackToShop} />
+        <PaymentSuccess amount={finalAmount} printOrder={printOrder} onBackToShop={handleBackToShop} />
       )}
     </div>
   );

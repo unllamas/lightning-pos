@@ -9,7 +9,7 @@ import type { PrintOrder } from '@/types/print';
 
 interface PaymentSuccessProps {
   amount: number;
-  printOrder?: PrintOrder;
+  printOrder?: PrintOrder | null;
   onBackToShop: () => void;
 }
 
@@ -17,10 +17,10 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
   const [isPrinting, setIsPrinting] = useState(false);
   const [hasPrinted, setHasPrinted] = useState(false);
   const { settings, getCurrencySymbol } = useSettings();
-  const { isAvailable: isPrintAvailable, print } = usePrint();
+  const { print, isAvailable } = usePrint();
 
   const handlePrint = async () => {
-    if (!printOrder || !isPrintAvailable) {
+    if (!printOrder || !isAvailable) {
       console.warn('Cannot print: no print order or printer not available');
       return;
     }
@@ -53,10 +53,10 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
         </div>
 
         {/* Información adicional si hay orden de impresión */}
-        {printOrder && (
+        {isAvailable && printOrder && (
           <div className='text-center text-sm text-gray-500 mt-4'>
-            <p>Order ID: {printOrder.orderId}</p>
-            <p>{new Date(printOrder.timestamp).toLocaleString()}</p>
+            <p>Order ID: {printOrder?.orderId}</p>
+            <p>{new Date(printOrder?.timestamp!).toLocaleString()}</p>
           </div>
         )}
       </div>
@@ -64,7 +64,7 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
       <div className='w-full py-4 bg-white border-t'>
         <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
           {/* Botón de impresión - solo mostrar si hay impresora disponible y orden */}
-          {isPrintAvailable && printOrder && (
+          {isAvailable && printOrder && (
             <Button
               className='w-full flex items-center justify-center gap-2'
               onClick={handlePrint}
