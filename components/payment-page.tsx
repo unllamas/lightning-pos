@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 
 import { usePOSData } from '@/hooks/use-pos-data';
 import { useSettings } from '@/hooks/use-settings';
+import { usePrint } from '@/hooks/use-print';
+import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 
 import { PaymentView } from '@/components/payment-view';
 import { PaymentSuccess } from '@/components/payment-success';
@@ -18,8 +20,9 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
   const router = useRouter();
 
   const { settings } = useSettings();
+  const { convertCurrency } = useCurrencyConverter();
   const { products, cart, isLoading, error, clearCart } = usePOSData();
-  // const { generatePrintOrder } = usePrintOrder();
+  const { print } = usePrint();
 
   const [paymentStatus, setPaymentStatus] = useState<'selecting' | 'pending' | 'success'>('selecting');
   const [tipOption, setTipOption] = useState<'with-tip' | 'without-tip' | null>(null);
@@ -48,8 +51,17 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
         const tipAmount = tipOption === 'with-tip' ? subtotal * 0.1 : undefined;
 
         // Generar orden de impresión
-        // const order = generatePrintOrder(orderId, cart, products, finalAmount, tipAmount);
-        // setPrintOrder(order);
+        const printOrder = {
+          subtotal: finalAmount,
+          total: convertCurrency(finalAmount, 'SAT', 'ARS'),
+          totalSats: finalAmount,
+          currency: settings?.currency,
+          currencySymbol: settings?.currency,
+          items: [],
+          orderId,
+        };
+
+        print(printOrder);
 
         // Limpiar carrito y cambiar estado
         setPaymentStatus('success');
