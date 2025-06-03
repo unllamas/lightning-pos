@@ -4,6 +4,8 @@ import Script from 'next/script';
 
 import { Space_Mono } from 'next/font/google';
 
+import { InjectedNFCProvider } from '@/context/injected-nfc';
+
 import './globals.css';
 
 // Define Space Mono as the primary font
@@ -77,7 +79,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
       </head>
       <body className={`${spaceMono.className} select-none`}>
-        {children}
+        <InjectedNFCProvider>{children}</InjectedNFCProvider>
         {/* <script
           dangerouslySetInnerHTML={{
             __html: `
