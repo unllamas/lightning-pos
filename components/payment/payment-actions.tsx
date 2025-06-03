@@ -12,6 +12,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 import { ScanAction } from '@/types/card';
 import { LNURLResponse, LNURLWStatus } from '@/types/lnurl';
+import { useToast } from '@/hooks/use-toast';
 
 interface PaymentActionsProps {
   lightningInvoice: string | null;
@@ -19,9 +20,11 @@ interface PaymentActionsProps {
 }
 
 export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsProps) {
+  const { toast } = useToast();
   const { isAvailable, permission, status: scanStatus, scan, stop } = useCard();
 
   const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.IDLE);
+  // const [error, setError] = useState<string>();
 
   const processRegularPayment = useCallback(
     async (cardUrl: string, response: LNURLResponse) => {
@@ -49,6 +52,10 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
     } catch (e) {
       setCardStatus(LNURLWStatus.ERROR);
       // setError((e as Error).message);
+      toast({
+        title: 'Oops',
+        description: (e as Error).message,
+      });
     }
   }, [processRegularPayment, scan]);
 
