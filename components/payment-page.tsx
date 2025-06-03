@@ -47,33 +47,33 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
 
   const handleCompletePayment = () => {
     if (finalAmount > 0) {
-      try {
-        // Calcular tip amount si aplica
-        const tipAmount = tipOption === 'with-tip' ? subtotal * 0.1 : undefined;
+      // try {
+      // Calcular tip amount si aplica
+      // const tipAmount = tipOption === 'with-tip' ? subtotal * 0.1 : undefined;
 
-        // Generar orden de impresión
-        const printOrder = {
-          subtotal: finalAmount,
-          total: convertCurrency(finalAmount, 'SAT', 'ARS'),
-          totalSats: finalAmount,
-          currency: settings?.currency,
-          currencySymbol: settings?.currency,
-          items: [],
-          orderId,
-        };
+      // Generar orden de impresión
+      const printOrder = {
+        subtotal: finalAmount,
+        total: convertCurrency(finalAmount, 'SAT', 'ARS'),
+        totalSats: finalAmount,
+        currency: settings?.currency,
+        currencySymbol: settings?.currency,
+        items: [],
+        orderId,
+      };
 
-        setPrintOrder(printOrder);
-        // print(printOrder);
+      setPrintOrder(printOrder);
+      print(printOrder);
 
-        // Limpiar carrito y cambiar estado
-        setPaymentStatus('success');
-        clearCart();
-      } catch (error) {
-        console.error('Error generating print order:', error);
-        // Aún así completar el pago, solo sin orden de impresión
-        setPaymentStatus('success');
-        clearCart();
-      }
+      // Limpiar carrito y cambiar estado
+      setPaymentStatus('success');
+      clearCart();
+      // } catch (error) {
+      //   console.error('Error generating print order:', error);
+      //   // Aún así completar el pago, solo sin orden de impresión
+      //   setPaymentStatus('success');
+      //   clearCart();
+      // }
     }
   };
 

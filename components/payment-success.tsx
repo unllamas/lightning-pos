@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { CheckCircle, Printer, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/hooks/use-settings';
@@ -18,7 +18,7 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
   const { settings, getCurrencySymbol } = useSettings();
   const { print, isAvailable } = usePrint();
 
-  const handlePrint = () => {
+  const handlePrint = useCallback(() => {
     if (!isAvailable || isPrinting) {
       console.warn('Cannot print: no print order or printer not available');
       return;
@@ -30,7 +30,7 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
     setTimeout(() => {
       setIsPrinting(false);
     }, 1200);
-  };
+  }, [isAvailable, isPrinting]);
 
   return (
     <div className='flex flex-col items-center justify-between w-full h-screen mx-auto'>
