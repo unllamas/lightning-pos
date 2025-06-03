@@ -68,18 +68,13 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
             <Button
               className='w-full flex items-center justify-center gap-2'
               onClick={handlePrint}
-              disabled={isPrinting || hasPrinted}
-              variant={hasPrinted ? 'outline' : 'default'}
+              disabled={isPrinting}
+              variant={'default'}
             >
               {isPrinting ? (
                 <>
                   <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
                   <span>Printing...</span>
-                </>
-              ) : hasPrinted ? (
-                <>
-                  <Check className='h-4 w-4 text-green-600' />
-                  <span>Printed</span>
                 </>
               ) : (
                 <>
@@ -90,7 +85,7 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
             </Button>
           )}
 
-          <Button className='w-full' variant='default' onClick={onBackToShop}>
+          <Button className='w-full' variant={isAvailable ? 'outline' : 'default'} onClick={onBackToShop}>
             Go to Shop
           </Button>
         </div>
