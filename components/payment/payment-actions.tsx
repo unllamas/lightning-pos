@@ -4,13 +4,12 @@ import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Check, Nfc } from 'lucide-react';
 
-import { ScanCardStatus } from '@/hooks/use-nfc';
 import { useCard } from '@/hooks/use-card';
 
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
-import { ScanAction } from '@/types/card';
+import { ScanAction, ScanCardStatus } from '@/types/card';
 import { LNURLResponse, LNURLWStatus } from '@/types/lnurl';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,8 +22,9 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
   const { toast } = useToast();
   const { isAvailable, permission, status: scanStatus, scan, stop } = useCard();
 
+  // Local states
   const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.IDLE);
-  // const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | null>(null);
 
   const processRegularPayment = useCallback(
     async (cardUrl: string, response: LNURLResponse) => {
@@ -51,7 +51,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
       await processRegularPayment(cardUrl, lnurlResponse);
     } catch (e) {
       setCardStatus(LNURLWStatus.ERROR);
-      // setError((e as Error).message);
+      setError((e as Error).message);
       toast({
         title: 'Oops',
         description: (e as Error).message,
@@ -63,43 +63,32 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
     switch (scanStatus) {
       case ScanCardStatus.SCANNING:
         setCardStatus(LNURLWStatus.SCANNING);
+        toast({
+          title: '',
+          description: `Available for NFC scanning`,
+        });
         break;
       case ScanCardStatus.REQUESTING:
         setCardStatus(LNURLWStatus.REQUESTING);
+        toast({
+          title: '',
+          description: `Procesing...`,
+        });
         break;
       case ScanCardStatus.ERROR:
         setCardStatus(LNURLWStatus.ERROR);
+        toast({
+          title: 'Oops',
+          description: `Error in: ${error}`,
+        });
         break;
-    }
-  }, [scanStatus]);
-
-  const handleStatusNFC = useCallback(() => {
-    switch (scanStatus) {
-      case ScanCardStatus.IDLE:
-        return (
-          <>
-            <Nfc className='h-4 w-4' />
-            <span>Pay via NFC</span>
-          </>
-        );
-      case ScanCardStatus.SCANNING:
-        return <LoadingSpinner />;
-      case ScanCardStatus.REQUESTING:
-        return <LoadingSpinner />;
-      case ScanCardStatus.DONE:
-        return <Check className='h-4 w-4' />;
-      case ScanCardStatus.ERROR:
-        stop();
-        return <>Oops</>;
-      default:
-        return <span>:)</span>;
     }
   }, [scanStatus]);
 
   return (
     <div className='relative z-0 w-full py-4 bg-white border-t'>
       <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
-        {isAvailable && (
+        {isAvailable && permission === 'prompt' && (
           <Button
             onClick={startRead}
             disabled={
@@ -111,7 +100,8 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
             }
             className={`w-full bg-blue-600 hover:bg-blue-700 text-white`}
           >
-            {handleStatusNFC()}
+            <Nfc className='h-4 w-4' />
+            <span>Request NFC</span>
           </Button>
         )}
 
