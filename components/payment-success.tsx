@@ -19,13 +19,13 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
   const { print, isAvailable } = usePrint();
 
   const handlePrint = () => {
-    if (!printOrder || !isAvailable || isPrinting) {
+    if (!isAvailable || isPrinting) {
       console.warn('Cannot print: no print order or printer not available');
       return;
     }
-    print(printOrder);
 
-    setIsPrinting(true);
+    print(printOrder!);
+
     // Simular un pequeño delay para cambiar el estado de impresión
     setTimeout(() => {
       setIsPrinting(false);
@@ -59,7 +59,10 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
           {isAvailable && printOrder && (
             <Button
               className='w-full flex items-center justify-center gap-2'
-              onClick={handlePrint}
+              onClick={() => {
+                setIsPrinting(true);
+                handlePrint();
+              }}
               disabled={isPrinting}
               variant={'default'}
             >
