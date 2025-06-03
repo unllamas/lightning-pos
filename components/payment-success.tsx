@@ -20,24 +20,14 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
   const { print, isAvailable } = usePrint();
 
   const handlePrint = async () => {
+    setIsPrinting(false);
     if (!printOrder || !isAvailable) {
       console.warn('Cannot print: no print order or printer not available');
       return;
     }
 
-    try {
-      setIsPrinting(true);
-      print(printOrder);
-
-      // Simular un pequeño delay para mostrar el estado de impresión
-      setTimeout(() => {
-        setIsPrinting(false);
-        setHasPrinted(true);
-      }, 1500);
-    } catch (error) {
-      console.error('Print error:', error);
-      setIsPrinting(false);
-    }
+    setIsPrinting(true);
+    print(printOrder);
   };
 
   return (
