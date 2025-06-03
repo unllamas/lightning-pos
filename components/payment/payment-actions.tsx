@@ -88,16 +88,10 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
   return (
     <div className='relative z-0 w-full py-4 bg-white border-t'>
       <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
-        {isAvailable && permission === 'prompt' && (
+        {isAvailable && (
           <Button
             onClick={startRead}
-            disabled={
-              cardStatus === LNURLWStatus.SCANNING ||
-              cardStatus === LNURLWStatus.REQUESTING ||
-              cardStatus === LNURLWStatus.CALLBACK ||
-              cardStatus === LNURLWStatus.DONE ||
-              !lightningInvoice
-            }
+            disabled={!lightningInvoice}
             className={`w-full bg-blue-600 hover:bg-blue-700 text-white`}
           >
             <Nfc className='h-4 w-4' />
