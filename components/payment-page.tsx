@@ -47,9 +47,11 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
 
   const handleCompletePayment = () => {
     if (finalAmount > 0) {
-      // try {
       // Calcular tip amount si aplica
       // const tipAmount = tipOption === 'with-tip' ? subtotal * 0.1 : undefined;
+
+      // Cambiar estado
+      setPaymentStatus('success');
 
       // Generar orden de impresión
       const printOrder = {
@@ -65,15 +67,8 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
       setPrintOrder(printOrder);
       print(printOrder);
 
-      // Limpiar carrito y cambiar estado
-      setPaymentStatus('success');
+      // Limpiar carrito
       clearCart();
-      // } catch (error) {
-      //   console.error('Error generating print order:', error);
-      //   // Aún así completar el pago, solo sin orden de impresión
-      //   setPaymentStatus('success');
-      //   clearCart();
-      // }
     }
   };
 
