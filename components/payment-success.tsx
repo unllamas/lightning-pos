@@ -15,19 +15,21 @@ interface PaymentSuccessProps {
 
 export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSuccessProps) {
   const [isPrinting, setIsPrinting] = useState(false);
-  const [hasPrinted, setHasPrinted] = useState(false);
   const { settings, getCurrencySymbol } = useSettings();
   const { print, isAvailable } = usePrint();
 
-  const handlePrint = async () => {
-    setIsPrinting(false);
-    if (!printOrder || !isAvailable) {
+  const handlePrint = () => {
+    if (!printOrder || !isAvailable || isPrinting) {
       console.warn('Cannot print: no print order or printer not available');
       return;
     }
+    print(printOrder);
 
     setIsPrinting(true);
-    print(printOrder);
+    // Simular un pequeño delay para cambiar el estado de impresión
+    setTimeout(() => {
+      setIsPrinting(false);
+    }, 1200);
   };
 
   return (
