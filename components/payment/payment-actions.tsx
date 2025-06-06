@@ -102,27 +102,28 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
         {isAvailable && (
           <Button
             onClick={startRead}
-            disabled={
-              !lightningInvoice ||
-              cardStatus === LNURLWStatus.SCANNING ||
-              cardStatus === LNURLWStatus.REQUESTING ||
-              cardStatus === LNURLWStatus.DONE
-            }
+            disabled={!lightningInvoice || cardStatus !== LNURLWStatus.IDLE}
             className={`w-full ${
               cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`
             } text-white`}
           >
-            {cardStatus === LNURLWStatus.IDLE && <span>IDLE</span>}
-            {cardStatus === LNURLWStatus.CALLBACK && <span>CALLBACK</span>}
-            {cardStatus === LNURLWStatus.DONE && <Check className='h-4 w-4' />}
-            {cardStatus === LNURLWStatus.REQUESTING || (cardStatus === LNURLWStatus.SCANNING && <LoadingSpinner />)}
-            {cardStatus === LNURLWStatus.ERROR && <span>{error}</span>}
-            {
+            {cardStatus === LNURLWStatus.DONE ? (
+              <>
+                <Check className='h-4 w-4' />
+                {/* <span>Done</span> */}
+              </>
+            ) : cardStatus === LNURLWStatus.REQUESTING ||
+              cardStatus === LNURLWStatus.SCANNING ||
+              cardStatus === LNURLWStatus.CALLBACK ? (
+              <LoadingSpinner />
+            ) : cardStatus === LNURLWStatus.ERROR ? (
+              <span>{error}</span>
+            ) : (
               <>
                 <Nfc className='h-4 w-4' />
                 <span>Request NFC</span>
               </>
-            }
+            )}
           </Button>
         )}
 
