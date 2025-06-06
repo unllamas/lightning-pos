@@ -24,7 +24,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
   const { isAvailable, status: scanStatus, scan, stop } = useCard();
 
   // Local states
-  const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.IDLE);
+  const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.DONE);
   const [error, setError] = useState<string | null>(null);
 
   const processRegularPayment = useCallback(
@@ -99,25 +99,24 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
   return (
     <div className='relative z-0 w-full py-4 bg-white border-t'>
       <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
-        {isAvailable && (
+        {!isAvailable && (
           <Button
-            onClick={startRead}
-            disabled={!lightningInvoice || cardStatus !== LNURLWStatus.IDLE}
-            className={`w-full ${
-              cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`
+            onClick={() => {
+              cardStatus === LNURLWStatus.IDLE && startRead();
+            }}
+            disabled={!lightningInvoice || (cardStatus !== LNURLWStatus.IDLE && cardStatus !== LNURLWStatus.DONE)}
+            className={`w-full ${cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`} ${
+              cardStatus === LNURLWStatus.DONE && 'cursor-not-allowed'
             } text-white`}
           >
             {cardStatus === LNURLWStatus.DONE ? (
-              <>
-                <Check className='h-4 w-4' />
-                {/* <span>Done</span> */}
-              </>
+              <Check className='h-4 w-4' />
             ) : cardStatus === LNURLWStatus.REQUESTING ||
               cardStatus === LNURLWStatus.SCANNING ||
               cardStatus === LNURLWStatus.CALLBACK ? (
               <LoadingSpinner />
             ) : cardStatus === LNURLWStatus.ERROR ? (
-              <span>{error}</span>
+              <span>Oops! Try again</span>
             ) : (
               <>
                 <Nfc className='h-4 w-4' />
