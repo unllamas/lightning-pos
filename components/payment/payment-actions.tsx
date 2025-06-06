@@ -110,7 +110,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
             {cardStatus === LNURLWStatus.DONE ? (
               <>
                 <Check className='h-4 w-4' />
-                <span>Payment Done</span>
+                {/* <span>Done</span> */}
               </>
             ) : cardStatus === LNURLWStatus.REQUESTING ? (
               <LoadingSpinner />
