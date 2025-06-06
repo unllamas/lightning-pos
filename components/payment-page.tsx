@@ -58,8 +58,8 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
       // Generar orden de impresión
       const printOrder = {
         total: finalAmount,
-        totalSats: convertCurrency(finalAmount, settings?.currency as AvailableCurrencies, 'SAT'),
         currency: settings?.currency,
+        totalSats: convertCurrency(finalAmount, settings?.currency as AvailableCurrencies, 'SAT'),
         items: [
           {
             name: 'Caja',
@@ -67,24 +67,7 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
             qty: 1,
           },
         ],
-        orderId,
       };
-
-      // const printOrder = {
-      //   subtotal: 69,
-      //   total: 100,
-      //   currency: 'PES',
-      //   currencySymbol: 'TEST',
-      //   items: [
-      //     {
-      //       name: 'Test Product',
-      //       quantity: 1,
-      //       price: 69,
-      //       total: 69,
-      //     },
-      //   ],
-      //   orderId,
-      // };
 
       setPrintOrder(printOrder);
       print(printOrder);

@@ -1,21 +1,12 @@
-export interface PrintItem {
+export interface OrderItem {
+  qty: number;
   name: string;
-  quantity: number;
   price: number;
-  total: number;
 }
 
 export interface PrintOrder {
-  orderId: string;
-  timestamp?: string;
-  items: PrintItem[];
-  subtotal: number;
-  tip?: number;
+  items: OrderItem[];
   total: number;
+  totalSats: number;
   currency: string;
-  currencySymbol: string;
-  paymentMethod?: 'lightning' | 'cash';
-  lightningAddress?: string;
-  operatorLightningAddress?: string;
-  status?: 'paid' | 'pending';
 }
