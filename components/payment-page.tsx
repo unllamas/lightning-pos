@@ -32,6 +32,16 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
   const [finalAmount, setFinalAmount] = useState(0);
   const [printOrder, setPrintOrder] = useState<PrintOrder | null>(null);
 
+  const cartItems = cart
+    .map((item) => {
+      const product = products.find((p) => p.id === item.id);
+      return {
+        ...item,
+        product,
+      };
+    })
+    .filter((item) => item.product !== undefined);
+
   const subtotal = cart.reduce((sum, item) => {
     const product = products.find((p) => p.id === item.id);
     return sum + (product?.price || 0) * item.quantity;
@@ -61,11 +71,13 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
         currency: settings?.currency,
         totalSats: convertCurrency(finalAmount, settings?.currency as AvailableCurrencies, 'SAT'),
         items: [
-          cart.map((item) => ({
-            name: products.find((product) => product.id === item.id)?.name,
-            qty: item.quantity,
-            price: products.find((product) => product.id === item.id)?.price,
-          })),
+          cartItems.map((item) => {
+            return {
+              name: item.product?.name,
+              qty: item.quantity,
+              price: item.product?.price,
+            };
+          }),
         ],
       };
 
