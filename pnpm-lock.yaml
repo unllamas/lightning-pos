@@ -116,6 +116,9 @@ dependencies:
   lnurl-pay:
     specifier: ^4.0.0
     version: 4.0.0
+  lottie-react:
+    specifier: ^2.4.1
+    version: 2.4.1(react-dom@19.1.0)(react@19.1.0)
   lucide-react:
     specifier: ^0.454.0
     version: 0.454.0(react@19.1.0)
@@ -2899,6 +2902,21 @@ packages:
     hasBin: true
     dependencies:
       js-tokens: 4.0.0
+    dev: false
+
+  /lottie-react@2.4.1(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-LQrH7jlkigIIv++wIyrOYFLHSKQpEY4zehPicL9bQsrt1rnoKRYCYgpCUe5maqylNtacy58/sQDZTkwMcTRxZw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    dependencies:
+      lottie-web: 5.13.0
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    dev: false
+
+  /lottie-web@5.13.0:
+    resolution: {integrity: sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ==}
     dev: false
 
   /lru-cache@10.4.3:
