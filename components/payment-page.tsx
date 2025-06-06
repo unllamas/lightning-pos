@@ -61,11 +61,11 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
         currency: settings?.currency,
         totalSats: convertCurrency(finalAmount, settings?.currency as AvailableCurrencies, 'SAT'),
         items: [
-          {
-            name: 'Caja',
-            price: 100,
-            qty: 1,
-          },
+          cart.map((item) => ({
+            name: products.find((product) => product.id === item.id)?.name,
+            qty: item.quantity,
+            price: products.find((product) => product.id === item.id)?.price,
+          })),
         ],
       };
 
