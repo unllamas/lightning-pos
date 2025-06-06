@@ -60,14 +60,7 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
         totalSats: finalAmount,
         currency: settings?.currency,
         currencySymbol: settings?.currency,
-        items: [
-          {
-            name: 'Test Product',
-            quantity: 1,
-            price: 69,
-            total: 69,
-          },
-        ],
+        items: [],
         orderId,
       };
 
