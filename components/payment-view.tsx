@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+import { useSettings } from '@/hooks/use-settings';
 import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 import { usePaymentGeneration } from '@/hooks/use-payment-generation';
 import { usePaymentVerification } from '@/lib/lightning-utils';
@@ -11,6 +12,7 @@ import { PaymentQRDisplay } from '@/components/payment/payment-qr-display';
 import { PaymentActions } from '@/components/payment/payment-actions';
 
 import type { Product } from '@/lib/types';
+import { AvailableCurrencies } from '@/types/config';
 
 // Primero, añadir los props necesarios
 interface PaymentViewProps {
@@ -23,6 +25,7 @@ interface PaymentViewProps {
 
 // Luego, actualizar la desestructuración de props
 export function PaymentView({ amount, cart = [], products = [], onCancel, onCompletePayment }: PaymentViewProps) {
+  const { settings } = useSettings();
   const { convertCurrency } = useCurrencyConverter();
   const {
     qrCodeDataUrl,
@@ -63,7 +66,7 @@ export function PaymentView({ amount, cart = [], products = [], onCancel, onComp
       <PaymentQRDisplay
         qrCodeDataUrl={qrCodeDataUrl}
         amount={amount}
-        amountInSats={convertCurrency(amount, 'ARS', 'SAT')}
+        amountInSats={convertCurrency(amount, settings?.currency as AvailableCurrencies, 'SAT')}
         lightningInvoice={lightningInvoice}
         isGenerating={isGenerating}
       />

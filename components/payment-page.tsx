@@ -11,7 +11,9 @@ import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 import { PaymentView } from '@/components/payment-view';
 import { PaymentSuccess } from '@/components/payment-success';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+
 import { PrintOrder } from '@/types/print';
+import { AvailableCurrencies } from '@/types/config';
 
 interface PaymentPageProps {
   orderId: string;
@@ -56,7 +58,7 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
       // Generar orden de impresión
       const printOrder = {
         total: finalAmount,
-        totalSats: convertCurrency(finalAmount, 'ARS', 'SAT'),
+        totalSats: convertCurrency(finalAmount, settings?.currency as AvailableCurrencies, 'SAT'),
         currency: settings?.currency,
         items: [
           {
