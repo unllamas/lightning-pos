@@ -1,11 +1,18 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { CheckCircle, Printer, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import dynamic from 'next/dynamic';
+import { Printer } from 'lucide-react';
+
 import { useSettings } from '@/hooks/use-settings';
 import { usePrint } from '@/hooks/use-print';
+
+import { Button } from '@/components/ui/button';
+
 import type { PrintOrder } from '@/types/print';
+
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
+import animationCheck from './payment/animation-check.json';
 
 interface PaymentSuccessProps {
   amount: number;
@@ -35,7 +42,9 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
   return (
     <div className='flex flex-col items-center justify-between w-full h-screen mx-auto'>
       <div className='flex-1 flex flex-col items-center justify-center gap-4 w-full max-w-md px-4'>
-        <CheckCircle className='h-24 w-24 text-gray-400' />
+        <div className='flex justify-center items-center w-40 h-40 rounded-lg'>
+          <Lottie animationData={animationCheck} loop={false} />
+        </div>
         <div className='flex flex-col justify-center gap-2 text-center'>
           <p className='text-gray-500'>Payment credited</p>
           <div className='text-4xl'>
