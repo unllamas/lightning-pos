@@ -70,15 +70,11 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
         total: finalAmount,
         currency: settings?.currency,
         totalSats: convertCurrency(finalAmount, settings?.currency as AvailableCurrencies, 'SAT'),
-        items: [
-          cartItems.map((item) => {
-            return {
-              name: item.product?.name,
-              qty: item.quantity,
-              price: item.product?.price,
-            };
-          }),
-        ],
+        items: cartItems.map((item) => ({
+          name: item?.product?.name,
+          price: item?.product?.price,
+          qty: item?.quantity,
+        })),
       };
 
       setPrintOrder(printOrder);
