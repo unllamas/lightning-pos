@@ -55,11 +55,9 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
 
       // Generar orden de impresión
       const printOrder = {
-        subtotal: 100,
-        total: 21,
-        totalSats: 69,
-        currency: 'PES',
-        currencySymbol: 'TEST',
+        total: convertCurrency(finalAmount, 'SAT', 'ARS'),
+        totalSats: finalAmount,
+        currency: settings?.currency,
         items: [
           {
             name: 'Caja',

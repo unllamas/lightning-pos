@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 
+import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 import { usePaymentGeneration } from '@/hooks/use-payment-generation';
 import { usePaymentVerification } from '@/lib/lightning-utils';
 
@@ -22,6 +23,7 @@ interface PaymentViewProps {
 
 // Luego, actualizar la desestructuración de props
 export function PaymentView({ amount, cart = [], products = [], onCancel, onCompletePayment }: PaymentViewProps) {
+  const { convertCurrency } = useCurrencyConverter();
   const {
     qrCodeDataUrl,
     lightningInvoice,
@@ -61,7 +63,7 @@ export function PaymentView({ amount, cart = [], products = [], onCancel, onComp
       <PaymentQRDisplay
         qrCodeDataUrl={qrCodeDataUrl}
         amount={amount}
-        amountInSats={amountInSats}
+        amountInSats={convertCurrency(amount, 'SAT', 'ARS')}
         lightningInvoice={lightningInvoice}
         isGenerating={isGenerating}
       />
