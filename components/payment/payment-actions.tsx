@@ -76,6 +76,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
         toast({
           title: '',
           description: `Procesing...`,
+          duration: 1200,
         });
         setCardStatus(LNURLWStatus.REQUESTING);
         break;
