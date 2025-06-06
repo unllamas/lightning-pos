@@ -24,7 +24,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
   const { isAvailable, status: scanStatus, scan, stop } = useCard();
 
   // Local states
-  const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.DONE);
+  const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.IDLE);
   const [error, setError] = useState<string | null>(null);
 
   const processRegularPayment = useCallback(
