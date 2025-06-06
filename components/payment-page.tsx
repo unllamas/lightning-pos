@@ -60,7 +60,13 @@ export function PaymentPage({ orderId }: PaymentPageProps) {
         totalSats: finalAmount,
         currency: settings?.currency,
         currencySymbol: settings?.currency,
-        items: [],
+        items: [
+          {
+            name: 'Caja',
+            price: 100,
+            qty: 1,
+          },
+        ],
         orderId,
       };
 
