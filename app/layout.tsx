@@ -6,6 +6,8 @@ import { Space_Mono } from 'next/font/google';
 
 import { InjectedNFCProvider } from '@/context/injected-nfc';
 
+import { Toaster } from '@/components/ui/toaster';
+
 import './globals.css';
 
 // Define Space Mono as the primary font
@@ -80,6 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className={`${spaceMono.className} select-none`}>
         <InjectedNFCProvider>{children}</InjectedNFCProvider>
+        <Toaster />
         {/* <script
           dangerouslySetInnerHTML={{
             __html: `
