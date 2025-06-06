@@ -102,7 +102,12 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
         {isAvailable && (
           <Button
             onClick={startRead}
-            disabled={!lightningInvoice || cardStatus === LNURLWStatus.SCANNING || cardStatus === LNURLWStatus.DONE}
+            disabled={
+              !lightningInvoice ||
+              cardStatus === LNURLWStatus.SCANNING ||
+              cardStatus === LNURLWStatus.REQUESTING ||
+              cardStatus === LNURLWStatus.DONE
+            }
             className={`w-full ${
               cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`
             } text-white`}
