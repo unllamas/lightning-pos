@@ -107,8 +107,15 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
               cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`
             } text-white`}
           >
-            {cardStatus === LNURLWStatus.SCANNING ? (
-              <span>Tap Card</span>
+            {cardStatus === LNURLWStatus.DONE ? (
+              <>
+                <Check className='h-4 w-4' />
+                <span>Payment Done</span>
+              </>
+            ) : cardStatus === LNURLWStatus.REQUESTING ? (
+              <LoadingSpinner />
+            ) : cardStatus === LNURLWStatus.ERROR ? (
+              <span>Error: {error}</span>
             ) : (
               <>
                 <Nfc className='h-4 w-4' />
