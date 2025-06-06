@@ -63,7 +63,7 @@ export function PaymentView({ amount, cart = [], products = [], onCancel, onComp
       <PaymentQRDisplay
         qrCodeDataUrl={qrCodeDataUrl}
         amount={amount}
-        amountInSats={convertCurrency(amount, 'SAT', 'ARS')}
+        amountInSats={convertCurrency(amount, 'ARS', 'SAT')}
         lightningInvoice={lightningInvoice}
         isGenerating={isGenerating}
       />
