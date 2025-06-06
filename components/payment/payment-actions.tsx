@@ -20,6 +20,7 @@ interface PaymentActionsProps {
 
 export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsProps) {
   const { toast } = useToast();
+
   const { isAvailable, status: scanStatus, scan, stop } = useCard();
 
   // Local states
@@ -101,11 +102,17 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
         {isAvailable && (
           <Button
             onClick={startRead}
-            disabled={!lightningInvoice}
+            disabled={!lightningInvoice || cardStatus === LNURLWStatus.SCANNING}
             className={`w-full bg-blue-600 hover:bg-blue-700 text-white`}
           >
-            <Nfc className='h-4 w-4' />
-            <span>Request NFC</span>
+            {cardStatus === LNURLWStatus.SCANNING ? (
+              <span>Tap Card</span>
+            ) : (
+              <>
+                <Nfc className='h-4 w-4' />
+                <span>Request NFC</span>
+              </>
+            )}
           </Button>
         )}
 
