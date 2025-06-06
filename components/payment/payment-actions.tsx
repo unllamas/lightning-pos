@@ -64,7 +64,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
 
   // on card scanStatus change
   useEffect(() => {
-    if (cardStatus === LNURLWStatus.CALLBACK) {
+    if (cardStatus === LNURLWStatus.REQUESTING) {
       return () => {
         toast({
           title: '',
