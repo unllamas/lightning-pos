@@ -46,10 +46,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
   );
 
   const startRead = useCallback(async () => {
-    toast({
-      title: 'Enable',
-      description: 'Scan NFC',
-    });
+    setCardStatus(LNURLWStatus.SCANNING);
 
     try {
       const { cardUrl, lnurlResponse } = await scan(ScanAction.PAY_REQUEST);
