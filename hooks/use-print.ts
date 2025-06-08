@@ -1,5 +1,6 @@
-import { PrintOrder } from '@/types/print';
 import { useCallback, useEffect, useState } from 'react';
+
+import { PrintOrder } from '@/types/print';
 
 interface PrintReturns {
   isAvailable: boolean;
