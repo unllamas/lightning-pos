@@ -26,7 +26,7 @@ export function usePaymentGeneration() {
 
   const generateQRCode = async (invoice: string) => {
     try {
-      const qrDataUrl = await QRCode.toDataURL(invoice, {
+      const qrDataUrl = await QRCode.toDataURL(invoice.toUpperCase(), {
         width: 300,
         margin: 2,
         color: {
