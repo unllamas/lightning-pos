@@ -28,3 +28,4 @@ next-env.d.ts
 
 # MAC
 .DS_Store
+.env
