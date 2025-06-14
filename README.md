@@ -18,12 +18,12 @@ See [FLOW](./FLOW.md).
 
 ### Prerequisites
 
-- Node.js 18+ and npm/yarn
+- Node.js 18+ and npm
 - Git
 
 ### Installation
 
-This project uses [pnpm](https://pnpm.io/) to install dependencies and run scripts.
+This project uses npm to install dependencies and run scripts.
 
 1. Clone the repository:
 ```bash
@@ -33,12 +33,12 @@ cd lightning-pos
 
 2. Install dependencies:
 ```bash
-pnpm install
+npm install
 ```
 
 3. Run the development server:
 ```bash
-pnpm dev
+npm run dev
 ```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser.
