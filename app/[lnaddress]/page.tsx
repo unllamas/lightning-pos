@@ -22,11 +22,23 @@ export default function PaydeskPage() {
   const { convertCurrency } = useCurrencyConverter();
   const numpadData = useNumpad(settings?.currency);
   const { login } = useLightningAuth();
+  const { validateLightningAddress } = useLightningAuth();
 
   useEffect(() => {
-    if (lnaddress) {
-      login(decodeURIComponent(String(lnaddress)));
+    async function validateAndLogin() {
+      if (!lnaddress) return;
+      const decodeLnAddress = decodeURIComponent(String(lnaddress));
+
+      const isValid = await validateLightningAddress(decodeLnAddress as string);
+
+      if (!isValid) {
+        router.push('/app');
+      }
+
+      login(decodeLnAddress);
     }
+
+    validateAndLogin();
   }, [lnaddress]);
 
   const value = Number(numpadData.intAmount[numpadData.usedCurrency] || 0);
