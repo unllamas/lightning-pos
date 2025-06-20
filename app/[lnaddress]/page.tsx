@@ -22,7 +22,7 @@ export default function PaydeskPage() {
   const { convertCurrency } = useCurrencyConverter();
   const numpadData = useNumpad(settings?.currency);
   const { login } = useLightningAuth();
-  const { validateLightningAddress } = useLightningAuth();
+  const { validateLightningAddress, logout } = useLightningAuth();
 
   useEffect(() => {
     async function validateAndLogin() {
@@ -67,17 +67,15 @@ export default function PaydeskPage() {
 
       <div className='flex-1 flex flex-col gap-4'>
         <div className='flex-1 flex flex-col justify-center items-center gap-2 px-4 bg-white border-b rounded-b-2xl'>
-          <div className='flex items-center gap-4 w-full max-w-md mx-auto mt-4 px-5 py-4 bg-gray-100 border rounded-lg'>
+          <div className='flex items-center gap-4 w-full max-w-md min-h-20 mx-auto mt-4 p-5 bg-gray-100 border rounded-lg'>
             {/* <div className='min-w-10 h-10 rounded-full bg-white border'></div> */}
             <div className='flex flex-col gap-0 w-full'>
               {/* <p className='text-muted-foreground'>{'Jona'}</p> */}
               <p className='font-medium text-gray-800'>{decodeURIComponent(String(lnaddress))}</p>
             </div>
-            <Button size='icon' variant='outline' asChild>
-              <Link href='/'>
-                <X />
-              </Link>
-            </Button>
+            {/* <Button size='icon' variant='outline' onClick={() => logout()}>
+              <X />
+            </Button> */}
           </div>
           <div className='flex-1 flex flex-col items-center justify-center'>
             <div className='text-3xl'>
