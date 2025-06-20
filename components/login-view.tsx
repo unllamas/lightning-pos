@@ -137,7 +137,7 @@ export function LoginView() {
           <span className='text-gray-500'>or</span>
         </div>
 
-        <Button variant='outline' className='w-full' asChild>
+        <Button variant='outline' className='w-full' size='lg' asChild>
           <Link href='/app'>Try Now</Link>
         </Button>
 
