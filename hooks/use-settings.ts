@@ -2,8 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
+import { AvailableCurrencies } from '@/types/config';
+
 interface Settings {
-  currency: string;
+  currency: AvailableCurrencies;
   language: string;
   operatorLightningAddress: string;
 }
@@ -69,7 +71,7 @@ export function useSettings() {
 
   // Función para actualizar solo la moneda
   const updateCurrency = useCallback(
-    (currency: string) => {
+    (currency: AvailableCurrencies) => {
       return updateSettings({ currency });
     },
     [updateSettings],
