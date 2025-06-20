@@ -38,7 +38,7 @@ export default function PaydeskPage() {
       </header>
 
       <div className='flex-1 flex flex-col gap-4'>
-        <div className='flex-1 flex flex-col justify-center items-center gap-4 bg-white rounded-b-2xl'>
+        <div className='flex-1 flex flex-col justify-center items-center gap-4 bg-white border-b rounded-b-2xl'>
           <div className='text-3xl mb-2'>
             {getCurrencySymbol()}
             <b>{new Intl.NumberFormat().format(numpadData.intAmount[numpadData.usedCurrency])}</b> {settings.currency}
