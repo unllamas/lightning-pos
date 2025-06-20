@@ -175,6 +175,9 @@ devDependencies:
   '@types/node':
     specifier: 24.0.3
     version: 24.0.3
+  '@types/qrcode':
+    specifier: ^1.5.5
+    version: 1.5.5
   '@types/react':
     specifier: 19.1.8
     version: 19.1.8
@@ -1936,6 +1939,12 @@ packages:
     resolution: {integrity: sha512-R4I/kzCYAdRLzfiCabn9hxWfbuHS573x+r0dJMkkzThEa7pbrcDWK+9zu3e7aBOouf+rQAciqPFMnxwr0aWgKg==}
     dependencies:
       undici-types: 7.8.0
+
+  /@types/qrcode@1.5.5:
+    resolution: {integrity: sha512-CdfBi/e3Qk+3Z/fXYShipBT13OJ2fDO2Q2w5CIP5anLTLIndQG9z6P1cnm+8zCWSpm5dnxMFd/uREtb0EXuQzg==}
+    dependencies:
+      '@types/node': 24.0.3
+    dev: true
 
   /@types/react-dom@19.1.5(@types/react@19.1.8):
     resolution: {integrity: sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==}
