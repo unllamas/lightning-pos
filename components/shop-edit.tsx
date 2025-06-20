@@ -100,8 +100,6 @@ export function ShopEdit({}: ShopEditProps) {
   const sortedCategories = [...categories].sort((a, b) => a.order - b.order);
 
   const handleAddCategory = () => {
-    if (!newCategoryName.trim()) return;
-
     // Get the next order number
     const maxOrder = categories.length > 0 ? Math.max(...categories.map((cat) => cat.order)) : 0;
 
@@ -380,14 +378,14 @@ export function ShopEdit({}: ShopEditProps) {
         {/* Add new category form */}
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='flex items-center gap-2'>
-            <Input
+            {/* <Input
               placeholder='New category eg: Food'
               className='flex-1'
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
-            />
-            <Button size='icon' onClick={handleAddCategory} disabled={!newCategoryName}>
-              <span className='text-xl'>+</span>
+            /> */}
+            <Button className='w-full' onClick={handleAddCategory}>
+              Add Category
             </Button>
           </div>
         </div>
@@ -440,10 +438,11 @@ export function ShopEdit({}: ShopEditProps) {
                     )}
                   </div>
                   <Input
-                    placeholder='Name the category eg: Food'
+                    placeholder='eg: Food'
                     className='flex-1'
                     value={category.name}
                     onChange={(e) => handleUpdateCategoryName(category.id, e.target.value)}
+                    autoFocus
                   />
                   <div className='flex items-center gap-1'>
                     <Button variant='outline' size='icon' onClick={() => toggleCategoryExpansion(category.id)}>
@@ -584,6 +583,7 @@ export function ShopEdit({}: ShopEditProps) {
                   value={editingProduct?.name || ''}
                   onChange={(e) => setEditingProduct((prev) => (prev ? { ...prev, name: e.target.value } : null))}
                   placeholder='Product name'
+                  autoFocus
                 />
               </div>
 
