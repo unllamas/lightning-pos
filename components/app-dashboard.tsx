@@ -29,12 +29,12 @@ export function AppDashboard() {
       status: 'ACTIVE',
     },
     {
-      title: 'Cash register',
+      title: 'Paydesk',
       description: 'Calculator for quick collections',
       icon: Calculator,
-      href: '#',
+      href: '/paydesk',
       color: 'bg-blue-500',
-      status: 'DISABLED',
+      status: 'ACTIVE',
     },
   ];
 
