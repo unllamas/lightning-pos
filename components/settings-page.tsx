@@ -1,8 +1,8 @@
 'use client';
 
 import type React from 'react';
-
 import { useState, useCallback } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, DollarSign, CheckCircle } from 'lucide-react';
 
@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { CTAButton } from '@/components/ui/button-cta';
+
 import { AvailableCurrencies } from '@/types/config';
 
 export function SettingsPage() {
@@ -129,6 +131,15 @@ export function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <div className='flex flex-col gap-2'>
+          <h6 className='text-xs text-muted-foreground'>Advertising</h6>
+          <Link href='https://geyser.fund/project/lightningpos' target='_blank' className='w-full'>
+            <CTAButton variant='solid' size='md'>
+              Support ⚡️ POS from $0.2
+            </CTAButton>
+          </Link>
+        </div>
 
         {/* Clear Local Storage */}
         {/* <Card className='border-red-200'>
