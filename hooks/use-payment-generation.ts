@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import QRCode from 'qrcode';
+
 import { useSettings } from '@/hooks/use-settings';
 import { useLightningAuth } from '@/hooks/use-lightning-auth';
 import { convertToSatoshis, generateLightningInvoice, extractPaymentHash } from '@/lib/lightning-utils';
-import QRCode from 'qrcode';
 
 export type Product = {
   id: string;
@@ -12,7 +13,7 @@ export type Product = {
   price: number;
 };
 
-export function usePaymentGeneration() {
+export function usePaymentGeneration(lnaddress: string) {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string | null>(null);
   const [lightningInvoice, setLightningInvoice] = useState<string | null>(null);
   const [verifyUrl, setVerifyUrl] = useState<string | null>(null);
@@ -87,7 +88,11 @@ export function usePaymentGeneration() {
 
         // 3. Generar factura Lightning usando LUD-16/LUD-21
         console.log(`Generating Lightning invoice for ${satsAmount} sats...`);
-        const invoiceData = await generateLightningInvoice(lightningAddress, satsAmount, comment);
+        const invoiceData = await generateLightningInvoice(
+          lnaddress ? lnaddress : lightningAddress,
+          satsAmount,
+          comment,
+        );
 
         setLightningInvoice(invoiceData.pr);
 
@@ -112,7 +117,7 @@ export function usePaymentGeneration() {
         setIsGenerating(false);
       }
     },
-    [isAuthenticated, lightningAddress, settings.currency, getCurrencySymbol],
+    [isAuthenticated, lnaddress, lightningAddress, settings.currency, getCurrencySymbol],
   );
 
   const resetPayment = useCallback(() => {

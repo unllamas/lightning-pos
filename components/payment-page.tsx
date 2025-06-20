@@ -19,7 +19,7 @@ export function PaymentPage() {
   const searchParams = useSearchParams();
 
   const amount = searchParams.get('amount');
-  // const lnaddress = searchParams.get('lnaddress');
+  const lnaddress = searchParams.get('lnaddress');
 
   const { settings } = useSettings();
   const { convertCurrency } = useCurrencyConverter();
@@ -27,25 +27,19 @@ export function PaymentPage() {
   const { print } = usePrint();
 
   const [paymentStatus, setPaymentStatus] = useState<'selecting' | 'pending' | 'success'>('selecting');
-  // const [tipOption, setTipOption] = useState<'with-tip' | 'without-tip' | null>(null);
   const [finalAmount, setFinalAmount] = useState(0);
   const [printOrder, setPrintOrder] = useState<PrintOrder | null>(null);
 
-  const operatorHasLightningAddress = settings.operatorLightningAddress?.trim() !== '';
-
   // Auto-redirect si no hay Lightning Address del operador
   useEffect(() => {
-    if (!isLoading && !operatorHasLightningAddress && Number(amount) > 0) {
+    if (!isLoading && Number(amount) > 0) {
       setFinalAmount(Number(amount));
       setPaymentStatus('pending');
     }
-  }, [isLoading, operatorHasLightningAddress]);
+  }, [isLoading]);
 
   const handleCompletePayment = () => {
     if (finalAmount > 0) {
-      // Calcular tip amount si aplica
-      // const tipAmount = tipOption === 'with-tip' ? subtotal * 0.1 : undefined;
-
       // Cambiar estado
       setPaymentStatus('success');
 
@@ -91,6 +85,7 @@ export function PaymentPage() {
       <div className='w-full h-full'>
         {paymentStatus === 'pending' && (
           <PaymentView
+            lnaddress={lnaddress as string}
             amount={Number(amount)}
             cart={cart}
             products={products}

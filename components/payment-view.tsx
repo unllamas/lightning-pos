@@ -16,6 +16,7 @@ import { AvailableCurrencies } from '@/types/config';
 
 // Primero, añadir los props necesarios
 interface PaymentViewProps {
+  lnaddress: string;
   amount: number;
   cart?: { id: string; quantity: number }[];
   products?: Product[];
@@ -23,8 +24,9 @@ interface PaymentViewProps {
 }
 
 // Luego, actualizar la desestructuración de props
-export function PaymentView({ amount, cart = [], products = [], onCompletePayment }: PaymentViewProps) {
+export function PaymentView({ lnaddress, amount, cart = [], products = [], onCompletePayment }: PaymentViewProps) {
   const { settings } = useSettings();
+
   const { convertCurrency } = useCurrencyConverter();
   const {
     qrCodeDataUrl,
@@ -36,7 +38,7 @@ export function PaymentView({ amount, cart = [], products = [], onCompletePaymen
     error,
     generatePayment,
     resetPayment,
-  } = usePaymentGeneration();
+  } = usePaymentGeneration(lnaddress);
 
   // Hook para verificar el pago automáticamente
   const { isVerifying, verificationError } = usePaymentVerification(
