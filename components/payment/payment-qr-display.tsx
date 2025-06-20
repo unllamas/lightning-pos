@@ -62,7 +62,7 @@ export function PaymentQRDisplay({
         </div>
 
         {amountInSats && (
-          <div className='text-lg text-gray-600 mb-4'>≈ {new Intl.NumberFormat().format(amountInSats)} SAT</div>
+          <div className='text-lg text-gray-600 mb-4'>~ {new Intl.NumberFormat().format(amountInSats)} SAT</div>
         )}
 
         {process.env.NODE_ENV === 'development' && lightningInvoice && (
