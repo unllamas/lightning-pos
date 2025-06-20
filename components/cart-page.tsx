@@ -47,7 +47,7 @@ export function CartPage() {
   }
 
   return (
-    <div className='w-full min-h-screen bg-gray-100'>
+    <div className='w-full h-full'>
       <CartView
         cart={cart}
         products={products}

@@ -87,7 +87,7 @@ export function PaymentPage() {
 
   return (
     <Suspense>
-      <div className='w-full bg-gray-100 min-h-screen'>
+      <div className='w-full h-full'>
         {paymentStatus === 'pending' && (
           <PaymentView
             amount={Number(amount)}

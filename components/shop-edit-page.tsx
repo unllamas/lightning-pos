@@ -27,7 +27,7 @@ export function ShopEditPage() {
   }
 
   return (
-    <div className='w-full min-h-screen bg-gray-100'>
+    <div className='w-full h-full'>
       <ShopEdit />
     </div>
   );

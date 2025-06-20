@@ -39,7 +39,7 @@ export function AppDashboard() {
   ];
 
   return (
-    <div className='w-full mx-auto min-h-screen bg-gray-100 flex flex-col'>
+    <div className='flex flex-col w-full h-full mx-auto'>
       {/* Header */}
       <header className='w-full py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>

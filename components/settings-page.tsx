@@ -78,7 +78,7 @@ export function SettingsPage() {
   }
 
   return (
-    <div className='w-full min-h-screen bg-gray-100 flex flex-col'>
+    <div className='w-full h-full flex flex-col'>
       {/* Header */}
       <header className='py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center w-full max-w-md mx-auto px-4'>
