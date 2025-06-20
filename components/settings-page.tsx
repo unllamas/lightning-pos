@@ -3,7 +3,6 @@
 import type React from 'react';
 
 import { useState, useCallback } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, DollarSign, CheckCircle } from 'lucide-react';
 
@@ -13,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { AvailableCurrencies } from '@/types/config';
 
 export function SettingsPage() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export function SettingsPage() {
   const currencies = [
     { value: 'ARS', label: 'ARS (Argentine Peso)', symbol: '$' },
     { value: 'USD', label: 'USD (US Dollar)', symbol: '$' },
-    { value: 'EUR', label: 'EUR (Euro)', symbol: '€' },
+    // { value: 'EUR', label: 'EUR (Euro)', symbol: '€' },
   ];
 
   const showFeedback = (message?: string) => {
@@ -31,7 +31,7 @@ export function SettingsPage() {
     setTimeout(() => setShowSaveSuccess(false), 2000);
   };
 
-  const handleCurrencyChange = (newCurrency: string) => {
+  const handleCurrencyChange = (newCurrency: AvailableCurrencies) => {
     updateCurrency(newCurrency);
     showFeedback();
   };
@@ -82,7 +82,7 @@ export function SettingsPage() {
       {/* Header */}
       <header className='py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center w-full max-w-md mx-auto px-4'>
-          <Button variant='default' size='icon' onClick={() => router.push('/app')} className='mr-2'>
+          <Button variant='default' size='icon' onClick={() => router.back()} className='mr-2'>
             <ChevronLeft className='h-4 w-4' />
             <span className='sr-only'>Back</span>
           </Button>
@@ -160,8 +160,8 @@ export function SettingsPage() {
       {/* Back Button */}
       <div className='py-4 bg-white border-t'>
         <div className='w-full max-w-md mx-auto px-4'>
-          <Button variant='outline' className='w-full' asChild>
-            <Link href='/app'>Back to Dashboard</Link>
+          <Button variant='outline' className='w-full' onClick={() => router.back()}>
+            Go to back
           </Button>
         </div>
       </div>
