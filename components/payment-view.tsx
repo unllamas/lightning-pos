@@ -19,12 +19,11 @@ interface PaymentViewProps {
   amount: number;
   cart?: { id: string; quantity: number }[];
   products?: Product[];
-  onCancel: () => void;
   onCompletePayment: () => void;
 }
 
 // Luego, actualizar la desestructuración de props
-export function PaymentView({ amount, cart = [], products = [], onCancel, onCompletePayment }: PaymentViewProps) {
+export function PaymentView({ amount, cart = [], products = [], onCompletePayment }: PaymentViewProps) {
   const { settings } = useSettings();
   const { convertCurrency } = useCurrencyConverter();
   const {
@@ -58,7 +57,7 @@ export function PaymentView({ amount, cart = [], products = [], onCancel, onComp
   };
 
   if (error) {
-    return <PaymentError error={error} amount={amount} onRetry={retryGeneration} onCancel={onCancel} />;
+    return <PaymentError error={error} amount={amount} onRetry={retryGeneration} />;
   }
 
   return (
@@ -71,7 +70,7 @@ export function PaymentView({ amount, cart = [], products = [], onCancel, onComp
         isGenerating={isGenerating}
       />
 
-      <PaymentActions lightningInvoice={lightningInvoice} onCancel={onCancel} />
+      <PaymentActions lightningInvoice={lightningInvoice} />
     </div>
   );
 }
