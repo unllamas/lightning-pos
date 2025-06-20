@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
 
 import { useSettings } from '@/hooks/use-settings';
@@ -11,10 +12,11 @@ interface PaymentErrorProps {
   error: string;
   amount: number;
   onRetry: () => void;
-  onCancel: () => void;
 }
 
 export function PaymentError({ error, amount }: PaymentErrorProps) {
+  const router = useRouter();
+
   const { settings, getCurrencySymbol } = useSettings();
 
   return (
@@ -42,8 +44,8 @@ export function PaymentError({ error, amount }: PaymentErrorProps) {
           <Button className='w-full' asChild>
             <Link href='/'>Setup Now</Link>
           </Button>
-          <Button className='w-full' variant='outline' asChild>
-            <Link href='/cart'>Cancel</Link>
+          <Button className='w-full' variant='outline' onClick={() => router.back()}>
+            Cancel
           </Button>
         </div>
       </div>
