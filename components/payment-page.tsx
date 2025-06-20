@@ -19,6 +19,7 @@ export function PaymentPage() {
   const searchParams = useSearchParams();
 
   const amount = searchParams.get('amount');
+  // const lnaddress = searchParams.get('lnaddress');
 
   const { settings } = useSettings();
   const { convertCurrency } = useCurrencyConverter();
