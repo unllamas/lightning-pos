@@ -18,8 +18,8 @@ export function Keyboard({ numpadData, disabled = false }: KeyboardProps) {
   const handleDeleteOnMouseUp = () => clearTimeout(timeOut?.reset);
 
   return (
-    <div className='flex flex-col gap-4 w-full'>
-      <div className='flex gap-4 w-full'>
+    <div className='flex flex-col gap-2 w-full'>
+      <div className='flex gap-2 w-full'>
         <Button className='w-full' variant='outline' size='lg' onClick={() => handleNumpad('1')} disabled={disabled}>
           1
         </Button>
@@ -30,7 +30,7 @@ export function Keyboard({ numpadData, disabled = false }: KeyboardProps) {
           3
         </Button>
       </div>
-      <div className='flex gap-4'>
+      <div className='flex gap-2'>
         <Button className='w-full' variant='outline' size='lg' onClick={() => handleNumpad('4')} disabled={disabled}>
           4
         </Button>
@@ -41,7 +41,7 @@ export function Keyboard({ numpadData, disabled = false }: KeyboardProps) {
           6
         </Button>
       </div>
-      <div className='flex gap-4'>
+      <div className='flex gap-2'>
         <Button className='w-full' variant='outline' size='lg' onClick={() => handleNumpad('7')} disabled={disabled}>
           7
         </Button>
@@ -52,7 +52,7 @@ export function Keyboard({ numpadData, disabled = false }: KeyboardProps) {
           9
         </Button>
       </div>
-      <div className='flex gap-4'>
+      <div className='flex gap-2'>
         <Button className='w-full' variant='outline' size='lg' onClick={() => handleNumpad('00')} disabled={disabled}>
           00
         </Button>
