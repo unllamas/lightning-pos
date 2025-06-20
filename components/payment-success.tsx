@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { Printer } from 'lucide-react';
 
 import { useSettings } from '@/hooks/use-settings';
@@ -17,13 +18,14 @@ import animationCheck from './payment/animation-check.json';
 interface PaymentSuccessProps {
   amount: number;
   printOrder?: PrintOrder | null;
-  onBackToShop: () => void;
 }
 
-export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSuccessProps) {
-  const [isPrinting, setIsPrinting] = useState(false);
+export function PaymentSuccess({ amount, printOrder }: PaymentSuccessProps) {
+  const router = useRouter();
   const { settings, getCurrencySymbol } = useSettings();
   const { print, isAvailable } = usePrint();
+
+  const [isPrinting, setIsPrinting] = useState(false);
 
   const handlePrint = useCallback(() => {
     if (!isAvailable || isPrinting) {
@@ -54,12 +56,12 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
         </div>
 
         {/* Información adicional si hay orden de impresión */}
-        {isAvailable && printOrder && (
+        {/* {isAvailable && printOrder && (
           <div className='text-center text-sm text-gray-500 mt-4'>
             <p>Order ID: {printOrder?.orderId}</p>
             <p>{new Date(printOrder?.timestamp!).toLocaleString()}</p>
           </div>
-        )}
+        )} */}
       </div>
 
       <div className='w-full py-4 bg-white border-t'>
@@ -89,8 +91,8 @@ export function PaymentSuccess({ amount, printOrder, onBackToShop }: PaymentSucc
             </Button>
           )}
 
-          <Button className='w-full' variant={isAvailable ? 'outline' : 'default'} onClick={onBackToShop}>
-            Go to Shop
+          <Button className='w-full' variant={isAvailable ? 'outline' : 'default'} onClick={() => router.back()}>
+            Go to back
           </Button>
         </div>
       </div>
