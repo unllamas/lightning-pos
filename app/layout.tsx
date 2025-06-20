@@ -80,7 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       `}
         </Script>
       </head>
-      <body className={`${spaceMono.className} select-none`}>
+      <body className={`flex flex-col h-[100dvh] bg-gray-100 ${spaceMono.className} select-none`}>
         <InjectedNFCProvider>{children}</InjectedNFCProvider>
         <Toaster />
         {/* <script

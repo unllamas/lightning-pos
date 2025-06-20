@@ -63,8 +63,8 @@ export function LoginView() {
   // Mostrar pantalla de éxito
   if (showSuccess && lightningAddress) {
     return (
-      <div className='w-full max-w-md mx-auto bg-white min-h-screen flex flex-col items-center justify-center p-8'>
-        <div className='text-center mb-8'>
+      <div className='w-full bg-white min-h-screen flex flex-col items-center justify-center p-8'>
+        <div className='max-w-md mx-auto text-center mb-8'>
           <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
             <CheckCircle className='h-8 w-8 text-green-600' />
           </div>
@@ -76,7 +76,7 @@ export function LoginView() {
   }
 
   return (
-    <div className='w-full bg-background min-h-screen flex flex-col items-center justify-center py-4'>
+    <div className='w-full h-full flex flex-col items-center justify-center py-4'>
       <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
         <div className='flex justify-center mb-4'>
           <img

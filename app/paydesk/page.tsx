@@ -17,7 +17,7 @@ export default function PaydeskPage() {
   const numpadData = useNumpad(settings?.currency);
 
   return (
-    <div className='w-full mx-auto min-h-screen flex flex-col bg-gray-100'>
+    <div className='flex-1 flex flex-col w-full mx-auto h-full'>
       <header className='py-4 flex bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
           <div className='flex items-center'>
@@ -37,7 +37,7 @@ export default function PaydeskPage() {
         </div>
       </header>
 
-      <div className='flex-1 flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-12'>
+      <div className='flex-1 flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-4'>
         <div className='flex-1 flex flex-col justify-center items-center gap-4'>
           <div className='text-3xl mb-2'>
             {getCurrencySymbol()}
