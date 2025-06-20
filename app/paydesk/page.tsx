@@ -6,15 +6,21 @@ import { ChevronLeft, Settings } from 'lucide-react';
 
 import { useNumpad } from '@/hooks/use-numpad';
 import { useSettings } from '@/hooks/use-settings';
+import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 
 import { Button } from '@/components/ui/button';
 import { Keyboard } from '@/components/keyboard';
+import { AvailableCurrencies } from '@/types/config';
 
 export default function PaydeskPage() {
   const router = useRouter();
 
   const { settings, getCurrencySymbol } = useSettings();
+  const { convertCurrency } = useCurrencyConverter();
   const numpadData = useNumpad(settings?.currency);
+
+  const value = Number(numpadData.intAmount[numpadData.usedCurrency] || 0);
+  const amountInSats = convertCurrency(value, settings?.currency as AvailableCurrencies, 'SAT');
 
   return (
     <div className='flex-1 flex flex-col w-full mx-auto h-full'>
@@ -38,11 +44,12 @@ export default function PaydeskPage() {
       </header>
 
       <div className='flex-1 flex flex-col gap-4'>
-        <div className='flex-1 flex flex-col justify-center items-center gap-4 bg-white border-b rounded-b-2xl'>
-          <div className='text-3xl mb-2'>
+        <div className='flex-1 flex flex-col justify-center items-center gap-2 bg-white border-b rounded-b-2xl'>
+          <div className='text-3xl'>
             {getCurrencySymbol()}
             <b>{new Intl.NumberFormat().format(numpadData.intAmount[numpadData.usedCurrency])}</b> {settings.currency}
           </div>
+          <div className='text-lg text-gray-600'>~ {new Intl.NumberFormat().format(amountInSats)} SAT</div>
         </div>
         <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-4'>
           <Button
