@@ -131,7 +131,7 @@ export function SettingsPage() {
         </Card>
 
         {/* Clear Local Storage */}
-        <Card className='border-red-200'>
+        {/* <Card className='border-red-200'>
           <CardHeader className='pb-3'>
             <CardTitle className='text-lg text-red-600'>Clear Storage</CardTitle>
           </CardHeader>
@@ -144,7 +144,7 @@ export function SettingsPage() {
               Clear All Data
             </Button>
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Additional Settings Placeholder */}
         <Card className='opacity-50'>
