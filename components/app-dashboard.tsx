@@ -30,7 +30,7 @@ export function AppDashboard() {
     },
     {
       title: 'Paydesk',
-      description: 'Calculator for quick collections',
+      description: 'Lightning Payments',
       icon: Calculator,
       href: '/paydesk',
       color: 'bg-blue-500',
