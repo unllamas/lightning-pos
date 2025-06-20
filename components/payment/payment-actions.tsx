@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Check, Nfc } from 'lucide-react';
 
@@ -15,11 +16,11 @@ import { useToast } from '@/hooks/use-toast';
 
 interface PaymentActionsProps {
   lightningInvoice: string | null;
-  onCancel: () => void;
 }
 
-export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsProps) {
+export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
   const { toast } = useToast();
+  const router = useRouter();
 
   const { isAvailable, status: scanStatus, scan, stop } = useCard();
 
@@ -127,7 +128,7 @@ export function PaymentActions({ lightningInvoice, onCancel }: PaymentActionsPro
           </Button>
         )}
 
-        <Button variant='outline' className='w-full' onClick={onCancel}>
+        <Button variant='outline' className='w-full' onClick={() => router.back()}>
           Cancel
         </Button>
       </div>
