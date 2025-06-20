@@ -1,15 +1,24 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { usePOSData } from '@/hooks/use-pos-data';
+import { useSettings } from '@/hooks/use-settings';
 
 import { CartView } from '@/components/cart-view';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export function CartPage() {
   const router = useRouter();
+  const { settings } = useSettings();
   const { products, cart, isLoading, error, updateCartQuantity } = usePOSData();
+
+  useEffect(() => {
+    if (!isLoading && cart?.length === 0) {
+      router.push('/shop');
+    }
+  }, [cart]);
 
   const totalAmount = cart.reduce((sum, item) => {
     const product = products.find((p) => p.id === item.id);
@@ -17,8 +26,7 @@ export function CartPage() {
   }, 0);
 
   const handleCheckout = () => {
-    const orderId = `order-${Date.now()}`;
-    router.push(`/payment/${orderId}`);
+    router.push(`/payment?currency=${settings?.currency}&amount=${totalAmount}`);
   };
 
   if (isLoading) {
