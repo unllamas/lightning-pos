@@ -37,26 +37,29 @@ export default function PaydeskPage() {
         </div>
       </header>
 
-      <div className='flex-1 flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-4'>
-        <div className='flex-1 flex flex-col justify-center items-center gap-4'>
+      <div className='flex-1 flex flex-col gap-4'>
+        <div className='flex-1 flex flex-col justify-center items-center gap-4 bg-white rounded-b-2xl'>
           <div className='text-3xl mb-2'>
             {getCurrencySymbol()}
             <b>{new Intl.NumberFormat().format(numpadData.intAmount[numpadData.usedCurrency])}</b> {settings.currency}
           </div>
         </div>
-        <Button
-          size='lg'
-          onClick={() => {
-            const orderId = `order-${Date.now()}`;
-            router.push(
-              `/payment?currency=${settings.currency}&&amount=${numpadData.intAmount[numpadData.usedCurrency]}`,
-            );
-          }}
-          disabled={numpadData.intAmount[numpadData.usedCurrency] === 0}
-        >
-          Confirm
-        </Button>
-        <Keyboard numpadData={numpadData} />
+        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-4'>
+          <Button
+            className='w-full'
+            size='lg'
+            onClick={() => {
+              const orderId = `order-${Date.now()}`;
+              router.push(
+                `/payment?currency=${settings.currency}&&amount=${numpadData.intAmount[numpadData.usedCurrency]}`,
+              );
+            }}
+            disabled={numpadData.intAmount[numpadData.usedCurrency] === 0}
+          >
+            Confirm
+          </Button>
+          <Keyboard numpadData={numpadData} />
+        </div>
       </div>
     </div>
   );
