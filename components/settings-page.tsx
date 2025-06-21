@@ -159,14 +159,14 @@ export function SettingsPage() {
           </div>
 
           {/* Additional Settings Placeholder */}
-          <Card className='opacity-50'>
+          {/* <Card className='opacity-50'>
             <CardHeader className='pb-3'>
               <CardTitle className='text-lg text-gray-500'>Comming Soon</CardTitle>
             </CardHeader>
             <CardContent>
               <p className='text-sm text-gray-400'>Tips, languages, themes and more.</p>
             </CardContent>
-          </Card>
+          </Card> */}
 
           <div className='flex flex-col gap-2'>
             <h6 className='text-xs text-muted-foreground'>Advertising</h6>
