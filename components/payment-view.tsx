@@ -63,12 +63,11 @@ export function PaymentView({ lnaddress, amount, cart = [], products = [], onCom
   }
 
   return (
-    <div className='flex flex-col items-center justify-between w-full h-screen mx-auto relative'>
+    <div className='flex flex-col items-center justify-between w-full h-screen mx-auto relative bg-[#0F0F0F]'>
       <PaymentQRDisplay
         qrCodeDataUrl={qrCodeDataUrl}
         amount={amount}
         amountInSats={convertCurrency(amount, settings?.currency as AvailableCurrencies, 'SAT')}
-        lightningInvoice={lightningInvoice}
         isGenerating={isGenerating}
       />
 
