@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import { Check, Nfc } from 'lucide-react';
+import { Check, CheckCircle, Copy, Nfc } from 'lucide-react';
 
 import { useCard } from '@/hooks/use-card';
 
@@ -27,6 +27,7 @@ export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
   // Local states
   const [cardStatus, setCardStatus] = useState<LNURLWStatus>(LNURLWStatus.IDLE);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const processRegularPayment = useCallback(
     async (cardUrl: string, response: LNURLResponse) => {
@@ -98,11 +99,24 @@ export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
     };
   }, []);
 
+  const copyInvoice = async () => {
+    if (lightningInvoice) {
+      try {
+        await navigator.clipboard.writeText(lightningInvoice);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy invoice:', err);
+      }
+    }
+  };
+
   return (
-    <div className='relative z-0 w-full py-4 bg-white border-t'>
-      <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
+    <div className='relative z-0 w-full'>
+      <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4 pt-4 pb-8'>
         {isAvailable && (
           <Button
+            size='lg'
             onClick={() => {
               cardStatus === LNURLWStatus.IDLE && startRead();
             }}
@@ -128,7 +142,23 @@ export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
           </Button>
         )}
 
-        <Button variant='outline' className='w-full' onClick={() => router.back()}>
+        {process.env.NODE_ENV === 'development' && lightningInvoice && (
+          <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
+            {copied ? (
+              <>
+                <CheckCircle className='h-4 w-4' />
+                <span>Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className='h-4 w-4' />
+                <span>Copy</span>
+              </>
+            )}
+          </Button>
+        )}
+
+        <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
           Cancel
         </Button>
       </div>
