@@ -127,7 +127,7 @@ export function SettingsPage() {
                   </SelectContent>
                 </Select>
                 <div className='flex items-center justify-between text-xs text-gray-500'>
-                  <span>This will be the default currency displayed in the system</span>
+                  <span>Default currency in the system.</span>
                 </div>
               </div>
             </CardContent>
