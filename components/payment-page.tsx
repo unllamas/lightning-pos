@@ -82,7 +82,7 @@ export function PaymentPage() {
 
   return (
     <Suspense>
-      <div className='w-full h-full'>
+      <div className='w-full h-full bg-[#0F0F0F]'>
         {paymentStatus === 'pending' && (
           <PaymentView
             lnaddress={lnaddress as string}
