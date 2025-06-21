@@ -374,7 +374,7 @@ export function ShopEdit({}: ShopEditProps) {
         </div>
       </header>
 
-      <div className='w-full py-4 border-b'>
+      <div className='w-full py-4 bg-white border-b rounded-b-2xl'>
         {/* Add new category form */}
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='flex items-center gap-2'>
