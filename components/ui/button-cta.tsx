@@ -21,9 +21,9 @@ export const CTAButton: React.FC<CTAButtonProps> = ({
 
   const sizeClasses = {
     sm: 'px-4 py-2 text-sm',
-    md: 'px-6 py-3 text-base',
-    lg: 'px-8 py-4 text-lg',
-    xl: 'px-10 py-5 text-xl',
+    md: 'px-6 py-3 sm',
+    lg: 'px-8 py-4 sm',
+    xl: 'px-10 py-5 sm',
   };
 
   const iconSizes = {
@@ -38,8 +38,7 @@ export const CTAButton: React.FC<CTAButtonProps> = ({
     rounded-md transition-all duration-300 ease-out
     transform-gpu will-change-transform
     focus:outline-none focus:ring-4 focus:ring-purple-500/30
-    active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
-    hover:scale-105
+    disabled:opacity-50 disabled:cursor-not-allowed
     ${sizeClasses[size]}
   `;
 
@@ -54,8 +53,8 @@ export const CTAButton: React.FC<CTAButtonProps> = ({
       before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300
     `,
     solid: `
-      bg-orange-600 text-white shadow-lg shadow-orange-600/25
-      hover:bg-orange-500 hover:shadow-xl hover:shadow-orange-600/40
+      bg-orange-500 text-black shadow-xl shadow-orange-600/25 border-2 border-white/25
+      hover:bg-orange-500
     `,
     outline: `
       border-2 border-purple-500 text-purple-600 bg-transparent
