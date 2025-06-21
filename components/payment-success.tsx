@@ -72,6 +72,7 @@ export function PaymentSuccess({ amount, printOrder }: PaymentSuccessProps) {
           {isAvailable && printOrder && (
             <Button
               className='w-full flex items-center justify-center gap-2'
+              size='lg'
               onClick={() => {
                 setIsPrinting(true);
                 handlePrint();
@@ -93,12 +94,7 @@ export function PaymentSuccess({ amount, printOrder }: PaymentSuccessProps) {
             </Button>
           )}
 
-          <Button
-            className='w-full'
-            size='lg'
-            variant={isAvailable ? 'outline' : 'secondary'}
-            onClick={() => router.back()}
-          >
+          <Button className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
             Go to back
           </Button>
         </div>
