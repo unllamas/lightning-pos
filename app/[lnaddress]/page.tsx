@@ -65,7 +65,7 @@ export default function PaydeskPage() {
         </div>
       </header>
 
-      <div className='flex-1 flex flex-col gap-4'>
+      <div className='flex-1 flex flex-col'>
         <div className='flex-1 flex flex-col justify-center items-center gap-2 px-4 bg-white border-b rounded-b-2xl'>
           <div className='flex items-center gap-4 w-full max-w-md min-h-20 mx-auto mt-4 p-5 bg-gray-100 border rounded-lg'>
             {/* <div className='min-w-10 h-10 rounded-full bg-white border'></div> */}
@@ -85,7 +85,7 @@ export default function PaydeskPage() {
             <div className='text-lg text-gray-600'>~ {new Intl.NumberFormat().format(amountInSats)} SAT</div>
           </div>
         </div>
-        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-8'>
+        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 py-8'>
           <Button
             className='w-full'
             size='lg'

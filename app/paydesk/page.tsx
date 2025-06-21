@@ -43,7 +43,7 @@ export default function PaydeskPage() {
         </div>
       </header>
 
-      <div className='flex-1 flex flex-col gap-4'>
+      <div className='flex-1 flex flex-col'>
         <div className='flex-1 flex flex-col justify-center items-center gap-2 bg-white border-b rounded-b-2xl'>
           <div className='text-3xl'>
             {getCurrencySymbol()}
@@ -51,7 +51,7 @@ export default function PaydeskPage() {
           </div>
           <div className='text-lg text-gray-600'>~ {new Intl.NumberFormat().format(amountInSats)} SAT</div>
         </div>
-        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-8'>
+        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 py-8'>
           <Button
             className='w-full'
             size='lg'
