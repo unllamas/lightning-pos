@@ -45,8 +45,8 @@ export default function PaydeskPage() {
   const amountInSats = convertCurrency(value, settings?.currency as AvailableCurrencies, 'SAT');
 
   return (
-    <div className='flex-1 flex flex-col w-full mx-auto h-full'>
-      <header className='py-4 flex bg-[#0F0F0F] border-b shadow-sm'>
+    <div className='flex-1 flex flex-col w-full mx-auto h-full bg-[#0F0F0F]'>
+      <header className='py-4 flex bg-background border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
           <div className='flex items-center'>
             {/* <Button className='mr-2' variant='default' size='icon' asChild>
@@ -55,9 +55,9 @@ export default function PaydeskPage() {
                 <span className='sr-only'>Back</span>
               </Link>
             </Button> */}
-            <h1 className='text-xl font-medium text-white'>{'Pay to...'}</h1>
+            <h1 className='text-xl font-medium'>{'Pay to...'}</h1>
           </div>
-          <Button size='icon' variant='default' asChild>
+          <Button size='icon' variant='outline' asChild>
             <Link href='/settings'>
               <Settings className='h-4 w-4' />
             </Link>
@@ -85,10 +85,11 @@ export default function PaydeskPage() {
             <div className='text-lg text-gray-600'>~ {new Intl.NumberFormat().format(amountInSats)} SAT</div>
           </div>
         </div>
-        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-4'>
+        <div className='flex flex-col gap-4 w-full max-w-md mx-auto px-4 pb-8'>
           <Button
             className='w-full'
             size='lg'
+            variant='success'
             onClick={() => {
               const orderId = `order-${Date.now()}`;
               router.push(
