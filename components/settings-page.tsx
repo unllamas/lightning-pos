@@ -80,15 +80,15 @@ export function SettingsPage() {
   }
 
   return (
-    <div className='w-full h-full flex flex-col'>
+    <div className='w-full h-full flex flex-col bg-[#0F0F0F]'>
       {/* Header */}
-      <header className='py-4 bg-[#0F0F0F] border-b shadow-sm'>
+      <header className='py-4 border-b shadow-sm bg-background'>
         <div className='flex items-center w-full max-w-md mx-auto px-4'>
-          <Button variant='default' size='icon' onClick={() => router.back()} className='mr-2'>
+          <Button variant='outline' size='icon' onClick={() => router.back()} className='mr-2'>
             <ChevronLeft className='h-4 w-4' />
             <span className='sr-only'>Back</span>
           </Button>
-          <h1 className='text-xl font-medium text-white'>Settings</h1>
+          <h1 className='text-xl font-medium'>Settings</h1>
           {showSaveSuccess && (
             <div className='ml-auto flex items-center text-green-500 animate-in fade-in slide-in-from-top-4 duration-300'>
               <CheckCircle className='h-4 w-4 mr-1' />
@@ -99,50 +99,42 @@ export function SettingsPage() {
       </header>
 
       {/* Main Content */}
-      <div className='flex-1 w-full max-w-md mx-auto p-4 space-y-4'>
-        {/* Currency Settings */}
-        <Card>
-          <CardHeader className='pb-3'>
-            <CardTitle className='flex items-center justify-between gap-2 text-lg'>
-              Currency
-              <DollarSign className='h-4 w-4 text-gray-500' />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className='space-y-2'>
-              <Select value={settings.currency} onValueChange={handleCurrencyChange}>
-                <SelectTrigger className='w-full'>
-                  <SelectValue placeholder='Select currency' />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((curr) => (
-                    <SelectItem key={curr.value} value={curr.value}>
-                      <div className='flex items-center'>
-                        <span className='mr-2'>{curr.symbol}</span>
-                        {curr.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <div className='flex items-center justify-between text-xs text-gray-500'>
-                <span>This will be the default currency displayed in the system</span>
+      <div className='flex-1 bg-background border-b rounded-b-2xl'>
+        <div className='w-full max-w-md mx-auto p-4 space-y-4'>
+          {/* Currency Settings */}
+          <Card>
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center justify-between gap-2 text-lg'>
+                Currency
+                <DollarSign className='h-4 w-4 text-gray-500' />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-2'>
+                <Select value={settings.currency} onValueChange={handleCurrencyChange}>
+                  <SelectTrigger className='w-full'>
+                    <SelectValue placeholder='Select currency' />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {currencies.map((curr) => (
+                      <SelectItem key={curr.value} value={curr.value}>
+                        <div className='flex items-center'>
+                          <span className='mr-2'>{curr.symbol}</span>
+                          {curr.label}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <div className='flex items-center justify-between text-xs text-gray-500'>
+                  <span>This will be the default currency displayed in the system</span>
+                </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <div className='flex flex-col gap-2'>
-          <h6 className='text-xs text-muted-foreground'>Advertising</h6>
-          <Link href='https://geyser.fund/project/lightningpos' target='_blank' className='w-full'>
-            <CTAButton variant='solid' size='md'>
-              Support ⚡️ POS from $0.2
-            </CTAButton>
-          </Link>
-        </div>
-
-        {/* Clear Local Storage */}
-        {/* <Card className='border-red-200'>
+          {/* Clear Local Storage */}
+          {/* <Card className='border-red-200'>
           <CardHeader className='pb-3'>
             <CardTitle className='text-lg text-red-600'>Clear Storage</CardTitle>
           </CardHeader>
@@ -157,21 +149,31 @@ export function SettingsPage() {
           </CardContent>
         </Card> */}
 
-        {/* Additional Settings Placeholder */}
-        <Card className='opacity-50'>
-          <CardHeader className='pb-3'>
-            <CardTitle className='text-lg text-gray-500'>Comming Soon</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className='text-sm text-gray-400'>Tips, languages, themes and more.</p>
-          </CardContent>
-        </Card>
+          {/* Additional Settings Placeholder */}
+          <Card className='opacity-50'>
+            <CardHeader className='pb-3'>
+              <CardTitle className='text-lg text-gray-500'>Comming Soon</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-sm text-gray-400'>Tips, languages, themes and more.</p>
+            </CardContent>
+          </Card>
+
+          <div className='flex flex-col gap-2'>
+            <h6 className='text-xs text-muted-foreground'>Advertising</h6>
+            <Link href='https://geyser.fund/project/lightningpos' target='_blank' className='w-full'>
+              <CTAButton variant='solid' size='md'>
+                Support ⚡️ POS from $0.2
+              </CTAButton>
+            </Link>
+          </div>
+        </div>
       </div>
 
       {/* Back Button */}
-      <div className='py-4 bg-white border-t'>
+      <div className='py-8'>
         <div className='w-full max-w-md mx-auto px-4'>
-          <Button variant='outline' className='w-full' onClick={() => router.back()}>
+          <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
             Go to back
           </Button>
         </div>
