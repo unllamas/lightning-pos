@@ -4,7 +4,7 @@ import type React from 'react';
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, DollarSign, CheckCircle } from 'lucide-react';
+import { ChevronLeft, DollarSign, CheckCircle, ArrowUpRight } from 'lucide-react';
 
 import { useSettings } from '@/hooks/use-settings';
 
@@ -148,6 +148,15 @@ export function SettingsPage() {
             </Button>
           </CardContent>
         </Card> */}
+
+          <div className='flex flex-col gap-2'>
+            <h6 className='text-xs text-muted-foreground'>Collaborate with us</h6>
+            <Link href='https://github.com/unllamas/lightning-pos/issues/new/choose' target='_blank' className='w-full'>
+              <Button size='lg' variant='outline' className='w-full'>
+                Report a bug or feature <ArrowUpRight className='size-4' />
+              </Button>
+            </Link>
+          </div>
 
           {/* Additional Settings Placeholder */}
           <Card className='opacity-50'>
