@@ -90,7 +90,7 @@ export function SettingsPage() {
           </Button>
           <h1 className='text-xl font-medium'>Settings</h1>
           {showSaveSuccess && (
-            <div className='ml-auto flex items-center text-green-500 animate-in fade-in slide-in-from-top-4 duration-300'>
+            <div className='ml-auto flex items-center text-green-700 animate-in fade-in slide-in-from-top-4 duration-300'>
               <CheckCircle className='h-4 w-4 mr-1' />
               <span className='text-sm'>Saved</span>
             </div>
@@ -99,8 +99,8 @@ export function SettingsPage() {
       </header>
 
       {/* Main Content */}
-      <div className='flex-1 bg-background border-b rounded-b-2xl'>
-        <div className='w-full max-w-md mx-auto p-4 space-y-4'>
+      <div className='overflow-y-scroll flex-1 py-4 bg-background border-b rounded-b-2xl'>
+        <div className='w-full max-w-md mx-auto px-4 space-y-4'>
           {/* Currency Settings */}
           <Card>
             <CardHeader className='pb-3'>
@@ -135,19 +135,19 @@ export function SettingsPage() {
 
           {/* Clear Local Storage */}
           {/* <Card className='border-red-200'>
-          <CardHeader className='pb-3'>
-            <CardTitle className='text-lg text-red-600'>Clear Storage</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className='text-sm text-gray-600 mb-4'>
-              This will clear all stored data including your Settings, Products, Categories, and Cart. This action
-              cannot be undone.
-            </p>
-            <Button variant='destructive' className='w-full' onClick={clearAllLocalData}>
-              Clear All Data
-            </Button>
-          </CardContent>
-        </Card> */}
+            <CardHeader className='pb-3'>
+              <CardTitle className='text-lg text-red-600'>Clear Storage</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className='text-sm text-gray-600 mb-4'>
+                This will clear all stored data including your Settings, Products, Categories, and Cart. This action
+                cannot be undone.
+              </p>
+              <Button variant='destructive' className='w-full' onClick={clearAllLocalData}>
+                Clear All Data
+              </Button>
+            </CardContent>
+          </Card> */}
 
           <div className='flex flex-col gap-2'>
             <h6 className='text-xs text-muted-foreground'>Collaborate with us</h6>
@@ -180,7 +180,7 @@ export function SettingsPage() {
       </div>
 
       {/* Back Button */}
-      <div className='py-8'>
+      <div className='pt-4 pb-8'>
         <div className='w-full max-w-md mx-auto px-4'>
           <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
             Go to back
