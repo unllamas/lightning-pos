@@ -2,7 +2,7 @@ import type { Config } from 'tailwindcss';
 import { fontFamily } from 'tailwindcss/defaultTheme';
 
 const config = {
-  darkMode: ['class'],
+  darkMode: 'selector',
   content: ['./components/**/*.{ts,tsx}', './app/**/*.{ts,tsx}', '*.{js,ts,jsx,tsx,mdx}'],
   prefix: '',
   theme: {
