@@ -4,12 +4,9 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { useSettings } from '@/hooks/use-settings';
 import { useLightningAuth } from '@/hooks/use-lightning-auth';
-import {
-  convertToSatoshis,
-  generateLightningInvoice,
-  extractPaymentHash,
-  verifyLightningPayment,
-} from '@/lib/lightning-utils';
+import { extractPaymentHash } from '@/lib/lightning-utils';
+
+import { convertToSatoshis, generateLightningInvoice, verifyLightningPayment } from '@/actions/lightning';
 
 interface UsePayment {
   lnaddress: string;
