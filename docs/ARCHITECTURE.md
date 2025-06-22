@@ -243,7 +243,6 @@ App (layout.tsx)
 │   └── CartView
 ├── PaymentPage (/payment/[orderId])
 │   ├── PaymentView
-│   │   ├── PaymentQRDisplay
 │   │   └── PaymentActions
 │   └── PaymentSuccess
 └── SettingsPage (/settings)
@@ -351,24 +350,6 @@ const generateLightningInvoice = async (
   const invoice = await callLNURLCallback(lnurlInfo, amountSats, comment)
   
   return invoice
-}
-```
-
-#### 3. **Verificación de Pagos (LUD-21)**
-```typescript
-// hooks/use-payment-verification.ts
-const usePaymentVerification = (verifyUrl, paymentHash, onConfirmed) => {
-  useEffect(() => {
-    const checkPayment = async () => {
-      const result = await verifyLightningPayment(verifyUrl, paymentHash)
-      if (result.settled) {
-        onConfirmed()
-      }
-    }
-    
-    const interval = setInterval(checkPayment, 3000)
-    return () => clearInterval(interval)
-  }, [verifyUrl, paymentHash])
 }
 ```
 
@@ -566,7 +547,6 @@ const PaymentView = ({ children }) => (
   <div className="payment-container">{children}</div>
 )
 
-PaymentView.QRDisplay = PaymentQRDisplay
 PaymentView.Actions = PaymentActions
 
 // Uso:
