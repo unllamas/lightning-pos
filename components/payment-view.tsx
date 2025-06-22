@@ -1,77 +1,60 @@
 'use client';
 
-import { useEffect } from 'react';
+import ReactQRCode from 'react-qr-code';
 
 import { useSettings } from '@/hooks/use-settings';
-import { useCurrencyConverter } from '@/hooks/use-currency-converter';
-import { usePaymentGeneration } from '@/hooks/use-payment-generation';
-import { usePaymentVerification } from '@/lib/lightning-utils';
-
-import { PaymentError } from '@/components/payment/payment-error';
-import { PaymentQRDisplay } from '@/components/payment/payment-qr-display';
 import { PaymentActions } from '@/components/payment/payment-actions';
 
-import type { Product } from '@/lib/types';
-import { AvailableCurrencies } from '@/types/config';
+import { Skeleton } from '@/components/ui/skeleton';
 
-// Primero, añadir los props necesarios
 interface PaymentViewProps {
-  lnaddress: string;
+  invoice: string;
   amount: number;
-  cart?: { id: string; quantity: number }[];
-  products?: Product[];
-  onCompletePayment: () => void;
+  amountInSats: number;
+  isLoading: boolean;
 }
 
-// Luego, actualizar la desestructuración de props
-export function PaymentView({ lnaddress, amount, cart = [], products = [], onCompletePayment }: PaymentViewProps) {
-  const { settings } = useSettings();
-
-  const { convertCurrency } = useCurrencyConverter();
-  const {
-    qrCodeDataUrl,
-    lightningInvoice,
-    verifyUrl,
-    paymentHash,
-    amountInSats,
-    isGenerating,
-    error,
-    generatePayment,
-    resetPayment,
-  } = usePaymentGeneration(lnaddress);
-
-  // Hook para verificar el pago automáticamente
-  const { isVerifying, verificationError } = usePaymentVerification(
-    verifyUrl,
-    paymentHash,
-    onCompletePayment,
-    3000, // Verificar cada 3 segundos
-  );
-
-  // Finalmente, actualizar la llamada a generatePayment
-  useEffect(() => {
-    generatePayment(amount, cart, products);
-  }, [amount, cart, products, generatePayment]);
-
-  const retryGeneration = () => {
-    resetPayment();
-    generatePayment(amount);
-  };
-
-  if (error) {
-    return <PaymentError error={error} amount={amount} onRetry={retryGeneration} />;
-  }
+export function PaymentView({ invoice, amount, amountInSats, isLoading }: PaymentViewProps) {
+  const { settings, getCurrencySymbol } = useSettings();
 
   return (
     <div className='flex flex-col items-center justify-between w-full h-screen mx-auto relative bg-[#0F0F0F]'>
-      <PaymentQRDisplay
-        qrCodeDataUrl={qrCodeDataUrl}
-        amount={amount}
-        amountInSats={convertCurrency(amount, settings?.currency as AvailableCurrencies, 'SAT')}
-        isGenerating={isGenerating}
-      />
+      <div className='flex-1 flex flex-col items-center w-full pt-4 bg-white border-b rounded-b-2xl'>
+        <div className='w-full max-w-md mx-auto px-4'>
+          <div className='mb-6'>
+            {isLoading ? (
+              <Skeleton className='w-72 h-72 bg-black/10 mx-auto' />
+            ) : invoice ? (
+              <div className='w-full flex justify-center'>
+                <ReactQRCode value={invoice} size={280} fgColor={'#000'} bgColor={'#fff'} />
+              </div>
+            ) : null}
+          </div>
 
-      <PaymentActions lightningInvoice={lightningInvoice} />
+          <div className='flex-1 flex flex-col items-center text-center w-full px-4'>
+            <div className='flex items-center gap-2 text-gray-500 mb-2'>
+              <span>Waiting for payment</span>
+            </div>
+
+            <div className='text-3xl mb-2'>
+              {getCurrencySymbol()}
+              <b>{new Intl.NumberFormat().format(amount)}</b> {settings.currency}
+            </div>
+
+            <div className='flex items-center gap-2 text-lg text-gray-600'>
+              <span>~</span>
+              {!amountInSats || amountInSats === 0 ? (
+                <Skeleton className='relative w-12 h-6 top-0.5 bg-black/10 rounded-full' />
+              ) : (
+                new Intl.NumberFormat().format(amountInSats)
+              )}
+              <span>SAT</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <PaymentActions lightningInvoice={invoice} />
     </div>
   );
 }
