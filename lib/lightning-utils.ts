@@ -1,9 +1,3 @@
-'use client';
-
-import { useEffect } from 'react';
-
-import { useState } from 'react';
-
 // Utilidades para Lightning Network
 export interface YadioResponse {
   BTC: {
@@ -238,75 +232,6 @@ export function extractPaymentHash(invoice: string): string {
     // Fallback: usar parte de la factura como hash
     return invoice.substring(4, 36);
   }
-}
-
-// Hook para verificar pagos automáticamente
-export function usePaymentVerification(
-  verifyUrl: string | null,
-  paymentHash: string | null,
-  onPaymentConfirmed: () => void,
-  intervalMs = 3000, // Verificar cada 3 segundos
-) {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationError, setVerificationError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!verifyUrl || !paymentHash) {
-      return;
-    }
-
-    let intervalId: NodeJS.Timeout;
-    let isActive = true;
-
-    const checkPayment = async () => {
-      if (!isActive) return;
-
-      try {
-        setIsVerifying(true);
-        setVerificationError(null);
-
-        const result = await verifyLightningPayment(verifyUrl, paymentHash);
-
-        if (result.settled) {
-          console.log('Payment confirmed!', result);
-          if (isActive) {
-            onPaymentConfirmed();
-          }
-          return; // Detener verificación
-        }
-      } catch (error) {
-        console.error('Payment verification error:', error);
-        if (isActive) {
-          setVerificationError(error instanceof Error ? error.message : 'Verification failed');
-        }
-      } finally {
-        if (isActive) {
-          setIsVerifying(false);
-        }
-      }
-
-      // Continuar verificando si el pago no está confirmado
-      if (isActive) {
-        intervalId = setTimeout(checkPayment, intervalMs);
-      }
-    };
-
-    // Iniciar verificación
-    checkPayment();
-
-    // Cleanup
-    return () => {
-      isActive = false;
-      if (intervalId) {
-        clearTimeout(intervalId);
-      }
-    };
-  }, [verifyUrl, paymentHash, onPaymentConfirmed, intervalMs]);
-
-  return {
-    isVerifying,
-    verificationError,
-  };
 }
 
 // Función para validar Lightning Address
