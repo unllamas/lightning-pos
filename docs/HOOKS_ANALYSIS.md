@@ -54,7 +54,7 @@ El proyecto contiene **15 hooks personalizados** con diferentes niveles de uso y
 
 ## 💰 Hooks de Pagos
 
-### 4. `usePaymentGeneration` - ⭐⭐⭐⭐
+### 4. `usePayment` - ⭐⭐⭐⭐
 **Ubicación:** `hooks/use-payment-generation.ts`
 **Uso:** Proceso de pago
 **Propósito:** Generación de facturas Lightning y códigos QR
@@ -160,7 +160,7 @@ const useAppState = () => {
 ### 2. **Lazy Loading de Hooks Pesados**
 ```typescript
 // Cargar hooks de pago solo cuando se necesiten
-const usePaymentGeneration = lazy(() => import('./use-payment-generation'))
+const usePayment = lazy(() => import('./use-payment'))
 ```
 
 ### 3. **Memoización Mejorada**
@@ -204,7 +204,7 @@ const convertCurrency = useMemo(() =>
 |------|------------------|-------------|-----|----------------------|
 | `usePOSData` | 200+ | Alta | Crítico | 🔥 Alta |
 | `useLightningAuth` | 150+ | Media | Crítico | 🔥 Alta |
-| `usePaymentGeneration` | 120+ | Alta | Crítico | 🔥 Alta |
+| `usePayment` | 120+ | Alta | Crítico | 🔥 Alta |
 | `useSettings` | 100+ | Baja | Alto | 🟡 Media |
 | `useCurrencyConverter` | 80+ | Media | Alto | 🟡 Media |
 
