@@ -114,23 +114,19 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
     setError(null);
   }, []);
 
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationError, setVerificationError] = useState<string | null>(null);
-
   useEffect(() => {
     if (!verifyUrl || !paymentHash) {
       return;
     }
 
-    let intervalId: NodeJS.Timeout;
+    let interval: NodeJS.Timeout;
     let isActive = true;
 
     const checkPayment = async () => {
       if (!isActive) return;
 
       try {
-        setIsVerifying(true);
-        setVerificationError(null);
+        setError(null);
 
         const result = await verifyLightningPayment(verifyUrl, paymentHash);
 
@@ -144,17 +140,13 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
       } catch (error) {
         console.error('Payment verification error:', error);
         if (isActive) {
-          setVerificationError(error instanceof Error ? error.message : 'Verification failed');
-        }
-      } finally {
-        if (isActive) {
-          setIsVerifying(false);
+          setError(error instanceof Error ? error.message : 'Verification failed');
         }
       }
 
       // Continuar verificando si el pago no está confirmado
       if (isActive) {
-        intervalId = setTimeout(checkPayment, INTERVAL_MS);
+        interval = setTimeout(checkPayment, INTERVAL_MS);
       }
     };
 
@@ -164,8 +156,8 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
     // Cleanup
     return () => {
       isActive = false;
-      if (intervalId) {
-        clearTimeout(intervalId);
+      if (interval) {
+        clearTimeout(interval);
       }
     };
   }, [verifyUrl, paymentHash, onComplete]);
