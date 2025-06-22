@@ -6,7 +6,7 @@ import { useSettings } from '@/hooks/use-settings';
 import { useLightningAuth } from '@/hooks/use-lightning-auth';
 import { extractPaymentHash } from '@/lib/lightning-utils';
 
-import { convertToSatoshis, generateLightningInvoice, verifyLightningPayment } from '@/actions/lightning';
+import { convertToSatoshis, generateLightningInvoice, verifyLightningPayment } from '@/lib/lightning-utils';
 
 interface UsePayment {
   lnaddress: string;
