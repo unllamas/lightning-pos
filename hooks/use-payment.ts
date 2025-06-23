@@ -34,7 +34,7 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
 
   const generatePayment = useCallback(
     async (amount: number, cart: { id: string; quantity: number }[] = [], products: Product[] = []) => {
-      if (!isAuthenticated || !lightningAddress) {
+      if (!lightningAddress && !lnaddress) {
         setError('Lightning Address not configured');
         setIsGenerating(false);
         return;
@@ -99,7 +99,7 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
         setIsGenerating(false);
       }
     },
-    [isAuthenticated, lnaddress, lightningAddress, settings.currency, getCurrencySymbol],
+    [lnaddress, lightningAddress, settings.currency, getCurrencySymbol],
   );
 
   const resetPayment = useCallback(() => {
