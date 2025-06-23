@@ -146,9 +146,11 @@ export default function Home() {
               <p className='text-2xl text-muted-foreground'>Transform your business NOW.</p>
 
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-                {/* <Button className='w-full md:w-auto' size='lg'>
-                  Get Started
-                </Button> */}
+                <Button variant='default' size='lg' asChild>
+                  <Link href='/unllamas@blink.sv'>
+                    Try Now <ArrowRight />
+                  </Link>
+                </Button>
               </div>
 
               <div className='relative overflow-hidden w-auto'>
@@ -252,13 +254,6 @@ export default function Home() {
             <p className='text-xl text-muted-foreground max-w-3xl mx-auto'>
               A complete point-of-sale solution with all the businesses need.
             </p>
-          </div>
-          <div className='mx-auto'>
-            <Button variant='default' size='lg' asChild>
-              <Link href='/login'>
-                Try Now <ArrowRight />
-              </Link>
-            </Button>
           </div>
           <div className='grid md:grid-cols-2 gap-8'>
             {features.map((feature, index) => (
@@ -434,7 +429,7 @@ export default function Home() {
                 <Button className='text-white' variant='link' asChild>
                   <Link
                     className='hover:text-white transition-colors duration-200'
-                    href='http://lnpos.online/unllamas@blink.sv'
+                    href='https://geyser.fund/project/lightningpos'
                     target='_blank'
                   >
                     Donate
