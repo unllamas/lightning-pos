@@ -147,7 +147,7 @@ export default function Home() {
 
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <Button variant='default' size='lg' asChild>
-                  <Link href='/unllamas@breez.fun'>
+                  <Link href='/jona@breez.fun'>
                     Try Now <ArrowRight />
                   </Link>
                 </Button>
