@@ -132,7 +132,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className='relative z-10 flex justify-center items-center py-20 bg-background'>
+      <section className='relative z-10 flex justify-center items-center py-20 pb-0 bg-background'>
         <div className='max-w-xl mx-auto px-4'>
           <div className='flex flex-col gap-12 items-center'>
             <div className='flex flex-col gap-8 items-center text-center'>
@@ -153,9 +153,9 @@ export default function Home() {
                 </Button>
               </div>
 
-              <div className='relative overflow-hidden w-auto'>
-                <div className='absolute z-10 bottom-0 left-0 w-full h-64 bg-gradient-to-b from-white/0 to-white'></div>
-                <img className='w-full max-w-xs h-full' src='/screen.png' />
+              <div className='relative overflow-hidden w-auto mt-8'>
+                {/* <div className='absolute z-10 bottom-0 left-0 w-full h-64 bg-gradient-to-b from-white/0 to-white'></div> */}
+                <img className='w-full max-w-lg h-full' src='/screen.png' />
               </div>
             </div>
           </div>
