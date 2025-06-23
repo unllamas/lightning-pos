@@ -167,7 +167,7 @@ export default function Home() {
         <div className='max-w-xl mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='text-center mb-16'>
             <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>Why?</h2>
-            <p className='text-xl text-gray-600 max-w-3xl mx-auto'>The simplest way to accept Bitcoin payments.</p>
+            <p className='text-xl text-gray-600 max-w-3xl mx-auto'>The simplest way.</p>
           </div>
           <div className='flex flex-col md:flex-row gap-8'>
             <div className='flex flex-col items-center justify-center gap-4 text-center'>
@@ -248,8 +248,8 @@ export default function Home() {
 
       {/* Features */}
       <section className='relative z-10 py-20 bg-background'>
-        <div className='flex flex-col gap-8 max-w-xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='text-center'>
+        <div className='flex flex-col max-w-xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='text-center mb-16'>
             <h2 className='text-3xl lg:text-4xl font-bold text-text mb-4'>Everything You Need</h2>
             <p className='text-xl text-muted-foreground max-w-3xl mx-auto'>
               A complete point-of-sale solution with all the businesses need.
@@ -396,50 +396,68 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className='w-full md:max-h-96 pt-16 pb-8 bg-[#0F0F0F] text-white'>
+      <footer className='w-full pt-16 pb-8 bg-[#0F0F0F] text-white'>
         <div className='max-w-xl mx-auto px-4'>
-          <div className='flex flex-col gap-4 mb-12'>
-            <div className='md:col-span-2'>
-              <div className='flex mb-4'>
+          <div className='flex flex-col gap-8'>
+            <div className='flex flex-col gap-2'>
+              <div className='flex'>
                 <img src='/iso.svg' alt='Lightning PoS Logo' className='h-[60px]' />
               </div>
-              <p className='text-muted-foreground mb-6'>The simplest way to accept Bitcoin payments.</p>
+              <p className='text-white'>The simplest way to accept Bitcoin payments.</p>
             </div>
-            <ul className='flex flex-col md:flex-row md:items-center justify-between gap-2 text-gray-400'>
-              <li>
-                <Button className='text-white' variant='link' asChild>
-                  <Link
-                    href='https://njump.me/nprofile1qqsxphhzhhxepm2csvpfgcs2zselmgst7v8k2fs5k58j35hw605c8wgtxthlw'
-                    target='_blank'
-                  >
-                    Contact
-                    <ArrowUpRight />
-                  </Link>
-                </Button>
-              </li>
-              <li>
-                <Button className='text-white' variant='link' asChild>
-                  <Link href='https://github.com/unllamas/lightning-pos/' target='_blank'>
-                    Documentation
-                    <ArrowUpRight />
-                  </Link>
-                </Button>
-              </li>
-              <li>
-                <Button className='text-white' variant='link' asChild>
-                  <Link
-                    className='hover:text-white transition-colors duration-200'
-                    href='https://geyser.fund/project/lightningpos'
-                    target='_blank'
-                  >
-                    Donate
-                    <ArrowUpRight />
-                  </Link>
-                </Button>
-              </li>
-            </ul>
+            <div className='flex flex-col md:flex-row w-full'>
+              <div className='w-full'>
+                <h6 className='mb-4 px-4 text-xs text-muted-foreground'>Social</h6>
+                <ul className='flex flex-col justify-between gap-2 text-gray-400'>
+                  <li>
+                    <Button className='text-white' variant='link' asChild>
+                      <Link
+                        href='https://njump.me/nprofile1qqsxphhzhhxepm2csvpfgcs2zselmgst7v8k2fs5k58j35hw605c8wgtxthlw'
+                        target='_blank'
+                      >
+                        Nostr
+                        <ArrowUpRight />
+                      </Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button className='text-white' variant='link' asChild>
+                      <Link href='https://t.me/lnpos' target='_blank'>
+                        Telegram
+                        <ArrowUpRight />
+                      </Link>
+                    </Button>
+                  </li>
+                </ul>
+              </div>
+              <div className='w-full'>
+                <h6 className='mb-4 px-4 text-xs text-muted-foreground'>About us</h6>
+                <ul className='flex flex-col justify-between gap-2 text-gray-400'>
+                  <li>
+                    <Button className='text-white' variant='link' asChild>
+                      <Link href='https://github.com/unllamas/lightning-pos/' target='_blank'>
+                        Documentation
+                        <ArrowUpRight />
+                      </Link>
+                    </Button>
+                  </li>
+                  <li>
+                    <Button className='text-white' variant='link' asChild>
+                      <Link
+                        className='hover:text-white transition-colors duration-200'
+                        href='https://geyser.fund/project/lightningpos'
+                        target='_blank'
+                      >
+                        Donate
+                        <ArrowUpRight />
+                      </Link>
+                    </Button>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-          <div className='border-t border-white/10 pt-8'>
+          <div className='border-t border-white/10 mt-4 pt-4'>
             <p className='text-sm text-muted-foreground text-center'>© 2025 ⚡️ POS</p>
           </div>
         </div>
