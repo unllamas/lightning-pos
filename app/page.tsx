@@ -9,11 +9,11 @@ import {
   Utensils,
   BarChart3,
   Lock,
-  CheckCircle,
   ArrowUpRight,
   Plus,
   Minus,
   BadgePercent,
+  ArrowRight,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -124,7 +124,9 @@ export default function Home() {
             style={{ filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2))' }}
           />
           <Button variant='link' asChild>
-            <Link href='/login'>Get Started</Link>
+            <Link href='/login'>
+              Get Started <ArrowRight />
+            </Link>
           </Button>
         </div>
       </header>
@@ -244,12 +246,19 @@ export default function Home() {
 
       {/* Features */}
       <section className='relative z-10 py-20 bg-background'>
-        <div className='max-w-xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='text-center mb-16'>
+        <div className='flex flex-col gap-8 max-w-xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='text-center'>
             <h2 className='text-3xl lg:text-4xl font-bold text-text mb-4'>Everything You Need</h2>
             <p className='text-xl text-muted-foreground max-w-3xl mx-auto'>
               A complete point-of-sale solution with all the businesses need.
             </p>
+          </div>
+          <div className='mx-auto'>
+            <Button variant='default' size='lg' asChild>
+              <Link href='/login'>
+                Try Now <ArrowRight />
+              </Link>
+            </Button>
           </div>
           <div className='grid md:grid-cols-2 gap-8'>
             {features.map((feature, index) => (
