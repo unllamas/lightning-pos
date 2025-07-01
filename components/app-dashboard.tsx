@@ -1,23 +1,26 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Calculator, Store, Settings, X, User } from 'lucide-react';
 
-import { useLightningAuth } from '@/hooks/use-lightning-auth';
+import { useAuth } from '@/context/auth';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { JoinCloud } from '@/components/join-cloud';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export function AppDashboard() {
   const router = useRouter();
-  const { lightningAddress, isAuthenticated, logout } = useLightningAuth();
+  const { logout, lightningAddress, isAuthenticated, isLoading, authMethod } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    router.push('/');
-  };
+  useEffect(() => {
+    if (!isAuthenticated && !isLoading) {
+      router.push('/login');
+    }
+  }, [isAuthenticated, isLoading]);
 
   const dashboardCards = [
     {
@@ -38,23 +41,26 @@ export function AppDashboard() {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className='flex justify-center items-center w-screen h-screen'>
+        <LoadingSpinner />
+      </div>
+    );
+  }
+
   return (
     <div className='flex flex-col w-full h-full mx-auto'>
       {/* Header */}
       <header className='w-full py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
-          <Button variant='default' onClick={handleLogout} className='mr-2'>
+          <Button variant='default' onClick={logout} className='mr-2'>
             <div className='flex gap-2 items-center justify-center min-w-0'>
-              {isAuthenticated && lightningAddress ? (
-                <>
-                  <User className='h-4 w-4 flex-shrink-0' />
-                  <span className='truncate text-sm'>{lightningAddress}</span>
-                </>
+              <User className='h-4 w-4 flex-shrink-0' />
+              {authMethod === 'lnaddress' ? (
+                <span className='truncate text-sm'>{lightningAddress}</span>
               ) : (
-                <>
-                  <User className='h-4 w-4 flex-shrink-0' />
-                  <span className='text-sm'>Guest Mode</span>
-                </>
+                <span className='text-sm'>NWC Mode</span>
               )}
               <X className='h-4 w-4 text-destructive flex-shrink-0' />
               <span className='sr-only'>Log out</span>
