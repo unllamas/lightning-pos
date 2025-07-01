@@ -33,7 +33,12 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
   const { lightningAddress, isAuthenticated } = useLightningAuth();
 
   const generatePayment = useCallback(
-    async (amount: number, cart: { id: string; quantity: number }[] = [], products: Product[] = []) => {
+    async (
+      amount: number,
+      currency: string,
+      cart: { id: string; quantity: number }[] = [],
+      products: Product[] = [],
+    ) => {
       setIsGenerating(true);
       setError(null);
       setVerifyUrl(null);
@@ -47,31 +52,13 @@ export const usePayment = ({ lnaddress, onComplete }: UsePayment) => {
 
       try {
         // 1. Convertir monto fiat a satoshis usando Yadio
-        console.log(`Converting ${amount} ${settings.currency} to satoshis...`);
-        const satsAmount = await convertToSatoshis(amount, settings.currency);
+        console.log(`Converting ${amount} ${currency} to satoshis...`);
+        const satsAmount = await convertToSatoshis(amount, currency);
         setAmountInSats(satsAmount);
         console.log(`Converted to ${satsAmount} satoshis`);
 
         // 2. Generar el comentario con los detalles de los productos
-        let comment = `Payment for ${getCurrencySymbol()}${amount.toLocaleString()} ${settings.currency}`;
-
-        // Añadir detalles de productos si hay elementos en el carrito
-        // if (cart.length > 0 && products.length > 0) {
-        //   // Formato estructurado para análisis de datos: POS|TOTAL:[amount]|[item1:qty]|[item2:qty]|...
-        //   const itemsList = cart
-        //     .map((item) => {
-        //       const product = products.find((p) => p.id === item.id);
-        //       if (product) {
-        //         return `${product.name.replace(/[|:,]/g, '')}:${item.quantity}`;
-        //       }
-        //       return null;
-        //     })
-        //     .filter(Boolean);
-
-        //   comment = `LNPOS|TOTAL:${getCurrencySymbol()}${amount.toLocaleString()}${settings.currency}|${itemsList.join(
-        //     '|',
-        //   )}`;
-        // }
+        let comment = `Payment for ${getCurrencySymbol()}${amount.toLocaleString()} ${currency}`;
 
         // 3. Generar factura Lightning usando LUD-16/LUD-21
         console.log(`Generating Lightning invoice for ${satsAmount} sats...`);
