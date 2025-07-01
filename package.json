@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@getalby/bitcoin-connect": "^3.8.2",
+    "@getalby/lightning-tools": "^5.2.0",
+    "@getalby/sdk": "^5.1.0",
     "@hookform/resolvers": "^3.9.1",
     "@instantdb/react": "^0.12.19",
     "@radix-ui/react-accordion": "1.2.2",
