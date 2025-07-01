@@ -11,10 +11,10 @@ import { Button } from '@/components/ui/button';
 interface PaymentErrorProps {
   error: string;
   amount: number;
-  onRetry: () => void;
+  currency: string;
 }
 
-export function PaymentError({ error, amount }: PaymentErrorProps) {
+export function PaymentError({ error, amount, currency }: PaymentErrorProps) {
   const router = useRouter();
 
   const { settings, getCurrencySymbol } = useSettings();
@@ -35,7 +35,7 @@ export function PaymentError({ error, amount }: PaymentErrorProps) {
             <div className='text-gray-500 mb-2'>Amount</div>
             <div className='text-2xl mb-4'>
               {getCurrencySymbol()}
-              <b>{amount.toLocaleString()}</b> {settings.currency}
+              <b>{amount.toLocaleString()}</b> {currency}
             </div>
           </div>
         </div>
