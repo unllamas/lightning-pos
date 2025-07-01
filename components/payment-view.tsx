@@ -1,5 +1,3 @@
-'use client';
-
 import ReactQRCode from 'react-qr-code';
 
 import { useSettings } from '@/hooks/use-settings';
@@ -10,11 +8,12 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface PaymentViewProps {
   invoice: string;
   amount: number;
+  currency: string;
   amountInSats: number;
   isLoading: boolean;
 }
 
-export function PaymentView({ invoice, amount, amountInSats, isLoading }: PaymentViewProps) {
+export function PaymentView({ invoice, amount, currency, amountInSats, isLoading }: PaymentViewProps) {
   const { settings, getCurrencySymbol } = useSettings();
 
   return (
@@ -38,7 +37,7 @@ export function PaymentView({ invoice, amount, amountInSats, isLoading }: Paymen
 
             <div className='text-3xl mb-2'>
               {getCurrencySymbol()}
-              <b>{new Intl.NumberFormat().format(amount)}</b> {settings.currency}
+              <b>{new Intl.NumberFormat().format(amount)}</b> {currency}
             </div>
 
             <div className='flex items-center gap-2 text-lg text-gray-600'>
