@@ -13,6 +13,7 @@ interface AuthState {
   lightningAddress: string | null;
   nwcString: string | null;
   error: string | null;
+  isInitialized: boolean;
 }
 
 type AuthAction =
@@ -31,6 +32,7 @@ interface AuthContextType extends AuthState {
   validateLightningAddress: (address: string) => Promise<boolean>;
   validateNWCString: (nwcString: string) => Promise<{ success: boolean; error?: string }>;
   clearError: () => void;
+  waitForInitialization: () => void;
 }
 
 const STORAGE_KEY = 'lnpos-auth';
@@ -42,6 +44,7 @@ const initialState: AuthState = {
   lightningAddress: null,
   nwcString: null,
   error: null,
+  isInitialized: false,
 };
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -309,6 +312,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     dispatch({ type: 'SET_ERROR', payload: null });
   }, []);
 
+  const waitForInitialization = useCallback((): Promise<void> => {
+    return new Promise((resolve) => {
+      if (state.isInitialized) {
+        resolve();
+        return;
+      }
+
+      // Poll until initialized
+      const checkInitialization = () => {
+        if (state.isInitialized) {
+          resolve();
+        } else {
+          setTimeout(checkInitialization, 50);
+        }
+      };
+
+      checkInitialization();
+    });
+  }, [state.isInitialized]);
+
   const contextValue: AuthContextType = {
     ...state,
     login,
@@ -319,6 +342,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     validateLightningAddress,
     validateNWCString,
     clearError,
+    waitForInitialization,
   };
 
   return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
