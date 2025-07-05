@@ -120,10 +120,6 @@ El proyecto contiene **15 hooks personalizados** con diferentes niveles de uso y
 **Problema:** Funcionalidad cubierta por `useCard`
 **Recomendación:** 🗑️ **ELIMINAR** - `useCard` es más completo
 
-### 3. `usePrintOrder` - ❌ NO USADO
-**Ubicación:** `hooks/use-print-order.ts`
-**Problema:** Lógica duplicada en componentes
-**Recomendación:** 🗑️ **ELIMINAR** - No se usa en ningún lugar
 
 ### 4. `useInjectedNFC` - ⚠️ USADO INDIRECTAMENTE
 **Ubicación:** `hooks/use-injected-nfc.ts`
@@ -185,7 +181,6 @@ const convertCurrency = useMemo(() =>
 ### Fase 1: Limpieza (Inmediata)
 1. ❌ Eliminar `useCart`
 2. ❌ Eliminar `useNFC` 
-3. ❌ Eliminar `usePrintOrder`
 4. 🔧 Consolidar hooks duplicados
 
 ### Fase 2: Optimización (Corto plazo)
