@@ -109,7 +109,7 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
       <div className='relative w-full h-full md:w-auto md:h-auto md:max-w-2xl md:max-h-[80vh]'>
         <div className='absolute top-4 right-4 z-10 flex space-x-2'>
           {/* Button to switch cameras (only visible if there are multiple cameras and the camera is active) */}
-          {cameraStarted && hasMutipleCamera && !isClosing && (
+          {hasMutipleCamera && (
             <Button
               variant='default'
               size='icon'
