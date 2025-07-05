@@ -128,6 +128,9 @@ dependencies:
   input-otp:
     specifier: 1.4.1
     version: 1.4.1(react-dom@19.1.0)(react@19.1.0)
+  jsqr:
+    specifier: ^1.4.0
+    version: 1.4.0
   lnurl-pay:
     specifier: ^4.0.0
     version: 4.0.0
@@ -2955,6 +2958,10 @@ packages:
 
   /js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
+    dev: false
+
+  /jsqr@1.4.0:
+    resolution: {integrity: sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==}
     dev: false
 
   /lilconfig@3.1.3:
