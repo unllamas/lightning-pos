@@ -54,21 +54,6 @@ El proyecto contiene **15 hooks personalizados** con diferentes niveles de uso y
 
 ## 💰 Hooks de Pagos
 
-### 4. `usePayment` - ⭐⭐⭐⭐
-**Ubicación:** `hooks/use-payment-generation.ts`
-**Uso:** Proceso de pago
-**Propósito:** Generación de facturas Lightning y códigos QR
-
-```typescript
-// Funcionalidades:
-- Conversión fiat a satoshis
-- Generación de facturas Lightning (LUD-16/LUD-21)
-- Generación de códigos QR
-- Verificación de pagos
-```
-
-**Estado:** ✅ Complejo pero bien estructurado
-
 ### 5. `useCurrencyConverter` - ⭐⭐⭐
 **Ubicación:** `hooks/use-currency-converter.ts`
 **Uso:** Conversión de monedas
@@ -153,12 +138,6 @@ const useAppState = () => {
 }
 ```
 
-### 2. **Lazy Loading de Hooks Pesados**
-```typescript
-// Cargar hooks de pago solo cuando se necesiten
-const usePayment = lazy(() => import('./use-payment'))
-```
-
 ### 3. **Memoización Mejorada**
 ```typescript
 // En useCurrencyConverter - memoizar conversiones
@@ -199,7 +178,6 @@ const convertCurrency = useMemo(() =>
 |------|------------------|-------------|-----|----------------------|
 | `usePOSData` | 200+ | Alta | Crítico | 🔥 Alta |
 | `useLightningAuth` | 150+ | Media | Crítico | 🔥 Alta |
-| `usePayment` | 120+ | Alta | Crítico | 🔥 Alta |
 | `useSettings` | 100+ | Baja | Alto | 🟡 Media |
 | `useCurrencyConverter` | 80+ | Media | Alto | 🟡 Media |
 
