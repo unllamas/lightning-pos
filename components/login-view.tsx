@@ -5,8 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
 
-import { useLightningAuth } from '@/hooks/use-lightning-auth';
-
 import { useAuth } from '@/context/auth';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { CameraModal } from '@/components/camera-modal';
 
 export function LoginView() {
   const router = useRouter();
@@ -26,6 +25,8 @@ export function LoginView() {
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const [showCameraModal, setShowCameraModal] = useState(false);
+
   // Auto-login si ya está autenticado
   useEffect(() => {
     if (isAuthenticated) {
@@ -35,6 +36,34 @@ export function LoginView() {
       }, 1500);
     }
   }, [isAuthenticated]);
+
+  const startCamera = () => {
+    if (typeof window !== 'undefined') {
+      setShowCameraModal(true);
+    }
+  };
+
+  const stopCamera = () => {
+    setShowCameraModal(false);
+  };
+
+  const handleScan = (code: string) => {
+    stopCamera();
+
+    login(code).then((res) => {
+      setIsValidating(true);
+
+      if (!res?.success) {
+        setError(res?.error as string);
+        setIsValidating(false);
+      }
+
+      setShowSuccess(true);
+      setTimeout(() => {
+        router.push('/app');
+      }, 1500);
+    });
+  };
 
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
@@ -78,23 +107,23 @@ export function LoginView() {
 
       <div className='w-full max-w-md mx-auto px-4 space-y-4'>
         <PWAInstallBanner />
-        <Tabs className='w-full' defaultValue='lnaddress'>
-          <TabsList className='w-full'>
-            <TabsTrigger className='w-full' value='lnaddress'>
+        <Tabs className='w-full' defaultValue='nwc'>
+          {/* <TabsList className='w-full'>
+            <TabsTrigger className='w-full' value='lnaddress' disabled>
               Lightning
             </TabsTrigger>
             <TabsTrigger className='w-full' value='nwc'>
               NWC
             </TabsTrigger>
-          </TabsList>
-          <TabsContent className='space-y-2' value='lnaddress'>
+          </TabsList> */}
+          {/* <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
             <Input
               type='email'
               placeholder='you@lightning.address'
               defaultValue={inputAddress as string}
               onChange={(e) => {
                 setInputAddress(e.target.value);
-                setError(''); // Clear error when typing
+                setError('');
               }}
               disabled={isValidating}
               className={error ? 'border-red-500' : ''}
@@ -141,7 +170,7 @@ export function LoginView() {
                 'Setup'
               )}
             </Button>
-          </TabsContent>
+          </TabsContent> */}
           <TabsContent className='space-y-2' value='nwc'>
             <Input
               type='text'
@@ -187,23 +216,16 @@ export function LoginView() {
           </TabsContent>
         </Tabs>
 
-        {/* <div className='text-center'>
+        <div className='text-center'>
           <span className='text-gray-500'>or</span>
         </div>
 
-        <Button variant='outline' className='w-full' size='lg' asChild>
-          <Link href='/app'>Try Now</Link>
-        </Button> */}
-
-        <Button className='w-full' variant='link' size='lg' asChild>
-          <Link href='/'>Back to Home</Link>
+        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
+          Scan QR Code
         </Button>
-
-        {/*
-        <div className="text-xs text-gray-500 text-center mt-4">
-          <p>We'll verify your Lightning Address by checking if it supports Lightning payments.</p>
-        </div> */}
       </div>
+
+      {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
     </div>
   );
 }
