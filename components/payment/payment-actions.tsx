@@ -29,40 +29,40 @@ export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const processRegularPayment = useCallback(
-    async (cardUrl: string, response: LNURLResponse) => {
-      setCardStatus(LNURLWStatus.CALLBACK);
-      const url = response.callback;
-      const _response = await axios.get(url, {
-        params: { k1: response.k1, pr: lightningInvoice },
-      });
+  // const processRegularPayment = useCallback(
+  //   async (cardUrl: string, response: LNURLResponse) => {
+  //     setCardStatus(LNURLWStatus.CALLBACK);
+  //     const url = response.callback;
+  //     const _response = await axios.get(url, {
+  //       params: { k1: response.k1, pr: lightningInvoice },
+  //     });
 
-      if (_response.status < 200 || _response.status >= 300) {
-        throw new Error(`Error al intentar cobrar ${_response.status}}`);
-      }
-      if (_response.data.status !== 'OK') {
-        throw new Error(`Error al intentar cobrar ${_response.data.reason}}`);
-      }
-      setCardStatus(LNURLWStatus.DONE);
-    },
-    [lightningInvoice],
-  );
+  //     if (_response.status < 200 || _response.status >= 300) {
+  //       throw new Error(`Error al intentar cobrar ${_response.status}}`);
+  //     }
+  //     if (_response.data.status !== 'OK') {
+  //       throw new Error(`Error al intentar cobrar ${_response.data.reason}}`);
+  //     }
+  //     setCardStatus(LNURLWStatus.DONE);
+  //   },
+  //   [lightningInvoice],
+  // );
 
-  const startRead = useCallback(async () => {
-    setCardStatus(LNURLWStatus.SCANNING);
+  // const startRead = useCallback(async () => {
+  //   setCardStatus(LNURLWStatus.SCANNING);
 
-    try {
-      const { cardUrl, lnurlResponse } = await scan(ScanAction.PAY_REQUEST);
-      await processRegularPayment(cardUrl, lnurlResponse);
-    } catch (e) {
-      setCardStatus(LNURLWStatus.ERROR);
-      setError((e as Error).message);
-      toast({
-        title: 'Oops',
-        description: (e as Error).message,
-      });
-    }
-  }, [processRegularPayment, scan]);
+  //   try {
+  //     const { cardUrl, lnurlResponse } = await scan(ScanAction.PAY_REQUEST);
+  //     await processRegularPayment(cardUrl, lnurlResponse);
+  //   } catch (e) {
+  //     setCardStatus(LNURLWStatus.ERROR);
+  //     setError((e as Error).message);
+  //     toast({
+  //       title: 'Oops',
+  //       description: (e as Error).message,
+  //     });
+  //   }
+  // }, [processRegularPayment, scan]);
 
   // on card scanStatus change
   useEffect(() => {
@@ -114,7 +114,7 @@ export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
   return (
     <div className='relative z-0 w-full'>
       <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4 pt-4 pb-8'>
-        {isAvailable && (
+        {/* {isAvailable && (
           <Button
             size='lg'
             onClick={() => {
@@ -140,7 +140,7 @@ export function PaymentActions({ lightningInvoice }: PaymentActionsProps) {
               </>
             )}
           </Button>
-        )}
+        )} */}
 
         {process.env.NODE_ENV === 'development' && lightningInvoice && (
           <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
