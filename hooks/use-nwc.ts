@@ -108,6 +108,5 @@ export function useNwc() {
     status,
     error,
     createInvoice,
-    verifyPayment,
   };
 }

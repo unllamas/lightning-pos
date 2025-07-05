@@ -17,7 +17,7 @@ export function PaymentPage() {
   const _amount = searchParams.get('amount');
   const _currency = searchParams.get('currency');
 
-  const { amount, invoice, createInvoice, status, error, verifyPayment } = useNwc();
+  const { amount, invoice, createInvoice, status, error } = useNwc();
   // const { print } = usePrint();
 
   // const handleCompletePayment = () => {
