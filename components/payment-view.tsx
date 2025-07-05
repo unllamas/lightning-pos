@@ -14,7 +14,7 @@ interface PaymentViewProps {
 }
 
 export function PaymentView({ invoice, amount, currency, amountInSats, isLoading }: PaymentViewProps) {
-  const { settings, getCurrencySymbol } = useSettings();
+  const { getCurrencySymbol } = useSettings();
 
   return (
     <div className='flex flex-col items-center justify-between w-full h-screen mx-auto relative bg-[#0F0F0F]'>
