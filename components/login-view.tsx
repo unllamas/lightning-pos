@@ -90,7 +90,7 @@ export function LoginView() {
   }
 
   return (
-    <div className='w-full h-full flex flex-col items-center justify-center py-4'>
+    <div className='flex-1 flex flex-col items-center justify-center w-full py-4 pb-12 bg-background'>
       <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
         <div className='flex justify-center mb-4'>
           <img

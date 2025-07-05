@@ -42,28 +42,22 @@ export function PaymentPage() {
   }, [invoice]);
 
   if (error) {
-    return (
-      <div className='flex-1 w-full h-full bg-black'>
-        <PaymentError error={error} amount={Number(_amount)} currency={_currency as string} />
-      </div>
-    );
+    return <PaymentError error={error} amount={Number(_amount)} currency={_currency as string} />;
   }
 
   return (
     <Suspense>
-      <div className='flex-1 w-full h-full bg-black'>
-        {status === 'pending' && (
-          <PaymentView
-            invoice={invoice as string}
-            amount={Number(_amount)}
-            currency={String(_currency)}
-            amountInSats={Number(amount)}
-            isLoading={!invoice}
-          />
-        )}
+      {status === 'pending' && (
+        <PaymentView
+          invoice={invoice as string}
+          amount={Number(_amount)}
+          currency={String(_currency)}
+          amountInSats={Number(amount)}
+          isLoading={!invoice}
+        />
+      )}
 
-        {status === 'paid' && <PaymentSuccess amount={amount} printOrder={printOrder} />}
-      </div>
+      {status === 'paid' && <PaymentSuccess amount={amount} printOrder={printOrder} />}
     </Suspense>
   );
 }

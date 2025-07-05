@@ -20,7 +20,7 @@ export function PaymentError({ error, amount, currency }: PaymentErrorProps) {
   const { settings, getCurrencySymbol } = useSettings();
 
   return (
-    <div className='flex flex-col items-center justify-between w-full h-screen mx-auto'>
+    <div className='flex-1 flex flex-col items-center justify-between w-full mx-auto'>
       <div className='flex-1 flex flex-col items-center justify-center w-full pt-4 bg-white border-b rounded-b-2xl'>
         <div className='w-full max-w-md px-4'>
           <div className='bg-red-50 border border-red-200 border-dashed p-6 rounded-lg mb-6 w-full'>

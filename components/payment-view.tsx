@@ -17,8 +17,8 @@ export function PaymentView({ invoice, amount, currency, amountInSats, isLoading
   const { getCurrencySymbol } = useSettings();
 
   return (
-    <div className='flex flex-col items-center justify-between w-full h-screen mx-auto relative bg-[#0F0F0F]'>
-      <div className='flex-1 flex flex-col items-center w-full pt-4 bg-white border-b rounded-b-2xl'>
+    <div className='relative flex-1 flex flex-col items-center justify-between w-full mx-auto bg-[#0F0F0F]'>
+      <div className='flex-1 flex flex-col items-center w-full pt-8 bg-white border-b rounded-b-2xl'>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='mb-6'>
             {isLoading ? (

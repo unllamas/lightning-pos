@@ -59,6 +59,7 @@ export function useNwc() {
       }
 
       if (!authData?.nwcString) {
+        setError('Error in NWC');
         throw new Error('Error in NWC');
       }
 
