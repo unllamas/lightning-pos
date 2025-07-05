@@ -43,7 +43,7 @@ export function PaymentPage() {
 
   if (error) {
     return (
-      <div className='w-full h-full bg-[#0F0F0F]'>
+      <div className='flex-1 w-full h-full bg-black'>
         <PaymentError error={error} amount={Number(_amount)} currency={_currency as string} />
       </div>
     );
@@ -51,7 +51,7 @@ export function PaymentPage() {
 
   return (
     <Suspense>
-      <div className='w-full h-full bg-[#0F0F0F]'>
+      <div className='flex-1 w-full h-full bg-black'>
         {status === 'pending' && (
           <PaymentView
             invoice={invoice as string}
