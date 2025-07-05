@@ -572,8 +572,8 @@ export function ShopEdit({}: ShopEditProps) {
 
       {/* Product Modal */}
       {isProductModalOpen && (
-        <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50'>
-          <div className='bg-white rounded-lg p-4 w-full max-w-md mx-4'>
+        <div className='fixed z-50 inset-0 bg-black/50 flex items-start md:items-center justify-center p-4'>
+          <div className='w-full md:max-w-md p-4 bg-white rounded-lg'>
             <h3 className='text-lg font-medium mb-4'>{editingProduct?.isNew ? 'Add Product' : 'Edit Product'}</h3>
 
             <div className='space-y-4'>
