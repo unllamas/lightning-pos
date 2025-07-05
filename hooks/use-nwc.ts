@@ -6,7 +6,6 @@ import { LN, webln } from '@getalby/sdk';
 
 import { convertToSatoshis } from '@/lib/lightning-utils';
 import { getLocal } from '@/lib/localStorage';
-import { extractPaymentHash } from '@/lib/bolt11';
 
 type Status = 'pending' | 'paid' | 'error';
 
@@ -78,9 +77,8 @@ export function useNwc() {
           throw new Error('Could not extract payment hash from invoice');
         }
 
-        const extractedHash = extractPaymentHash(invoice?.paymentRequest);
         setInvoice(invoice?.paymentRequest);
-        setHash(extractedHash);
+        setHash(invoice?.paymentHash);
       } catch (error: any) {
         setError(error.message ?? 'Error generating invoice');
         setStatus('error');
