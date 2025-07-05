@@ -2,11 +2,11 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { XIcon, RefreshCcw, Camera, FlipHorizontal } from 'lucide-react';
-import { QrCodeIcon as QrScanIcon } from 'lucide-react';
 
 import { useCamera } from '@/hooks/use-camera';
 
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface CameraModalProps {
   onClose: () => void;
@@ -99,16 +99,16 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
 
   return (
     <div
-      className='fixed z-50 top-0 inset-0 bg-background bg-opacity-90 flex items-center justify-center'
+      className='fixed z-50 top-0 inset-0 flex items-center justify-center bg-black bg-opacity-90'
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           handleClose();
         }
       }}
     >
-      <div className='relative w-full h-full md:w-auto md:h-auto md:max-w-2xl md:max-h-[80vh]'>
-        <div className='absolute top-4 right-4 z-10 flex space-x-2'>
-          {/* Button to switch cameras (only visible if there are multiple cameras and the camera is active) */}
+      <div className='absolute top-0 z-20 w-full h-14 flex items-center gap-2 px-4 bg-background'>
+        {/* Button to switch cameras (only visible if there are multiple cameras and the camera is active) */}
+        <div className='w-full min-w-10 max-w-10'>
           {hasMutipleCamera && (
             <Button
               variant='default'
@@ -121,18 +121,28 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
               <span className='sr-only'>Change camera</span>
             </Button>
           )}
-
-          <Button variant='default' size='icon' onClick={handleClose} disabled={isClosing}>
-            <XIcon className='h-4 w-4' />
-            <span className='sr-only'>Close</span>
-          </Button>
         </div>
 
-        <div className='w-full h-full md:rounded-lg overflow-hidden'>
-          <div className='relative w-full h-full'>
+        <h1 className='w-full text-xl font-medium text-center'>{'Scan to login'}</h1>
+
+        {cameraStarted && !isSwitchingCamera && !isClosing && (
+          <div className='absolute top-full w-full mt-2 text-center'>
+            <Badge>{facingMode === 'environment' ? 'Back camera' : 'Front camera'}</Badge>
+          </div>
+        )}
+
+        <Button variant='default' size='icon' onClick={handleClose} disabled={isClosing}>
+          <XIcon className='h-4 w-4' />
+          <span className='sr-only'>Close</span>
+        </Button>
+      </div>
+
+      <div className='relative w-full h-full md:max-w-2xl md:max-h-[80vh]'>
+        <div className='relative overflow-hidden h-full md:rounded-lg bg-background'>
+          <div className='relative h-full'>
             {(!cameraStarted || isSwitchingCamera || isClosing) && (
-              <div className='absolute inset-0 flex flex-col items-center justify-center bg-background p-6'>
-                <div className='text-foreground text-center p-4 max-w-md'>
+              <div className='flex flex-col items-center justify-center h-full p-4'>
+                <div className='w-full p-4 text-foreground text-center'>
                   {isClosing ? (
                     <div className='mb-4'>
                       <p className='text-xl mb-2'>Closing camera...</p>
@@ -174,9 +184,8 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
                   ) : (
                     <>
                       <div className='mb-4'>
-                        <Camera className='w-5 h-5 mx-auto text-primary' />
+                        <Camera className='w-4 h-4 mx-auto text-primary' />
                       </div>
-                      <p className='text-xl mb-2'>{isSwitchingCamera ? 'Changing camera...' : 'Starting camera...'}</p>
                       <p className='text-sm text-muted-foreground'>
                         {!isSwitchingCamera && 'Please accept camera access.'}
                       </p>
@@ -191,28 +200,31 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
               </div>
             )}
 
-            <video ref={videoRef} className='w-full h-full object-cover' playsInline autoPlay muted />
-            <canvas ref={canvasRef} className='absolute top-0 left-0 w-full h-full hidden' />
+            {cameraStarted && (
+              <>
+                <video ref={videoRef} className='w-full h-full object-cover' playsInline autoPlay muted />
+                <canvas ref={canvasRef} className='absolute top-0 left-0 w-full h-full hidden' />
+              </>
+            )}
 
             {/* Enhanced scanning overlay */}
             {cameraStarted && !isSwitchingCamera && !isClosing && (
-              <div className='absolute inset-0 flex items-center justify-center pointer-events-none'>
-                <div className='w-64 h-64 border-2 border-primary rounded-lg opacity-70'></div>
-                <div className='absolute'>
-                  <div className='animate-pulse rounded-lg'>
-                    <QrScanIcon className='h-24 w-24 text-primary drop-shadow-lg' />
-                  </div>
-                </div>
-              </div>
-            )}
+              <div className='absolute inset-0 z-10 pointer-events-none'>
+                <div className='w-full h-[calc(50%-140px)] bg-black bg-opacity-70'></div>
 
-            {cameraStarted && !isSwitchingCamera && !isClosing && (
-              <div className='absolute bottom-8 left-0 right-0 text-center'>
-                <p className='text-foreground text-lg font-medium drop-shadow-lg'>Position the QR code in the center</p>
-                <p className='text-sm text-muted-foreground mt-2'>
-                  {facingMode === 'environment' ? 'Using rear camera' : 'Using front camera'}
-                  {hasMutipleCamera && ' - You can switch cameras with the top button'}
-                </p>
+                <div className='flex w-full h-[280px]'>
+                  <div className='w-[calc(50%-140px)] bg-black bg-opacity-70'></div>
+
+                  <div className='relative w-[280px]'>
+                    <div className='absolute left-2 top-2 h-8 w-8 rounded-tl-2xl border-l-4 border-t-4 border-black'></div>
+                    <div className='absolute right-2 top-2 h-8 w-8 rounded-tr-2xl border-r-4 border-t-4 border-black'></div>
+                    <div className='absolute bottom-2 left-2 h-8 w-8 rounded-bl-2xl border-b-4 border-l-4 border-black'></div>
+                    <div className='absolute bottom-2 right-2 h-8 w-8 rounded-br-2xl border-b-4 border-r-4 border-black'></div>
+                  </div>
+                  <div className='w-[calc(50%-140px)] bg-black bg-opacity-70'></div>
+                </div>
+
+                <div className='w-full h-[calc(50%-140px)] bg-black bg-opacity-70'></div>
               </div>
             )}
           </div>
