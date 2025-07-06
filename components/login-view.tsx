@@ -13,17 +13,11 @@ import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CameraModal } from '@/components/camera-modal';
-import { CameraPreview } from './camera-preview';
-import { CameraFacing, CameraMode, CapturedMedia } from '@/types/media';
-import { useMobileDetection } from '@/hooks/use-mobile-detection';
-import { InstallPrompt } from './install-prompt';
-
-type View = 'camera' | 'gallery' | 'settings';
+import { InstallPrompt } from '@/components/install-prompt';
 
 export function LoginView() {
   const router = useRouter();
   const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
-  const { isMobile, isMobileUserAgent, isMobileScreen, viewportHeight, isPWA } = useMobileDetection();
 
   // const [inputAddress, setInputAddress] = useState<string | null>(null);
   const [nwc, setNwc] = useState<string | null>(null);
@@ -32,34 +26,7 @@ export function LoginView() {
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const [showCameraModalV1, setShowCameraModalV1] = useState(false);
-  const [showCameraModalV2, setShowCameraModalV2] = useState(false);
-
-  // Detect if running in an iframe
-  const [isInIframe, setIsInIframe] = useState(false);
-
-  useEffect(() => {
-    // Check if the app is running inside an iframe
-    const inIframe = window.self !== window.top;
-    setIsInIframe(inIframe);
-    console.log('App running in iframe:', inIframe);
-  }, []);
-
-  // Helper function to determine if front camera should be used
-  const shouldUseFrontCamera = (isMobileUserAgent: boolean, isMobileScreen: boolean): boolean => {
-    return !isMobileUserAgent && isMobileScreen;
-  };
-
-  // Set initial camera facing based on device type and screen size
-  const initialCameraFacing =
-    isInIframe && shouldUseFrontCamera(isMobileUserAgent, isMobileScreen) ? 'user' : 'environment';
-
-  const [cameraFacing, setCameraFacing] = useState<CameraFacing>(initialCameraFacing);
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string>('');
-
-  const toggleCameraFacing = () => {
-    setCameraFacing((prev) => (prev === 'user' ? 'environment' : 'user'));
-  };
+  const [showCameraModal, setShowCameraModal] = useState(false);
 
   // Auto-login si ya está autenticado
   useEffect(() => {
@@ -71,15 +38,14 @@ export function LoginView() {
     }
   }, [isAuthenticated]);
 
-  // const startCamera = () => {
-  //   if (typeof window !== 'undefined') {
-  //     setShowCameraModal(true);
-  //   }
-  // };
+  const startCamera = () => {
+    if (typeof window !== 'undefined') {
+      setShowCameraModal(true);
+    }
+  };
 
   const stopCamera = () => {
-    setShowCameraModalV1(false);
-    setShowCameraModalV2(false);
+    setShowCameraModal(false);
   };
 
   const handleScan = (code: string) => {
@@ -254,35 +220,15 @@ export function LoginView() {
           <span className='text-gray-500'>or</span>
         </div>
 
-        <div className='flex gap-2 w-full'>
-          <Button variant='outline' className='w-full' size='lg' onClick={() => setShowCameraModalV1(true)}>
-            Scan v1
-          </Button>
-          <Button variant='outline' className='w-full' size='lg' onClick={() => setShowCameraModalV2(true)}>
-            Scan v2
-          </Button>
-        </div>
+        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
+          Scan QR Code
+        </Button>
       </div>
 
-      {showCameraModalV1 && <CameraModal onClose={stopCamera} onScan={() => null} />}
-
-      {showCameraModalV2 && (
-        <CameraPreview
-          mode={'photo'}
-          facing={cameraFacing}
-          selectedDeviceId={selectedDeviceId}
-          setSelectedDeviceId={setSelectedDeviceId}
-          onCapture={() => null}
-          onClose={stopCamera}
-          onFacingChange={toggleCameraFacing}
-          isCapturing={false}
-          setIsCapturing={() => null}
-          isPWA={isPWA}
-        />
-      )}
+      {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
 
       {/* PWA Install Prompt */}
-      {/* <InstallPrompt /> */}
+      <InstallPrompt />
     </div>
   );
 }
