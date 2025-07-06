@@ -32,7 +32,8 @@ export function LoginView() {
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [showCameraModalV1, setShowCameraModalV1] = useState(false);
+  const [showCameraModalV2, setShowCameraModalV2] = useState(false);
 
   // Detect if running in an iframe
   const [isInIframe, setIsInIframe] = useState(false);
@@ -70,14 +71,15 @@ export function LoginView() {
     }
   }, [isAuthenticated]);
 
-  const startCamera = () => {
-    if (typeof window !== 'undefined') {
-      setShowCameraModal(true);
-    }
-  };
+  // const startCamera = () => {
+  //   if (typeof window !== 'undefined') {
+  //     setShowCameraModal(true);
+  //   }
+  // };
 
   const stopCamera = () => {
-    setShowCameraModal(false);
+    setShowCameraModalV1(false);
+    setShowCameraModalV2(false);
   };
 
   const handleScan = (code: string) => {
@@ -252,19 +254,26 @@ export function LoginView() {
           <span className='text-gray-500'>or</span>
         </div>
 
-        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
-          Scan QR Code
-        </Button>
+        <div className='flex gap-2 w-full'>
+          <Button variant='outline' className='w-full' size='lg' onClick={() => setShowCameraModalV1(true)}>
+            Scan v1
+          </Button>
+          <Button variant='outline' className='w-full' size='lg' onClick={() => setShowCameraModalV2(true)}>
+            Scan v2
+          </Button>
+        </div>
       </div>
 
-      {showCameraModal && (
+      {showCameraModalV1 && <CameraModal onClose={stopCamera} onScan={() => null} />}
+
+      {showCameraModalV2 && (
         <CameraPreview
           mode={'photo'}
           facing={cameraFacing}
           selectedDeviceId={selectedDeviceId}
           setSelectedDeviceId={setSelectedDeviceId}
           onCapture={() => null}
-          onClose={() => setShowCameraModal(false)}
+          onClose={stopCamera}
           onFacingChange={toggleCameraFacing}
           isCapturing={false}
           setIsCapturing={() => null}
@@ -273,7 +282,7 @@ export function LoginView() {
       )}
 
       {/* PWA Install Prompt */}
-      <InstallPrompt />
+      {/* <InstallPrompt /> */}
     </div>
   );
 }
