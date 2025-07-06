@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+
 import { pwaManager } from '@/utils/pwa';
 
 interface InstallPromptProps {
@@ -68,30 +71,23 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ onClose }) => {
             <p className='text-xs text-zinc-400 mb-3'>Add to your home screen for quick access and offline use</p>
 
             <div className='flex space-x-2'>
-              <button
-                onClick={handleInstall}
-                disabled={isInstalling}
-                className='flex-1 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-medium py-2 px-3 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-1'
-              >
+              <Button className='w-full' variant='success' onClick={handleInstall} disabled={isInstalling}>
                 {isInstalling ? (
                   <>
-                    <div className='animate-spin rounded-full h-3 w-3 border-b border-white'></div>
+                    <LoadingSpinner />
                     <span>Installing...</span>
                   </>
                 ) : (
                   <>
-                    <Download className='h-3 w-3' />
+                    <Download className='h-4 w-4' />
                     <span>Install</span>
                   </>
                 )}
-              </button>
+              </Button>
 
-              <button
-                onClick={handleClose}
-                className='text-zinc-400 hover:text-white p-2 rounded-lg transition-colors duration-200'
-              >
-                <X className='h-3 w-3' />
-              </button>
+              <Button variant='outline' size='icon' onClick={handleClose}>
+                <X className='h-4 w-4' />
+              </Button>
             </div>
           </div>
         </div>
