@@ -125,6 +125,9 @@ dependencies:
   embla-carousel-react:
     specifier: 8.5.1
     version: 8.5.1(react@19.1.0)
+  gsap:
+    specifier: ^3.13.0
+    version: 3.13.0
   input-otp:
     specifier: 1.4.1
     version: 1.4.1(react-dom@19.1.0)(react@19.1.0)
@@ -164,6 +167,9 @@ dependencies:
   react-resizable-panels:
     specifier: ^2.1.7
     version: 2.1.9(react-dom@19.1.0)(react@19.1.0)
+  react-webcam:
+    specifier: ^7.2.0
+    version: 7.2.0(react-dom@19.1.0)(react@19.1.0)
   recharts:
     specifier: 2.15.0
     version: 2.15.0(react-dom@19.1.0)(react@19.1.0)
@@ -2775,6 +2781,10 @@ packages:
     engines: {node: '>= 0.4'}
     dev: false
 
+  /gsap@3.13.0:
+    resolution: {integrity: sha512-QL7MJ2WMjm1PHWsoFrAQH/J8wUeqZvMtHO58qdekHpCfhvhSL4gSiz6vJf5EeMP0LOn3ZCprL2ki/gjED8ghVw==}
+    dev: false
+
   /has-property-descriptors@1.0.2:
     resolution: {integrity: sha512-55JNKuIW+vq4Ke1BjOTjM2YctQIvCT7GFzHwmfZPGo5wnrgkid0YQtnAleFSqumZm4az3n2BS+erby5ipJdgrg==}
     dependencies:
@@ -3516,6 +3526,16 @@ packages:
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+    dev: false
+
+  /react-webcam@7.2.0(react-dom@19.1.0)(react@19.1.0):
+    resolution: {integrity: sha512-xkrzYPqa1ag2DP+2Q/kLKBmCIfEx49bVdgCCCcZf88oF+0NPEbkwYk3/s/C7Zy0mhM8k+hpdNkBLzxg8H0aWcg==}
+    peerDependencies:
+      react: '>=16.2.0'
+      react-dom: '>=16.2.0'
+    dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
     dev: false
