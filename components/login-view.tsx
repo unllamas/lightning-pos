@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
@@ -14,10 +14,12 @@ import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CameraModal } from '@/components/camera-modal';
 import { InstallPrompt } from '@/components/install-prompt';
+import { useMobileDetection } from '@/hooks/use-mobile-detection';
 
 export function LoginView() {
   const router = useRouter();
   const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
+  const { isPWA, isMobile, isMobileUserAgent, isMobileScreen } = useMobileDetection();
 
   // const [inputAddress, setInputAddress] = useState<string | null>(null);
   const [nwc, setNwc] = useState<string | null>(null);
@@ -66,6 +68,21 @@ export function LoginView() {
     });
   };
 
+  const cameraPreviewHeightStyle = useMemo(() => {
+    // Special case: Desktop browser with mobile screen width (narrow window)
+    if (!isMobileUserAgent && isMobileScreen) {
+      return { height: isPWA ? '90vh' : '88vh' };
+    }
+
+    // Mobile devices (actual mobile user agent or mobile screen width)
+    if (isMobile) {
+      return { height: isPWA ? '82vh' : '76vh' };
+    }
+
+    // Desktop with wide window - use flexbox
+    return {};
+  }, [isMobileUserAgent, isMobileScreen, isMobile, isPWA]);
+
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
     return (
@@ -91,24 +108,28 @@ export function LoginView() {
   }
 
   return (
-    <div className='flex-1 flex flex-col items-center justify-center w-full py-4 pb-12 bg-background'>
-      <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
-        <div className='flex justify-center mb-4'>
-          <img
-            src='/logo.svg'
-            alt='Lightning PoS Logo'
-            className='h-[60px] w-auto'
-            style={{ filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2))' }}
-          />
+    <div className={`w-full h-full bg-red-500 ${isMobile ? 'space-y-1' : 'flex-1 flex flex-col h-full space-y-1'}`}>
+      <div
+        className='overflow-hidden relative flex flex-col items-center justify-center w-full py-4 bg-background/50'
+        style={cameraPreviewHeightStyle}
+      >
+        <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
+          <div className='flex justify-center mb-4'>
+            <img
+              src='/logo.svg'
+              alt='Lightning PoS Logo'
+              className='h-[60px] w-auto'
+              style={{ filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2))' }}
+            />
+          </div>
+          <p className='text-gray-600'>
+            Point of Sale System <br /> with Lightning Network
+          </p>
         </div>
-        <p className='text-gray-600'>
-          Point of Sale System <br /> with Lightning Network
-        </p>
-      </div>
 
-      <div className='w-full max-w-md mx-auto px-4 space-y-4'>
-        <Tabs className='w-full' defaultValue='nwc'>
-          {/* <TabsList className='w-full'>
+        <div className='w-full max-w-md mx-auto px-4 space-y-4'>
+          <Tabs className='w-full' defaultValue='nwc'>
+            {/* <TabsList className='w-full'>
             <TabsTrigger className='w-full' value='lnaddress' disabled>
               Lightning
             </TabsTrigger>
@@ -116,7 +137,7 @@ export function LoginView() {
               NWC
             </TabsTrigger>
           </TabsList> */}
-          {/* <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
+            {/* <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
             <Input
               type='email'
               placeholder='you@lightning.address'
@@ -171,64 +192,65 @@ export function LoginView() {
               )}
             </Button>
           </TabsContent> */}
-          <TabsContent className='space-y-2' value='nwc'>
-            <Input
-              type='text'
-              placeholder='nostr+walletconnect://...'
-              defaultValue={nwc as string}
-              onChange={(e) => setNwc(e.target.value)}
-              disabled={isValidating}
-              className={error ? 'border-red-500' : ''}
-            />
+            <TabsContent className='space-y-2' value='nwc'>
+              <Input
+                type='text'
+                placeholder='nostr+walletconnect://...'
+                defaultValue={nwc as string}
+                onChange={(e) => setNwc(e.target.value)}
+                disabled={isValidating}
+                className={error ? 'border-red-500' : ''}
+              />
 
-            {error && (
-              <div className='flex items-center gap-2 text-red-600 text-sm'>
-                <AlertCircle className='min-h-4 min-w-4' />
-                <span>{error}</span>
-              </div>
-            )}
+              {error && (
+                <div className='flex items-center gap-2 text-red-600 text-sm'>
+                  <AlertCircle className='min-h-4 min-w-4' />
+                  <span>{error}</span>
+                </div>
+              )}
 
-            <Button
-              className='w-full'
-              variant='default'
-              size='lg'
-              onClick={() => {
-                if (!nwc) return;
+              <Button
+                className='w-full'
+                variant='default'
+                size='lg'
+                onClick={() => {
+                  if (!nwc) return;
 
-                login(nwc).then((res) => {
-                  setIsValidating(true);
+                  login(nwc).then((res) => {
+                    setIsValidating(true);
 
-                  if (!res?.success) {
-                    setError(res?.error as string);
-                    setIsValidating(false);
-                  }
+                    if (!res?.success) {
+                      setError(res?.error as string);
+                      setIsValidating(false);
+                    }
 
-                  setShowSuccess(true);
-                  setTimeout(() => {
-                    router.push('/app');
-                  }, 1500);
-                });
-              }}
-              disabled={isValidating || !nwc}
-            >
-              Setup
-            </Button>
-          </TabsContent>
-        </Tabs>
+                    setShowSuccess(true);
+                    setTimeout(() => {
+                      router.push('/app');
+                    }, 1500);
+                  });
+                }}
+                disabled={isValidating || !nwc}
+              >
+                Setup
+              </Button>
+            </TabsContent>
+          </Tabs>
 
-        <div className='text-center'>
-          <span className='text-gray-500'>or</span>
+          <div className='text-center'>
+            <span className='text-gray-500'>or</span>
+          </div>
+
+          <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
+            Scan QR Code
+          </Button>
         </div>
 
-        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
-          Scan QR Code
-        </Button>
+        {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
+
+        {/* PWA Install Prompt */}
+        <InstallPrompt />
       </div>
-
-      {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
-
-      {/* PWA Install Prompt */}
-      <InstallPrompt />
     </div>
   );
 }
