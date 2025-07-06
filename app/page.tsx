@@ -224,8 +224,8 @@ export default function Home() {
             <div className='flex gap-4'>
               <div className='w-12 mt-1 text-muted-foreground text-lg'>1.</div>
               <div className='flex flex-col gap-2 w-full'>
-                <h3 className='text-lg font-bold text-gray-900'>Use your Lightning Address</h3>
-                <p className='text-muted-foreground'>It's like an email address for Bitcoin.</p>
+                <h3 className='text-lg font-bold text-gray-900'>Set up your account</h3>
+                <p className='text-muted-foreground'>Lightning Address or NWC.</p>
               </div>
             </div>
             <div className='flex gap-4'>
