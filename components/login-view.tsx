@@ -108,9 +108,9 @@ export function LoginView() {
   }
 
   return (
-    <div className={`w-full h-full bg-background ${isMobile ? 'space-y-1' : 'flex-1 flex flex-col h-full space-y-1'}`}>
+    <div className={`w-full h-full ${isMobile ? 'space-y-1' : 'flex-1 flex flex-col h-full space-y-1'}`}>
       <div
-        className={`overflow-hidden relative flex flex-col items-center justify-center w-full py-4 ${
+        className={`overflow-hidden relative flex flex-col items-center justify-center w-full py-4 bg-background rounded-b-2xl ${
           isMobile ? 'mx-auto' : 'flex-grow flex-shrink-0'
         }`}
         style={cameraPreviewHeightStyle}

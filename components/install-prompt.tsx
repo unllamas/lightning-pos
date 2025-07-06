@@ -58,7 +58,7 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ onClose }) => {
 
   return (
     <div className='fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm'>
-      <div className='bg-black backdrop-blur-xl border border-card rounded-xl p-4 shadow-2xl'>
+      <div className='bg-black backdrop-blur-xl border border-card/15 rounded-xl p-4 shadow-2xl'>
         <div className='flex items-start space-x-3'>
           <div className='flex-shrink-0'>
             <div className='overflow-hidden flex items-center justify-center w-10 h-10 bg-background rounded-lg'>
