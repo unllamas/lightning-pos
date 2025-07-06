@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle } from 'lucide-react';
 
 import { useAuth } from '@/context/auth';
+import { useMobileDetection } from '@/hooks/use-mobile-detection';
+import { useCamera } from '@/hooks/use-camera';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
@@ -14,12 +15,12 @@ import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CameraModal } from '@/components/camera-modal';
 import { InstallPrompt } from '@/components/install-prompt';
-import { useMobileDetection } from '@/hooks/use-mobile-detection';
 
 export function LoginView() {
   const router = useRouter();
   const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
   const { isPWA, isMobile, isMobileUserAgent, isMobileScreen } = useMobileDetection();
+  const { hasCamera } = useCamera(() => null);
 
   // const [inputAddress, setInputAddress] = useState<string | null>(null);
   const [nwc, setNwc] = useState<string | null>(null);
@@ -239,9 +240,11 @@ export function LoginView() {
             </TabsContent>
           </Tabs>
 
-          <div className='text-center'>
-            <span className='text-gray-500'>or</span>
-          </div>
+          {hasCamera && (
+            <div className='text-center'>
+              <span className='text-gray-500'>or</span>
+            </div>
+          )}
         </div>
 
         {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
@@ -249,15 +252,17 @@ export function LoginView() {
         {/* PWA Install Prompt */}
         <InstallPrompt />
       </div>
-      <div
-        className={`flex items-center justify-center gap-4 w-full p-4 ${
-          !isMobile ? 'flex-shrink md:max-w-md mx-auto' : ''
-        }`}
-      >
-        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
-          Scan QR Code
-        </Button>
-      </div>
+      {hasCamera && (
+        <div
+          className={`flex items-center justify-center gap-4 w-full p-4 ${
+            !isMobile ? 'flex-shrink md:max-w-md mx-auto' : ''
+          }`}
+        >
+          <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
+            Scan QR Code
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
