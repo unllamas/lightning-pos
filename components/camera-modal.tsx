@@ -158,7 +158,7 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
         {hasMutipleCamera && (
           <Button
             className='w-full'
-            variant='default'
+            variant='secondary'
             size='lg'
             onClick={handleSwitchCamera}
             disabled={isSwitchingCamera || isClosing}
@@ -169,7 +169,7 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
           </Button>
         )}
 
-        <Button className='w-full' variant='default' size='lg' onClick={handleClose} disabled={isClosing}>
+        <Button className='w-full' variant='secondary' size='lg' onClick={handleClose} disabled={isClosing}>
           <XIcon className='h-4 w-4' />
           <span className='sr-only'>Close</span>
         </Button>
