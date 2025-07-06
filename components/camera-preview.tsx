@@ -5,6 +5,8 @@ import { gsap } from 'gsap';
 
 import { useMobileDetection } from '@/hooks/use-mobile-detection';
 
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
+
 import { CameraMode, CameraFacing, CapturedMedia } from '@/types/media';
 
 interface CameraPreviewProps {
@@ -694,9 +696,9 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
             ref={initialLoadOverlayRef}
             className='absolute inset-0 z-20 bg-zinc-900 flex items-center justify-center'
           >
-            <div className='text-gray-100 text-center'>
-              <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-gray-100 mx-auto mb-3'></div>
-              <p className='text-sm font-medium'>Loading camera...</p>
+            <div className='flex flex-col items-center text-gray-100 text-center'>
+              <LoadingSpinner />
+              <p className='text-sm font-medium'>Loading camera</p>
             </div>
           </div>
         )}
