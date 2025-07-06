@@ -108,9 +108,11 @@ export function LoginView() {
   }
 
   return (
-    <div className={`w-full h-full bg-red-500 ${isMobile ? 'space-y-1' : 'flex-1 flex flex-col h-full space-y-1'}`}>
+    <div className={`w-full h-full bg-background ${isMobile ? 'space-y-1' : 'flex-1 flex flex-col h-full space-y-1'}`}>
       <div
-        className='overflow-hidden relative flex flex-col items-center justify-center w-full py-4 bg-background/50'
+        className={`overflow-hidden relative flex flex-col items-center justify-center w-full py-4 ${
+          isMobile ? 'mx-auto' : 'border border-zinc-700 flex-grow flex-shrink-0'
+        }`}
         style={cameraPreviewHeightStyle}
       >
         <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
@@ -240,16 +242,17 @@ export function LoginView() {
           <div className='text-center'>
             <span className='text-gray-500'>or</span>
           </div>
-
-          <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
-            Scan QR Code
-          </Button>
         </div>
 
         {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
 
         {/* PWA Install Prompt */}
         <InstallPrompt />
+      </div>
+      <div className={`flex items-center justify-center gap-4 w-full p-4 ${!isMobile ? 'flex-shrink' : ''}`}>
+        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
+          Scan QR Code
+        </Button>
       </div>
     </div>
   );
