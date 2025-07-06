@@ -17,12 +17,13 @@ import animationCheck from './payment/animation-check.json';
 
 interface PaymentSuccessProps {
   amount: number;
+  currency: string;
   printOrder?: PrintOrder | null;
 }
 
-export function PaymentSuccess({ amount, printOrder }: PaymentSuccessProps) {
+export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessProps) {
   const router = useRouter();
-  const { settings, getCurrencySymbol } = useSettings();
+  const { getCurrencySymbol } = useSettings();
   const { print, isAvailable } = usePrint();
 
   const [isPrinting, setIsPrinting] = useState(false);
@@ -51,8 +52,8 @@ export function PaymentSuccess({ amount, printOrder }: PaymentSuccessProps) {
           <div className='flex flex-col justify-center gap-2 text-center'>
             <p className='text-gray-500'>Payment credited</p>
             <div className='text-4xl'>
-              {getCurrencySymbol()}
-              <b>{amount.toLocaleString()}</b> {settings.currency}
+              {getCurrencySymbol(currency)}
+              <b>{amount.toLocaleString()}</b> {currency}
             </div>
           </div>
 

@@ -57,7 +57,9 @@ export function PaymentPage() {
         />
       )}
 
-      {status === 'paid' && <PaymentSuccess amount={amount} printOrder={printOrder} />}
+      {status === 'paid' && (
+        <PaymentSuccess amount={Number(_amount)} currency={String(_currency)} printOrder={printOrder} />
+      )}
     </Suspense>
   );
 }
