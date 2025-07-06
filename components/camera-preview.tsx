@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 
 import { useMobileDetection } from '@/hooks/use-mobile-detection';
 
+import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 import { CameraMode, CameraFacing, CapturedMedia } from '@/types/media';
@@ -664,12 +665,10 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
   }, [onClose]);
 
   return (
-    <div
-      className={`fixed top-0 bg-background w-full h-full ${isMobile ? 'space-y-1' : 'flex flex-col h-full space-y-1'}`}
-    >
+    <div className={`fixed top-0 bg-black w-full h-full ${isMobile ? 'space-y-1' : 'flex flex-col h-full space-y-1'}`}>
       {/* Camera Preview */}
       <div
-        className={`relative w-full bg-black overflow-hidden shadow-2xl ${
+        className={`overflow-hidden relative w-full bg-black rounded-b-2xl shadow-2xl ${
           isMobile ? 'mx-auto' : 'border border-zinc-700 flex-grow flex-shrink-0'
         }`}
         style={cameraPreviewHeightStyle}
@@ -680,8 +679,8 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
           audio={false}
           screenshotFormat='image/jpeg'
           videoConstraints={videoConstraints}
-          onUserMedia={handleUserMedia}
-          onUserMediaError={handleUserMediaError}
+          // onUserMedia={handleUserMedia}
+          // onUserMediaError={handleUserMediaError}
           key={`webcam-${facing}-${selectedDeviceId}-${retryCount}`}
           className='w-full h-full object-cover'
           style={{
@@ -698,7 +697,7 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
           >
             <div className='flex flex-col items-center text-gray-100 text-center'>
               <LoadingSpinner />
-              <p className='text-sm font-medium'>Loading camera</p>
+              <p className='mt-2 text-sm font-medium'>Loading camera</p>
             </div>
           </div>
         )}
@@ -711,9 +710,9 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
         {/* Loading State */}
         {((!isReady && !error) || isInitializing) && (
           <div className='absolute inset-0 bg-zinc-900 flex items-center justify-center p-6'>
-            <div className='text-gray-100 text-center'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-gray-100 mx-auto mb-4'></div>
-              <p className='font-medium'>
+            <div className='flex flex-col items-center text-gray-100 text-center'>
+              <LoadingSpinner />
+              <p className='mt-2 font-medium'>
                 {retryCount > 0 ? `Retrying camera... (${retryCount}/3)` : 'Initializing camera...'}
               </p>
               <p className='text-xs text-zinc-400 mt-2 max-w-xs'>
@@ -921,30 +920,27 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
 
         {/* Camera Switch for Mobile - Right */}
         {isMobile && (
-          <button
+          <Button
+            size='icon'
             onClick={handleSwitchCameraClick}
-            className='bg-zinc-800/80 text-gray-100 p-4 rounded-full hover:bg-zinc-700 transition-all duration-200 backdrop-blur-xl border border-zinc-700 shadow-lg relative z-50'
             disabled={isCapturing || isRecording}
             style={{ position: 'relative', zIndex: 50 }}
           >
-            <SwitchCamera ref={switchCameraIconRef} className='h-6 w-6' />
-          </button>
+            <SwitchCamera ref={switchCameraIconRef} className='h-4 w-4' />
+          </Button>
         )}
 
         {/* Spacer for mobile layout */}
         <div className='flex-1' />
 
-        <button
-          onClick={onClose}
-          className='bg-zinc-800/80 text-gray-100 p-4 rounded-full hover:bg-zinc-700 transition-all duration-200 backdrop-blur-xl border border-zinc-700 shadow-lg relative'
-        >
-          <X className='h-6 w-6' />
-          {capturedMediaCount > 0 && (
+        <Button size='icon' onClick={onClose}>
+          <X className='h-4 w-4' />
+          {/* {capturedMediaCount > 0 && (
             <span className='absolute -top-2 -right-2 bg-[#FF4D00] text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-medium shadow-md'>
               {capturedMediaCount}
             </span>
-          )}
-        </button>
+          )} */}
+        </Button>
       </div>
     </div>
   );
