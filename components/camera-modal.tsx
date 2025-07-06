@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { XIcon, Camera, FlipHorizontal } from 'lucide-react';
+import { XIcon, Camera, SwitchCamera } from 'lucide-react';
 
 import { useCamera } from '@/hooks/use-camera';
 
@@ -153,23 +153,23 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
       </div>
 
       {/* Controls Section - Below camera feed */}
-      <div className={`flex items-center justify-center gap-4 w-full px-6 pt-4 pb-4 ${!isMobile ? 'flex-shrink' : ''}`}>
+      <div className={`flex items-center justify-center gap-4 w-full p-4 bg-red-500 ${!isMobile ? 'flex-shrink' : ''}`}>
         {/* Camera Switch for Mobile - Left */}
         {hasMutipleCamera && (
           <Button
             className='w-full'
             variant='default'
-            size='icon'
+            size='lg'
             onClick={handleSwitchCamera}
             disabled={isSwitchingCamera || isClosing}
             title={`Cambiar a cámara ${facingMode === 'environment' ? 'frontal' : 'trasera'}`}
           >
-            <FlipHorizontal className={`h-4 w-4 ${isSwitchingCamera ? 'animate-spin' : ''}`} />
+            <SwitchCamera className={`h-4 w-4 ${isSwitchingCamera ? 'animate-spin' : ''}`} />
             <span className='sr-only'>Change camera</span>
           </Button>
         )}
 
-        <Button className='w-full' variant='default' size='icon' onClick={handleClose} disabled={isClosing}>
+        <Button className='w-full' variant='default' size='lg' onClick={handleClose} disabled={isClosing}>
           <XIcon className='h-4 w-4' />
           <span className='sr-only'>Close</span>
         </Button>
