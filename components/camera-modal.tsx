@@ -153,7 +153,11 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
       </div>
 
       {/* Controls Section - Below camera feed */}
-      <div className={`flex items-center justify-center gap-4 w-full p-4 ${!isMobile ? 'flex-shrink' : ''}`}>
+      <div
+        className={`flex items-center justify-center gap-4 w-full p-4 ${
+          !isMobile ? 'flex-shrink md:max-w-md mx-auto' : ''
+        }`}
+      >
         {/* Camera Switch for Mobile - Left */}
         {hasMutipleCamera && (
           <Button
