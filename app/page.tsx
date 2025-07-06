@@ -145,13 +145,13 @@ export default function Home() {
               </h1>
               <p className='text-2xl text-muted-foreground'>Transform your business NOW.</p>
 
-              <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+              {/* <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <Button variant='default' size='lg' asChild>
                   <Link href='/jona@breez.fun'>
                     Try Now <ArrowRight />
                   </Link>
                 </Button>
-              </div>
+              </div> */}
 
               <div className='relative overflow-hidden w-auto mt-8'>
                 {/* <div className='absolute z-10 bottom-0 left-0 w-full h-64 bg-gradient-to-b from-white/0 to-white'></div> */}

@@ -59,7 +59,7 @@ export default function PaydeskPage() {
             onClick={() => {
               const orderId = `order-${Date.now()}`;
               router.push(
-                `/payment?currency=${settings.currency}&&amount=${numpadData.intAmount[numpadData.usedCurrency]}`,
+                `/payment?currency=${settings.currency}&amount=${numpadData.intAmount[numpadData.usedCurrency]}`,
               );
             }}
             disabled={numpadData.intAmount[numpadData.usedCurrency] === 0}

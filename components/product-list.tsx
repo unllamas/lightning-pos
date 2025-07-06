@@ -193,7 +193,7 @@ export function ProductList({
       </div>
 
       {cart.length > 0 && (
-        <div className='sticky bottom-0 w-full py-4 bg-white border-t'>
+        <div className='fixed bottom-0 w-full py-4 bg-white border-t'>
           <div className='flex gap-2 w-full max-w-md mx-auto px-4'>
             <Button variant='destructive' size='icon' className='relative' onClick={onClearCart}>
               <span className='absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-5 w-5 flex items-center justify-center'>

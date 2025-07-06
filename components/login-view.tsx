@@ -5,63 +5,77 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
 
-import { useLightningAuth } from '@/hooks/use-lightning-auth';
+import { useAuth } from '@/context/auth';
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { CameraModal } from '@/components/camera-modal';
 
 export function LoginView() {
   const router = useRouter();
-  const { lightningAddress, isAuthenticated, isLoading, login } = useLightningAuth();
-  const [inputAddress, setInputAddress] = useState('');
+  const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
+
+  const [inputAddress, setInputAddress] = useState<string | null>(null);
+  const [nwc, setNwc] = useState<string | null>(null);
+
   const [isValidating, setIsValidating] = useState(false);
   const [error, setError] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const [showCameraModal, setShowCameraModal] = useState(false);
+
   // Auto-login si ya está autenticado
   useEffect(() => {
-    if (isAuthenticated && lightningAddress) {
+    if (isAuthenticated) {
       setShowSuccess(true);
       setTimeout(() => {
         router.push('/app');
       }, 1500);
     }
-  }, [isAuthenticated, lightningAddress, router]);
+  }, [isAuthenticated]);
 
-  const handleSetup = async () => {
-    if (!inputAddress.trim()) {
-      setError('Please enter a Lightning Address');
-      return;
+  const startCamera = () => {
+    if (typeof window !== 'undefined') {
+      setShowCameraModal(true);
     }
+  };
 
-    setError('');
-    setIsValidating(true);
+  const stopCamera = () => {
+    setShowCameraModal(false);
+  };
 
-    const result = await login(inputAddress.trim().toLowerCase());
+  const handleScan = (code: string) => {
+    stopCamera();
 
-    setIsValidating(false);
+    login(code).then((res) => {
+      setIsValidating(true);
 
-    if (result.success) {
+      if (!res?.success) {
+        setError(res?.error as string);
+        setIsValidating(false);
+      }
+
       setShowSuccess(true);
       setTimeout(() => {
         router.push('/app');
       }, 1500);
-    } else {
-      setError(result.error || 'Error setting up Lightning Address');
-    }
+    });
   };
 
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
-    <div className='flex justify-center items-center w-screen h-screen'>
-      <LoadingSpinner />
-    </div>;
+    return (
+      <div className='flex justify-center items-center w-screen h-screen'>
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   // Mostrar pantalla de éxito
-  if (showSuccess && lightningAddress) {
+  if (showSuccess) {
     return (
       <div className='w-full bg-white min-h-screen flex flex-col items-center justify-center p-8'>
         <div className='max-w-md mx-auto text-center mb-8'>
@@ -69,14 +83,14 @@ export function LoginView() {
             <CheckCircle className='h-8 w-8 text-green-600' />
           </div>
           <h1 className='text-2xl font-bold mb-2'>Welcome!</h1>
-          <p className='text-gray-600'>Logged in as {lightningAddress}</p>
+          {lightningAddress && <p className='text-gray-600'>Logged in as {lightningAddress}</p>}
         </div>
       </div>
     );
   }
 
   return (
-    <div className='w-full h-full flex flex-col items-center justify-center py-4'>
+    <div className='flex-1 flex flex-col items-center justify-center w-full py-4 pb-12 bg-background'>
       <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
         <div className='flex justify-center mb-4'>
           <img
@@ -93,63 +107,125 @@ export function LoginView() {
 
       <div className='w-full max-w-md mx-auto px-4 space-y-4'>
         <PWAInstallBanner />
-        <div className='space-y-3'>
-          <Input
-            type='email'
-            placeholder='you@lightning.address'
-            value={inputAddress}
-            onChange={(e) => {
-              setInputAddress(e.target.value);
-              setError(''); // Clear error when typing
-            }}
-            disabled={isValidating}
-            className={error ? 'border-red-500' : ''}
-          />
+        <Tabs className='w-full' defaultValue='nwc'>
+          {/* <TabsList className='w-full'>
+            <TabsTrigger className='w-full' value='lnaddress' disabled>
+              Lightning
+            </TabsTrigger>
+            <TabsTrigger className='w-full' value='nwc'>
+              NWC
+            </TabsTrigger>
+          </TabsList> */}
+          {/* <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
+            <Input
+              type='email'
+              placeholder='you@lightning.address'
+              defaultValue={inputAddress as string}
+              onChange={(e) => {
+                setInputAddress(e.target.value);
+                setError('');
+              }}
+              disabled={isValidating}
+              className={error ? 'border-red-500' : ''}
+            />
 
-          {error && (
-            <div className='flex items-center gap-2 text-red-600 text-sm'>
-              <AlertCircle className='min-h-4 min-w-4' />
-              <span>{error}</span>
-            </div>
-          )}
-        </div>
-
-        <Button
-          className='w-full'
-          variant='default'
-          size='lg'
-          onClick={handleSetup}
-          disabled={isValidating || !inputAddress.trim()}
-        >
-          {isValidating ? (
-            <>
-              <div className='animate-spin rounded-full h-4 w-4'>
-                <LoaderCircle className='h-4 w-4' />
+            {error && (
+              <div className='flex items-center gap-2 text-red-600 text-sm'>
+                <AlertCircle className='min-h-4 min-w-4' />
+                <span>{error}</span>
               </div>
-              Validating...
-            </>
-          ) : (
-            'Setup'
-          )}
-        </Button>
+            )}
 
-        {/* <div className='text-center'>
+            <Button
+              className='w-full'
+              variant='default'
+              size='lg'
+              onClick={() => {
+                if (!inputAddress) return;
+
+                login(inputAddress).then((res) => {
+                  setIsValidating(true);
+
+                  if (!res?.success) {
+                    setError(res?.error as string);
+                    setIsValidating(false);
+                  }
+
+                  setShowSuccess(true);
+                  setTimeout(() => {
+                    router.push('/app');
+                  }, 1500);
+                });
+              }}
+              disabled={isValidating || !inputAddress?.trim()}
+            >
+              {isValidating ? (
+                <>
+                  <div className='animate-spin rounded-full h-4 w-4'>
+                    <LoaderCircle className='h-4 w-4' />
+                  </div>
+                  Validating...
+                </>
+              ) : (
+                'Setup'
+              )}
+            </Button>
+          </TabsContent> */}
+          <TabsContent className='space-y-2' value='nwc'>
+            <Input
+              type='text'
+              placeholder='nostr+walletconnect://...'
+              defaultValue={nwc as string}
+              onChange={(e) => setNwc(e.target.value)}
+              disabled={isValidating}
+              className={error ? 'border-red-500' : ''}
+            />
+
+            {error && (
+              <div className='flex items-center gap-2 text-red-600 text-sm'>
+                <AlertCircle className='min-h-4 min-w-4' />
+                <span>{error}</span>
+              </div>
+            )}
+
+            <Button
+              className='w-full'
+              variant='default'
+              size='lg'
+              onClick={() => {
+                if (!nwc) return;
+
+                login(nwc).then((res) => {
+                  setIsValidating(true);
+
+                  if (!res?.success) {
+                    setError(res?.error as string);
+                    setIsValidating(false);
+                  }
+
+                  setShowSuccess(true);
+                  setTimeout(() => {
+                    router.push('/app');
+                  }, 1500);
+                });
+              }}
+              disabled={isValidating || !nwc}
+            >
+              Setup
+            </Button>
+          </TabsContent>
+        </Tabs>
+
+        <div className='text-center'>
           <span className='text-gray-500'>or</span>
         </div>
 
-        <Button variant='outline' className='w-full' size='lg' asChild>
-          <Link href='/app'>Try Now</Link>
-        </Button> */}
-
-        <Button className='w-full' variant='link' size='lg' asChild>
-          <Link href='/'>Back to Home</Link>
+        <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
+          Scan QR Code
         </Button>
-
-        {/*
-        <div className="text-xs text-gray-500 text-center mt-4">
-          <p>We'll verify your Lightning Address by checking if it supports Lightning payments.</p>
-        </div> */}
       </div>
+
+      {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
     </div>
   );
 }
