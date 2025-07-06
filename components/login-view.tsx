@@ -69,7 +69,7 @@ export function LoginView() {
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-screen h-screen'>
+      <div className='flex justify-center items-center w-screen h-screen text-white'>
         <LoadingSpinner />
       </div>
     );
