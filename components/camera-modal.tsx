@@ -126,7 +126,7 @@ export function CameraModal({ onClose, onScan }: CameraModalProps) {
     >
       <div
         className={`overflow-hidden relative w-full bg-background rounded-b-2xl shadow-2xl ${
-          isMobile ? 'mx-auto' : 'border border-zinc-700 flex-grow flex-shrink-0'
+          isMobile ? 'mx-auto' : 'flex-grow flex-shrink-0'
         }`}
         style={cameraPreviewHeightStyle}
       >
