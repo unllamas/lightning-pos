@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
@@ -13,12 +13,19 @@ import { Button } from '@/components/ui/button';
 import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CameraModal } from '@/components/camera-modal';
+import { CameraPreview } from './camera-preview';
+import { CameraFacing, CameraMode, CapturedMedia } from '@/types/media';
+import { useMobileDetection } from '@/hooks/use-mobile-detection';
+import { InstallPrompt } from './install-prompt';
+
+type View = 'camera' | 'gallery' | 'settings';
 
 export function LoginView() {
   const router = useRouter();
   const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
+  const { isMobile, isMobileUserAgent, isMobileScreen, viewportHeight, isPWA } = useMobileDetection();
 
-  const [inputAddress, setInputAddress] = useState<string | null>(null);
+  // const [inputAddress, setInputAddress] = useState<string | null>(null);
   const [nwc, setNwc] = useState<string | null>(null);
 
   const [isValidating, setIsValidating] = useState(false);
@@ -26,6 +33,32 @@ export function LoginView() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [showCameraModal, setShowCameraModal] = useState(false);
+
+  // Detect if running in an iframe
+  const [isInIframe, setIsInIframe] = useState(false);
+
+  useEffect(() => {
+    // Check if the app is running inside an iframe
+    const inIframe = window.self !== window.top;
+    setIsInIframe(inIframe);
+    console.log('App running in iframe:', inIframe);
+  }, []);
+
+  // Helper function to determine if front camera should be used
+  const shouldUseFrontCamera = (isMobileUserAgent: boolean, isMobileScreen: boolean): boolean => {
+    return !isMobileUserAgent && isMobileScreen;
+  };
+
+  // Set initial camera facing based on device type and screen size
+  const initialCameraFacing =
+    isInIframe && shouldUseFrontCamera(isMobileUserAgent, isMobileScreen) ? 'user' : 'environment';
+
+  const [cameraFacing, setCameraFacing] = useState<CameraFacing>(initialCameraFacing);
+  const [selectedDeviceId, setSelectedDeviceId] = useState<string>('');
+
+  const toggleCameraFacing = () => {
+    setCameraFacing((prev) => (prev === 'user' ? 'environment' : 'user'));
+  };
 
   // Auto-login si ya está autenticado
   useEffect(() => {
@@ -106,7 +139,6 @@ export function LoginView() {
       </div>
 
       <div className='w-full max-w-md mx-auto px-4 space-y-4'>
-        <PWAInstallBanner />
         <Tabs className='w-full' defaultValue='nwc'>
           {/* <TabsList className='w-full'>
             <TabsTrigger className='w-full' value='lnaddress' disabled>
@@ -225,7 +257,23 @@ export function LoginView() {
         </Button>
       </div>
 
-      {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
+      {showCameraModal && (
+        <CameraPreview
+          mode={'photo'}
+          facing={cameraFacing}
+          selectedDeviceId={selectedDeviceId}
+          setSelectedDeviceId={setSelectedDeviceId}
+          onCapture={() => null}
+          onClose={() => setShowCameraModal(false)}
+          onFacingChange={toggleCameraFacing}
+          isCapturing={false}
+          setIsCapturing={() => null}
+          isPWA={isPWA}
+        />
+      )}
+
+      {/* PWA Install Prompt */}
+      <InstallPrompt />
     </div>
   );
 }
