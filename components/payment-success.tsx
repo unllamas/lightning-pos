@@ -8,6 +8,8 @@ import { Printer } from 'lucide-react';
 import { useSettings } from '@/hooks/use-settings';
 import { usePrint } from '@/hooks/use-print';
 
+import { AppContent } from '@/components/app/app-content';
+import { AppFooter } from '@/components/app/app-footer';
 import { Button } from '@/components/ui/button';
 
 import type { PrintOrder } from '@/types/print';
@@ -43,8 +45,8 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
   }, [isAvailable, isPrinting]);
 
   return (
-    <div className='flex flex-col items-center justify-between w-full h-screen mx-auto'>
-      <div className='flex-1 flex flex-col items-center justify-center gap-4 w-full bg-white border-b rounded-b-2xl'>
+    <>
+      <AppContent>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='flex justify-center items-center w-40 h-40 mx-auto rounded-lg'>
             <Lottie animationData={animationCheck} loop={false} />
@@ -65,41 +67,38 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
             </div>
           )} */}
         </div>
-      </div>
+      </AppContent>
 
-      <div className='w-full py-4 pb-8'>
-        <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
-          {/* Botón de impresión - solo mostrar si hay impresora disponible y orden */}
-          {isAvailable && printOrder && (
-            <Button
-              className='w-full flex items-center justify-center gap-2'
-              size='lg'
-              onClick={() => {
-                setIsPrinting(true);
-                handlePrint();
-              }}
-              disabled={isPrinting}
-              variant='success'
-            >
-              {isPrinting ? (
-                <>
-                  <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
-                  <span>Printing...</span>
-                </>
-              ) : (
-                <>
-                  <Printer className='h-4 w-4' />
-                  <span>Print receipt</span>
-                </>
-              )}
-            </Button>
-          )}
-
-          <Button className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
-            Go to back
+      <AppFooter>
+        {isAvailable && printOrder && (
+          <Button
+            className='w-full flex items-center justify-center gap-2'
+            size='lg'
+            onClick={() => {
+              setIsPrinting(true);
+              handlePrint();
+            }}
+            disabled={isPrinting}
+            variant='success'
+          >
+            {isPrinting ? (
+              <>
+                <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-white'></div>
+                <span>Printing...</span>
+              </>
+            ) : (
+              <>
+                <Printer className='h-4 w-4' />
+                <span>Print receipt</span>
+              </>
+            )}
           </Button>
-        </div>
-      </div>
-    </div>
+        )}
+
+        <Button className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
+          Go to back
+        </Button>
+      </AppFooter>
+    </>
   );
 }

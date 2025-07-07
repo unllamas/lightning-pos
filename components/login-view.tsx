@@ -8,6 +8,9 @@ import { useAuth } from '@/context/auth';
 import { useMobileDetection } from '@/hooks/use-mobile-detection';
 import { useCamera } from '@/hooks/use-camera';
 
+import { AppViewport } from '@/components/app/app-viewport';
+import { AppContent } from '@/components/app/app-content';
+import { AppFooter } from '@/components/app/app-footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -109,13 +112,8 @@ export function LoginView() {
   }
 
   return (
-    <div className={`w-full h-full ${isMobile ? 'space-y-1' : 'flex-1 flex flex-col h-full space-y-1'}`}>
-      <div
-        className={`overflow-hidden relative flex flex-col items-center justify-center w-full py-4 bg-background rounded-b-2xl ${
-          isMobile ? 'mx-auto' : 'flex-grow flex-shrink-0'
-        }`}
-        style={cameraPreviewHeightStyle}
-      >
+    <AppViewport>
+      <AppContent>
         <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
           <div className='flex justify-center mb-4'>
             <img
@@ -251,18 +249,14 @@ export function LoginView() {
 
         {/* PWA Install Prompt */}
         <InstallPrompt />
-      </div>
+      </AppContent>
       {hasCamera && (
-        <div
-          className={`flex items-center justify-center gap-4 w-full p-4 ${
-            !isMobile ? 'flex-shrink md:max-w-md mx-auto' : ''
-          }`}
-        >
+        <AppFooter>
           <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
             Scan QR Code
           </Button>
-        </div>
+        </AppFooter>
       )}
-    </div>
+    </AppViewport>
   );
 }

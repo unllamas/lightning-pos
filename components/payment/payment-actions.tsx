@@ -113,56 +113,54 @@ export function PaymentActions({ invoice }: PaymentActionsProps) {
   };
 
   return (
-    <div className='relative z-0 w-full'>
-      <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4 pt-4 pb-8'>
-        {isAvailable && (
-          <Button
-            size='lg'
-            onClick={() => {
-              cardStatus === LNURLWStatus.IDLE && startRead();
-            }}
-            disabled={!invoice || (cardStatus !== LNURLWStatus.IDLE && cardStatus !== LNURLWStatus.DONE)}
-            className={`w-full ${cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`} ${
-              cardStatus === LNURLWStatus.DONE && 'cursor-not-allowed'
-            } text-white`}
-          >
-            {cardStatus === LNURLWStatus.DONE ? (
-              <Check className='h-4 w-4' />
-            ) : cardStatus === LNURLWStatus.REQUESTING ||
-              cardStatus === LNURLWStatus.SCANNING ||
-              cardStatus === LNURLWStatus.CALLBACK ? (
-              <LoadingSpinner />
-            ) : cardStatus === LNURLWStatus.ERROR ? (
-              <span>Oops! Try again</span>
-            ) : (
-              <>
-                <Nfc className='h-4 w-4' />
-                <span>Request NFC</span>
-              </>
-            )}
-          </Button>
-        )}
-
-        {process.env.NODE_ENV === 'development' && invoice && (
-          <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
-            {copied ? (
-              <>
-                <CheckCircle className='h-4 w-4' />
-                <span>Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className='h-4 w-4' />
-                <span>Copy</span>
-              </>
-            )}
-          </Button>
-        )}
-
-        <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
-          Cancel
+    <>
+      {isAvailable && (
+        <Button
+          size='lg'
+          onClick={() => {
+            cardStatus === LNURLWStatus.IDLE && startRead();
+          }}
+          disabled={!invoice || (cardStatus !== LNURLWStatus.IDLE && cardStatus !== LNURLWStatus.DONE)}
+          className={`w-full ${cardStatus !== LNURLWStatus.DONE ? `bg-blue-600 hover:bg-blue-700` : `bg-green-600`} ${
+            cardStatus === LNURLWStatus.DONE && 'cursor-not-allowed'
+          } text-white`}
+        >
+          {cardStatus === LNURLWStatus.DONE ? (
+            <Check className='h-4 w-4' />
+          ) : cardStatus === LNURLWStatus.REQUESTING ||
+            cardStatus === LNURLWStatus.SCANNING ||
+            cardStatus === LNURLWStatus.CALLBACK ? (
+            <LoadingSpinner />
+          ) : cardStatus === LNURLWStatus.ERROR ? (
+            <span>Try again</span>
+          ) : (
+            <>
+              <Nfc className='h-4 w-4' />
+              <span>NFC</span>
+            </>
+          )}
         </Button>
-      </div>
-    </div>
+      )}
+
+      {process.env.NODE_ENV === 'development' && invoice && (
+        <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
+          {copied ? (
+            <>
+              <CheckCircle className='h-4 w-4' />
+              <span>Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className='h-4 w-4' />
+              <span>Copy</span>
+            </>
+          )}
+        </Button>
+      )}
+
+      <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
+        Cancel
+      </Button>
+    </>
   );
 }

@@ -1,8 +1,10 @@
 import ReactQRCode from 'react-qr-code';
 
 import { useSettings } from '@/hooks/use-settings';
-import { PaymentActions } from '@/components/payment/payment-actions';
 
+import { AppFooter } from '@/components/app/app-footer';
+import { AppContent } from '@/components/app/app-content';
+import { PaymentActions } from '@/components/payment/payment-actions';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface PaymentViewProps {
@@ -17,8 +19,8 @@ export function PaymentView({ invoice, amount, currency, amountInSats, isLoading
   const { getCurrencySymbol } = useSettings();
 
   return (
-    <div className='relative flex-1 flex flex-col items-center justify-between w-full mx-auto bg-[#0F0F0F]'>
-      <div className='flex-1 flex flex-col items-center w-full pt-8 bg-white border-b rounded-b-2xl'>
+    <>
+      <AppContent>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='mb-6'>
             {isLoading ? (
@@ -51,9 +53,10 @@ export function PaymentView({ invoice, amount, currency, amountInSats, isLoading
             </div>
           </div>
         </div>
-      </div>
-
-      <PaymentActions invoice={invoice} />
-    </div>
+      </AppContent>
+      <AppFooter>
+        <PaymentActions invoice={invoice} />
+      </AppFooter>
+    </>
   );
 }

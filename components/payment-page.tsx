@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { useNwc } from '@/hooks/use-nwc';
 
+import { AppViewport } from '@/components/app/app-viewport';
 import { PaymentView } from '@/components/payment-view';
 import { PaymentSuccess } from '@/components/payment-success';
 import { PaymentError } from '@/components/payment/payment-error';
@@ -47,19 +48,21 @@ export function PaymentPage() {
 
   return (
     <Suspense>
-      {status === 'pending' && (
-        <PaymentView
-          invoice={invoice as string}
-          amount={Number(_amount)}
-          currency={String(_currency)}
-          amountInSats={Number(amount)}
-          isLoading={!invoice}
-        />
-      )}
+      <AppViewport>
+        {status === 'pending' && (
+          <PaymentView
+            invoice={invoice as string}
+            amount={Number(_amount)}
+            currency={String(_currency)}
+            amountInSats={Number(amount)}
+            isLoading={!invoice}
+          />
+        )}
 
-      {status === 'paid' && (
-        <PaymentSuccess amount={Number(_amount)} currency={String(_currency)} printOrder={printOrder} />
-      )}
+        {status === 'paid' && (
+          <PaymentSuccess amount={Number(_amount)} currency={String(_currency)} printOrder={printOrder} />
+        )}
+      </AppViewport>
     </Suspense>
   );
 }
