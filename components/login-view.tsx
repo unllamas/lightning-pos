@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle } from 'lucide-react';
 
 import { useAuth } from '@/context/auth';
-import { useMobileDetection } from '@/hooks/use-mobile-detection';
 import { useCamera } from '@/hooks/use-camera';
 
 import { AppViewport } from '@/components/app/app-viewport';
@@ -22,7 +21,6 @@ import { InstallPrompt } from '@/components/install-prompt';
 export function LoginView() {
   const router = useRouter();
   const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
-  const { isPWA, isMobile, isMobileUserAgent, isMobileScreen } = useMobileDetection();
   const { hasCamera } = useCamera(() => null);
 
   // const [inputAddress, setInputAddress] = useState<string | null>(null);
@@ -71,21 +69,6 @@ export function LoginView() {
       }, 1500);
     });
   };
-
-  const cameraPreviewHeightStyle = useMemo(() => {
-    // Special case: Desktop browser with mobile screen width (narrow window)
-    if (!isMobileUserAgent && isMobileScreen) {
-      return { height: isPWA ? '90vh' : '88vh' };
-    }
-
-    // Mobile devices (actual mobile user agent or mobile screen width)
-    if (isMobile) {
-      return { height: isPWA ? '82vh' : '76vh' };
-    }
-
-    // Desktop with wide window - use flexbox
-    return {};
-  }, [isMobileUserAgent, isMobileScreen, isMobile, isPWA]);
 
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
