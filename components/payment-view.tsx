@@ -53,7 +53,7 @@ export function PaymentView({ invoice, amount, currency, amountInSats, isLoading
         </div>
       </div>
 
-      <PaymentActions lightningInvoice={invoice} />
+      <PaymentActions invoice={invoice} />
     </div>
   );
 }
