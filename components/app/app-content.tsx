@@ -21,7 +21,7 @@ export function AppContent({ children }: { children: any }) {
 
   return (
     <div
-      className={`overflow-hidden relative flex flex-col items-center justify-center w-full py-4 bg-background rounded-b-2xl ${
+      className={`overflow-x-hidden overflow-y-scroll relative flex flex-col items-center justify-center w-full py-4 bg-background rounded-b-2xl ${
         isMobile ? 'mx-auto' : 'flex-grow flex-shrink-0'
       }`}
       style={cameraPreviewHeightStyle}
