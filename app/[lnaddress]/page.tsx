@@ -30,25 +30,25 @@ export default function PaydeskPage() {
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  useEffect(() => {
-    // async function validateAndLogin() {
-    //   if (!lnaddress) return;
-    //   const decodeLnAddress = decodeURIComponent(String(lnaddress));
+  // useEffect(() => {
+  //   async function validateAndLogin() {
+  //     if (!lnaddress) return;
+  //     const decodeLnAddress = decodeURIComponent(String(lnaddress));
 
-    //   const isValid = await validateLightningAddress(decodeLnAddress as string);
+  //     const isValid = await validateLightningAddress(decodeLnAddress as string);
 
-    //   if (isValid) {
-    //     setIsValid(true);
-    //     return;
-    //   }
-    // }
+  //     if (isValid) {
+  //       setIsValid(true);
+  //       return;
+  //     }
+  //   }
 
-    // validateAndLogin();
+  //   validateAndLogin();
 
-    login(decodeURIComponent(String(lnaddress))).then((res) => {
-      if (res?.success) setIsValid(true);
-    });
-  }, [lnaddress, isValid]);
+  //   login(decodeURIComponent(String(lnaddress))).then((res) => {
+  //     if (res?.success) setIsValid(true);
+  //   });
+  // }, [lnaddress, isValid]);
 
   const value = Number(numpadData.intAmount[numpadData.usedCurrency] || 0);
   const amountInSats = convertCurrency(value, settings?.currency as AvailableCurrencies, 'SAT');
@@ -83,7 +83,7 @@ export default function PaydeskPage() {
             className='w-full'
             size='lg'
             variant='secondary'
-            onClick={() => router.back()}
+            onClick={() => router.push('/login')}
           >
             Go home
           </Button>
