@@ -96,7 +96,7 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
         )}
 
         <Button className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
-          Go to back
+          Go back
         </Button>
       </AppFooter>
     </>
