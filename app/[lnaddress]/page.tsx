@@ -3,17 +3,22 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { AlertCircle, ChevronLeft, Settings, X } from 'lucide-react';
+import { AlertCircle, ArrowUpRight, ChevronLeft, Settings, ShieldAlert, X } from 'lucide-react';
 
 import { useAuth } from '@/hooks/use-auth';
 import { useSettings } from '@/hooks/use-settings';
 import { useNumpad } from '@/hooks/use-numpad';
 import { useCurrencyConverter } from '@/hooks/use-currency-converter';
 
+import { AppViewport } from '@/components/app/app-viewport';
+import { AppContent } from '@/components/app/app-content';
+import { AppFooter } from '@/components/app/app-footer';
 import { Button } from '@/components/ui/button';
 import { Keyboard } from '@/components/keyboard';
 
 import { AvailableCurrencies } from '@/types/config';
+
+const LNADDRESS_ENABLE = process.env.NEXT_PUBLIC_LNADDRESS_ENABLE || false;
 
 export default function PaydeskPage() {
   const { lnaddress } = useParams();
@@ -47,6 +52,45 @@ export default function PaydeskPage() {
 
   const value = Number(numpadData.intAmount[numpadData.usedCurrency] || 0);
   const amountInSats = convertCurrency(value, settings?.currency as AvailableCurrencies, 'SAT');
+
+  if (LNADDRESS_ENABLE !== 'true') {
+    return (
+      <AppViewport>
+        <AppContent>
+          <div className='flex flex-col gap-4 w-full max-w-md px-4'>
+            <div className='bg-yellow-50 border border-yellow-200 border-dashed p-6 rounded-lg w-full'>
+              <div className='flex items-center justify-center mb-4'>
+                <ShieldAlert className='h-12 w-12 text-yellow-500' />
+              </div>
+              <h3 className='text-lg font-medium text-yellow-800 text-center mb-2'>Function temporarily disabled</h3>
+              <p className='text-yellow-700 text-center text-sm'>
+                {
+                  "Thanks for using this feature. We're improving the experience and will be back with Lightning Address soon."
+                }
+              </p>
+            </div>
+
+            <Button id='btn_share_feedback' className='w-full' variant='outline' size='lg' asChild>
+              <Link href='https://tally.so/r/mBoBLR' target='_blank'>
+                Share feedback <ArrowUpRight />
+              </Link>
+            </Button>
+          </div>
+        </AppContent>
+        <AppFooter>
+          <Button
+            id='btn_lnaddress_back'
+            className='w-full'
+            size='lg'
+            variant='secondary'
+            onClick={() => router.back()}
+          >
+            Go home
+          </Button>
+        </AppFooter>
+      </AppViewport>
+    );
+  }
 
   return (
     <div className='flex-1 flex flex-col w-full mx-auto h-full bg-[#0F0F0F]'>
