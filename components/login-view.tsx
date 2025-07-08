@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle } from 'lucide-react';
+import { AlertCircle, CheckCircle, Trash2 } from 'lucide-react';
 
 import { useAuth } from '@/context/auth';
 import { useCamera } from '@/hooks/use-camera';
@@ -68,6 +68,27 @@ export function LoginView() {
         router.push('/app');
       }, 1500);
     });
+  };
+
+  const handlePaste = async () => {
+    setError('');
+    try {
+      const text = await navigator.clipboard.readText();
+
+      if (!isValidNWC(text)) {
+        setError('Invalid value');
+        return;
+      }
+
+      setNwc(text);
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  const isValidNWC = (value: string) => {
+    const prefix = 'nostr+walletconnect://';
+    return typeof value === 'string' && value.startsWith(prefix);
   };
 
   // Mostrar loading mientras verifica sesión existente
@@ -177,14 +198,26 @@ export function LoginView() {
             </Button>
           </TabsContent> */}
             <TabsContent className='space-y-2' value='nwc'>
-              <Input
-                type='text'
-                placeholder='nostr+walletconnect://...'
-                defaultValue={nwc as string}
-                onChange={(e) => setNwc(e.target.value)}
-                disabled={isValidating}
-                className={error ? 'border-red-500' : ''}
-              />
+              <div className='relative'>
+                <Input
+                  type='text'
+                  placeholder='nostr+walletconnect://...'
+                  defaultValue={nwc as string}
+                  readOnly
+                  className={`${nwc ? 'pr-14' : 'pr-20'} ${error ? 'border-red-500' : ''}`}
+                />
+                <div className='absolute top-0 right-0 flex items-center h-full pr-[6px]'>
+                  {!!nwc ? (
+                    <Button variant='destructive' size='sm' onClick={() => setNwc(null)}>
+                      <Trash2 />
+                    </Button>
+                  ) : (
+                    <Button variant='outline' size='sm' onClick={handlePaste} disabled={!!nwc}>
+                      Paste
+                    </Button>
+                  )}
+                </div>
+              </div>
 
               {error && (
                 <div className='flex items-center gap-2 text-red-600 text-sm'>
@@ -200,9 +233,14 @@ export function LoginView() {
                 onClick={() => {
                   if (!nwc) return;
 
-                  login(nwc).then((res) => {
-                    setIsValidating(true);
+                  if (!isValidNWC(nwc)) {
+                    setError('Invalid value');
+                    return;
+                  }
 
+                  setIsValidating(true);
+
+                  login(nwc).then((res) => {
                     if (!res?.success) {
                       setError(res?.error as string);
                       setIsValidating(false);
@@ -216,7 +254,7 @@ export function LoginView() {
                 }}
                 disabled={isValidating || !nwc}
               >
-                Setup
+                {isValidating ? <LoadingSpinner /> : 'Setup'}
               </Button>
             </TabsContent>
           </Tabs>
