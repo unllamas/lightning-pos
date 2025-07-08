@@ -114,6 +114,26 @@ export function PaymentActions({ invoice }: PaymentActionsProps) {
 
   return (
     <>
+      <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
+        Cancel
+      </Button>
+
+      {process.env.NODE_ENV === 'development' && invoice && (
+        <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
+          {copied ? (
+            <>
+              <CheckCircle className='h-4 w-4' />
+              <span>Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className='h-4 w-4' />
+              <span>Copy</span>
+            </>
+          )}
+        </Button>
+      )}
+
       {isAvailable && (
         <Button
           size='lg'
@@ -141,26 +161,6 @@ export function PaymentActions({ invoice }: PaymentActionsProps) {
           )}
         </Button>
       )}
-
-      {process.env.NODE_ENV === 'development' && invoice && (
-        <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
-          {copied ? (
-            <>
-              <CheckCircle className='h-4 w-4' />
-              <span>Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className='h-4 w-4' />
-              <span>Copy</span>
-            </>
-          )}
-        </Button>
-      )}
-
-      <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
-        Cancel
-      </Button>
     </>
   );
 }
