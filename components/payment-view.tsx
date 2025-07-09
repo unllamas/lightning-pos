@@ -1,25 +1,26 @@
-'use client';
-
 import ReactQRCode from 'react-qr-code';
 
 import { useSettings } from '@/hooks/use-settings';
-import { PaymentActions } from '@/components/payment/payment-actions';
 
+import { AppFooter } from '@/components/app/app-footer';
+import { AppContent } from '@/components/app/app-content';
+import { PaymentActions } from '@/components/payment/payment-actions';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface PaymentViewProps {
   invoice: string;
   amount: number;
+  currency: string;
   amountInSats: number;
   isLoading: boolean;
 }
 
-export function PaymentView({ invoice, amount, amountInSats, isLoading }: PaymentViewProps) {
-  const { settings, getCurrencySymbol } = useSettings();
+export function PaymentView({ invoice, amount, currency, amountInSats, isLoading }: PaymentViewProps) {
+  const { getCurrencySymbol } = useSettings();
 
   return (
-    <div className='flex flex-col items-center justify-between w-full h-screen mx-auto relative bg-[#0F0F0F]'>
-      <div className='flex-1 flex flex-col items-center w-full pt-4 bg-white border-b rounded-b-2xl'>
+    <>
+      <AppContent>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='mb-6'>
             {isLoading ? (
@@ -38,7 +39,7 @@ export function PaymentView({ invoice, amount, amountInSats, isLoading }: Paymen
 
             <div className='text-3xl mb-2'>
               {getCurrencySymbol()}
-              <b>{new Intl.NumberFormat().format(amount)}</b> {settings.currency}
+              <b>{new Intl.NumberFormat().format(amount)}</b> {currency}
             </div>
 
             <div className='flex items-center gap-2 text-lg text-gray-600'>
@@ -52,9 +53,10 @@ export function PaymentView({ invoice, amount, amountInSats, isLoading }: Paymen
             </div>
           </div>
         </div>
-      </div>
-
-      <PaymentActions lightningInvoice={invoice} />
-    </div>
+      </AppContent>
+      <AppFooter>
+        <PaymentActions invoice={invoice} />
+      </AppFooter>
+    </>
   );
 }

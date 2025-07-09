@@ -27,7 +27,7 @@ export function ShopEditPage() {
   }
 
   return (
-    <div className='w-full h-full'>
+    <div className='flex-1 w-full bg-background'>
       <ShopEdit />
     </div>
   );

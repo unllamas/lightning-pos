@@ -145,13 +145,13 @@ export default function Home() {
               </h1>
               <p className='text-2xl text-muted-foreground'>Transform your business NOW.</p>
 
-              <div className='flex flex-col sm:flex-row gap-4 justify-center'>
+              {/* <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <Button variant='default' size='lg' asChild>
                   <Link href='/jona@breez.fun'>
                     Try Now <ArrowRight />
                   </Link>
                 </Button>
-              </div>
+              </div> */}
 
               <div className='relative overflow-hidden w-auto mt-8'>
                 {/* <div className='absolute z-10 bottom-0 left-0 w-full h-64 bg-gradient-to-b from-white/0 to-white'></div> */}
@@ -224,8 +224,8 @@ export default function Home() {
             <div className='flex gap-4'>
               <div className='w-12 mt-1 text-muted-foreground text-lg'>1.</div>
               <div className='flex flex-col gap-2 w-full'>
-                <h3 className='text-lg font-bold text-gray-900'>Use your Lightning Address</h3>
-                <p className='text-muted-foreground'>It's like an email address for Bitcoin.</p>
+                <h3 className='text-lg font-bold text-gray-900'>Set up your account</h3>
+                <p className='text-muted-foreground'>Lightning Address or NWC.</p>
               </div>
             </div>
             <div className='flex gap-4'>

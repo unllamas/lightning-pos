@@ -36,7 +36,7 @@ export function CartView({ cart, products, totalAmount, onUpdateQuantity, onChec
   }, 0);
 
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='flex flex-col h-screen bg-background'>
       <header className='py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='flex items-center'>

@@ -8,6 +8,9 @@ import { ChevronLeft, DollarSign, CheckCircle, ArrowUpRight } from 'lucide-react
 
 import { useSettings } from '@/hooks/use-settings';
 
+import { AppViewport } from '@/components/app/app-viewport';
+import { AppFooter } from '@/components/app/app-footer';
+import { AppContent } from '@/components/app/app-content';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -80,9 +83,9 @@ export function SettingsPage() {
   }
 
   return (
-    <div className='w-full h-full flex flex-col bg-[#0F0F0F]'>
+    <AppViewport>
       {/* Header */}
-      <header className='py-4 border-b shadow-sm bg-background'>
+      <header className='fixed top-0 z-10 w-full py-4 border-b shadow-sm bg-background'>
         <div className='flex items-center w-full max-w-md mx-auto px-4'>
           <Button variant='outline' size='icon' onClick={() => router.back()} className='mr-2'>
             <ChevronLeft className='h-4 w-4' />
@@ -99,7 +102,7 @@ export function SettingsPage() {
       </header>
 
       {/* Main Content */}
-      <div className='overflow-y-scroll flex-1 py-4 bg-background border-b rounded-b-2xl'>
+      <AppContent>
         <div className='w-full max-w-md mx-auto px-4 space-y-4'>
           {/* Currency Settings */}
           <Card>
@@ -177,16 +180,16 @@ export function SettingsPage() {
             </Link>
           </div>
         </div>
-      </div>
+      </AppContent>
 
       {/* Back Button */}
-      <div className='pt-4 pb-8'>
+      <AppFooter>
         <div className='w-full max-w-md mx-auto px-4'>
           <Button variant='secondary' size='lg' className='w-full' onClick={() => router.back()}>
             Go to back
           </Button>
         </div>
-      </div>
-    </div>
+      </AppFooter>
+    </AppViewport>
   );
 }
