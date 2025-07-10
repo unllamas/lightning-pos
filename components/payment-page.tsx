@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { useNwc } from '@/hooks/use-nwc';
+import { usePrint } from '@/hooks/use-print';
 
 import { AppViewport } from '@/components/app/app-viewport';
 import { PaymentView } from '@/components/payment-view';
@@ -19,28 +20,34 @@ export function PaymentPage() {
   const _currency = searchParams.get('currency');
 
   const { amount, invoice, createInvoice, status, error } = useNwc();
-  // const { print } = usePrint();
+  const { print } = usePrint();
 
-  // const handleCompletePayment = () => {
-  //   if (amountSats > 0) {
-  //     // Cambiar estado
-  //     // Generar orden de impresión
-  //     const printOrder = {
-  //       total: amountSats,
-  //       currency: _currency,
-  //       totalSats: amount,
-  //     };
+  const handleCompletePayment = () => {
+    if (amount > 0) {
+      // Cambiar estado
+      // Generar orden de impresión
+      const printOrder = {
+        total: amount,
+        currency: _currency,
+        totalSats: amount,
+      };
 
-  //     setPrintOrder(printOrder as any);
-  //     print(printOrder as any);
-  //   }
-  // };
+      setPrintOrder(printOrder as any);
+      print(printOrder as any);
+    }
+  };
 
   const [printOrder, setPrintOrder] = useState<PrintOrder | null>(null);
 
   useEffect(() => {
     !invoice && createInvoice();
   }, [invoice]);
+
+  useEffect(() => {
+    if (status === 'paid') {
+      handleCompletePayment();
+    }
+  }, [status]);
 
   if (error) {
     return <PaymentError error={error} amount={Number(_amount)} currency={_currency as string} />;
