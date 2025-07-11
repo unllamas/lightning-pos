@@ -12,8 +12,8 @@ type Status = 'pending' | 'paid' | 'error';
 export function useNwc() {
   const searchParams = useSearchParams();
 
-  const _amount = searchParams.get('amount');
-  const _currency = searchParams.get('currency');
+  const _amount = searchParams.get('amt');
+  const _currency = searchParams.get('cur');
 
   const [amount, setAmount] = useState<number>(0);
   const [invoice, setInvoice] = useState<string | null>(null);

@@ -16,8 +16,8 @@ import { PrintOrder } from '@/types/print';
 export function PaymentPage() {
   const searchParams = useSearchParams();
 
-  const _amount = searchParams.get('amount');
-  const _currency = searchParams.get('currency');
+  const _amount = searchParams.get('amt');
+  const _currency = searchParams.get('cur');
 
   const { amount, invoice, createInvoice, status, error } = useNwc();
   const { print } = usePrint();
