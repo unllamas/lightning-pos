@@ -26,7 +26,7 @@ export function CartPage() {
   }, 0);
 
   const handleCheckout = () => {
-    router.push(`/payment?cur=${settings?.currency}&amt=${totalAmount}`);
+    router.push(`/payment?src=shop&cur=${settings?.currency}&amt=${totalAmount}`);
   };
 
   if (isLoading) {
