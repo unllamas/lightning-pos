@@ -206,13 +206,13 @@ export function LoginView() {
                   readOnly
                   className={`${nwc ? 'pr-14' : 'pr-20'} ${error ? 'border-red-500' : ''}`}
                 />
-                <div className='absolute top-0 right-0 flex items-center h-full pr-[6px]'>
+                <div className='absolute top-0 right-0 flex items-center h-full pr-[4px]'>
                   {!!nwc ? (
-                    <Button variant='destructive' size='sm' onClick={() => setNwc(null)}>
+                    <Button variant='outline' size='icon' onClick={() => setNwc(null)}>
                       <Trash2 />
                     </Button>
                   ) : (
-                    <Button variant='outline' size='sm' onClick={handlePaste} disabled={!!nwc}>
+                    <Button variant='outline' onClick={handlePaste} disabled={!!nwc}>
                       Paste
                     </Button>
                   )}
