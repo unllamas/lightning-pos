@@ -1,11 +1,12 @@
 'use client';
 
 import type React from 'react';
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, DollarSign, CheckCircle, ArrowUpRight } from 'lucide-react';
+import { ChevronLeft, DollarSign, CheckCircle, ArrowUpRight, Zap, AlertCircle, Trash2 } from 'lucide-react';
 
+import { getLNURLPayInfo } from '@/lib/lightning-utils';
 import { useSettings } from '@/hooks/use-settings';
 
 import { AppViewport } from '@/components/app/app-viewport';
@@ -16,14 +17,27 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CTAButton } from '@/components/ui/button-cta';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 
 import { AvailableCurrencies } from '@/types/config';
 
 export function SettingsPage() {
   const router = useRouter();
-  const { settings, isLoading: settingsLoading, updateCurrency } = useSettings();
+  const { settings, isLoading: settingsLoading, updateCurrency, updateOperator } = useSettings();
 
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
+
+  // Operador
+  const [operatorInput, setOperatorInput] = useState('');
+  const [operatorError, setOperatorError] = useState('');
+
+  // Actualizar el input cuando se cargan las configuraciones
+  useEffect(() => {
+    if (!settingsLoading && settings.operator) {
+      setOperatorInput(settings.operator);
+    }
+  }, [settingsLoading, settings.operator]);
 
   const currencies = [
     { value: 'ARS', label: 'ARS (Argentine Peso)', symbol: '$' },
@@ -41,42 +55,27 @@ export function SettingsPage() {
     showFeedback();
   };
 
-  const clearAllLocalData = useCallback(async () => {
-    // Mostrar confirmación antes de proceder
-    if (!window.confirm('Are you sure you want to clear all local data? This action cannot be undone.')) {
+  const handleOperatorSave = async () => {
+    const address = operatorInput.trim();
+
+    const { ok, error } = await getLNURLPayInfo(address);
+
+    if (!ok) {
+      setOperatorError(error as string);
       return;
     }
 
-    try {
-      // 1. Limpiar localStorage
-      localStorage.clear();
+    updateOperator(address);
+    setOperatorError('');
+    showFeedback();
+  };
 
-      // 2. Limpiar IndexedDB
-      const databases = await window.indexedDB.databases();
-      databases.forEach((db) => {
-        if (db.name) {
-          window.indexedDB.deleteDatabase(db.name);
-        }
-      });
-
-      // 3. Limpiar Cache API si está disponible
-      if ('caches' in window) {
-        const cacheNames = await caches.keys();
-        await Promise.all(cacheNames.map((cacheName) => caches.delete(cacheName)));
-      }
-
-      // 4. Redirigir a la página de inicio
-      router.push('/');
-    } catch (error) {
-      console.error('Error clearing local data:', error);
-      alert('There was an error clearing the data. Please try again.');
-    }
-  }, [router]);
+  const hasOperatorAddressChanges = operatorInput !== settings.operator;
 
   // Mostrar loading mientras cargan las configuraciones
   if (settingsLoading) {
     return (
-      <div className='flex justify-center items-center w-screen h-screen'>
+      <div className='flex justify-center items-center w-screen h-screen text-white'>
         <LoadingSpinner />
       </div>
     );
@@ -102,8 +101,73 @@ export function SettingsPage() {
       </header>
 
       {/* Main Content */}
-      <AppContent>
+      <AppContent className='pt-20'>
         <div className='w-full max-w-md mx-auto px-4 space-y-4'>
+          {/* Operator Lightning Address */}
+          <Card>
+            <CardHeader className='pb-3'>
+              <CardTitle className='flex items-center justify-between gap-2 text-lg'>
+                Operator
+                <Zap className='h-4 w-4 text-gray-500' />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className='space-y-3'>
+                <div>
+                  <Label htmlFor='operator-address' className='text-sm font-medium text-gray-700'>
+                    Lightning Address
+                  </Label>
+                  <div className='relative flex gap-2'>
+                    <Input
+                      id='operator-address'
+                      type='text'
+                      placeholder='operator@wallet.com'
+                      value={operatorInput}
+                      onChange={(e) => {
+                        setOperatorInput(e.target.value);
+                        setOperatorError('');
+                      }}
+                      className={operatorError ? 'border-red-500 flex-1' : 'flex-1'}
+                    />
+                    {settings.operator && (
+                      <div className='absolute top-0 right-0 flex items-center h-full pr-1'>
+                        <Button
+                          variant='outline'
+                          size='icon'
+                          onClick={() => {
+                            setOperatorInput('');
+                            updateOperator('');
+                            setOperatorError('');
+                            showFeedback('Lightning Address cleared');
+                          }}
+                          className='px-3'
+                        >
+                          <Trash2 />
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                  {operatorError && (
+                    <div className='flex items-center text-red-600 text-xs mt-1'>
+                      <AlertCircle className='h-3 w-3 mr-1' />
+                      {operatorError}
+                    </div>
+                  )}
+                </div>
+
+                {hasOperatorAddressChanges && (
+                  <Button size='sm' onClick={handleOperatorSave} disabled={!!operatorError} className='w-full'>
+                    Save
+                  </Button>
+                )}
+
+                <div className='text-xs text-gray-500'>
+                  <p className='mb-1'>Configure your Lightning Address to receive tips directly from customers.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Currency Settings */}
           <Card>
             <CardHeader className='pb-3'>
