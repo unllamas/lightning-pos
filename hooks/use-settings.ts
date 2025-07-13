@@ -7,13 +7,13 @@ import { AvailableCurrencies } from '@/types/config';
 interface Settings {
   currency: AvailableCurrencies;
   language: string;
-  operatorLightningAddress: string;
+  operator: string;
 }
 
 const defaultSettings: Settings = {
   currency: 'USD',
   language: 'EN',
-  operatorLightningAddress: '',
+  operator: '',
 };
 
 export function useSettings() {
@@ -31,8 +31,7 @@ export function useSettings() {
           setSettings({
             currency: parsedSettings.currency || defaultSettings.currency,
             language: parsedSettings.language || defaultSettings.language,
-            operatorLightningAddress:
-              parsedSettings.operatorLightningAddress || defaultSettings.operatorLightningAddress,
+            operator: parsedSettings.operator || defaultSettings.operator,
           });
         }
       } catch (error) {
@@ -86,9 +85,9 @@ export function useSettings() {
   );
 
   // Función para actualizar solo la Lightning Address del operador
-  const updateOperatorLightningAddress = useCallback(
-    (operatorLightningAddress: string) => {
-      return updateSettings({ operatorLightningAddress });
+  const updateOperator = useCallback(
+    (operator: string) => {
+      return updateSettings({ operator });
     },
     [updateSettings],
   );
@@ -168,9 +167,9 @@ export function useSettings() {
   }, []);
 
   // Función para verificar si el operador tiene Lightning Address configurada
-  const hasOperatorLightningAddress = useCallback(() => {
-    return settings.operatorLightningAddress.trim() !== '';
-  }, [settings.operatorLightningAddress]);
+  const hasOperator = useCallback(() => {
+    return settings.operator.trim() !== '';
+  }, [settings.operator]);
 
   return {
     settings,
@@ -179,12 +178,12 @@ export function useSettings() {
     updateSettings,
     updateCurrency,
     updateLanguage,
-    updateOperatorLightningAddress,
+    updateOperator,
     resetSettings,
     getCurrencySymbol,
     getCurrencyName,
     getLanguageName,
     validateLightningAddress,
-    hasOperatorLightningAddress,
+    hasOperator,
   };
 }
