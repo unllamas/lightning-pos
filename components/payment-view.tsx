@@ -20,7 +20,7 @@ export function PaymentView({ invoice, amount, currency, amountInSats, isLoading
 
   return (
     <>
-      <AppContent>
+      <AppContent className='justify-center'>
         <div className='w-full max-w-md mx-auto px-4'>
           <div className='mb-6'>
             {isLoading ? (
