@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { HandHeart, Printer } from 'lucide-react';
+import { AlertCircle, CheckCircle, Copy, HandHeart, Printer } from 'lucide-react';
 import ReactQRCode from 'react-qr-code';
 
-import { convertToSatoshis, generateLightningInvoice, listenPayment } from '@/lib/lightning-utils';
+import { convertToSatoshis, generateLightningInvoice } from '@/lib/lightning-utils';
 import { useSettings } from '@/hooks/use-settings';
 import { usePrint } from '@/hooks/use-print';
 
@@ -46,28 +46,50 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
   const { print, isAvailable } = usePrint();
 
   const [isPrinting, setIsPrinting] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [percentageTip, setPercentageTip] = useState<number>(0);
   const [invoice, setInvoice] = useState<string | null>(null);
-  const [verify, setVerify] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
   const [isPaid, setIsPaid] = useState<boolean>(false);
+  const [paymentListener, setPaymentListener] = useState<NodeJS.Timeout | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (verify) {
-      listenPayment({
-        verifyUrl: verify,
-        intervalMs: 1200,
-        maxRetries: 48,
-        onPaymentConfirmed: async (isPaid: any) => {
-          if (isPaid) {
-            setIsPaid(true);
-          }
-        },
-        onPaymentFailed: () => {
-          console.log('Payment verification failed after maximum retries.');
-        },
-      });
+  // Función para limpiar el listener de pagos
+  const clearPaymentListener = useCallback(() => {
+    if (paymentListener) {
+      clearInterval(paymentListener);
+      setPaymentListener(null);
     }
-  }, [verify, setIsPaid]);
+  }, [paymentListener]);
+
+  // Función para iniciar la escucha de pagos
+  const startPaymentListener = useCallback(
+    (verifyUrl: string) => {
+      // Limpiar cualquier listener existente
+      clearPaymentListener();
+
+      const interval = setInterval(async () => {
+        try {
+          const response = await fetch(verifyUrl);
+          const data: { settled: boolean } = await response.json();
+
+          if (response.ok && data.settled) {
+            // Pago confirmado
+            clearInterval(interval);
+            setPaymentListener(null);
+            setIsPaid(true);
+            console.log('Payment confirmed!');
+          }
+        } catch (error) {
+          console.error('Error checking payment status:', error);
+        }
+      }, 1200); // Verificar cada 1200ms
+
+      setPaymentListener(interval);
+    },
+    [clearPaymentListener],
+  );
 
   const handlePrint = useCallback(() => {
     if (!isAvailable || isPrinting) {
@@ -83,11 +105,29 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
     }, 1200);
   }, [isAvailable, isPrinting]);
 
+  // Limpiar el listener cuando se cierra el modal
+  useEffect(() => {
+    if (!isOpen && paymentListener) {
+      clearPaymentListener();
+    }
+  }, [isOpen, paymentListener, clearPaymentListener]);
+
+  // Limpiar el listener cuando el componente se desmonta
+  useEffect(() => {
+    return () => {
+      if (paymentListener) {
+        clearPaymentListener();
+      }
+    };
+  }, [paymentListener, clearPaymentListener]);
+
   const handleGenerateTip = async (value: number | 0) => {
     if (!value || value === 0) {
       return;
     }
 
+    setIsLoading(true);
+    setError(null);
     const percentageDiscount = TIPS[value as keyof typeof TIPS];
 
     try {
@@ -101,9 +141,25 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
       }
 
       setInvoice(data?.pr);
-      setVerify(data?.verify as string);
+      if (data?.verify) {
+        startPaymentListener(data.verify);
+      }
     } catch (error: any) {
+      setIsLoading(false);
+      setError(error?.message);
       console.log('error', error?.message);
+    }
+  };
+
+  const copyInvoice = async () => {
+    if (invoice) {
+      try {
+        await navigator.clipboard.writeText(invoice);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy invoice:', err);
+      }
     }
   };
 
@@ -124,11 +180,17 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
 
           {settings?.operator && !isPaid && (
             <>
-              <Dialog>
+              <Dialog open={isOpen}>
                 <DialogTrigger asChild>
-                  <Button className={`w-full mt-4`} size='lg' variant='outline' onClick={() => {}}>
+                  <Button
+                    id='btn-generate-tip'
+                    className={`w-full mt-4`}
+                    size='lg'
+                    variant='outline'
+                    onClick={() => setIsOpen(true)}
+                  >
                     <HandHeart />
-                    Generate TIP
+                    Generate Tip
                   </Button>
                 </DialogTrigger>
                 <DialogContent
@@ -144,15 +206,43 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
                   </DialogHeader>
                   {percentageTip === 0 && !invoice && (
                     <div className='flex gap-2 w-full'>
-                      <Button className='w-full' size='lg' variant={'default'} onClick={() => handleGenerateTip(10)}>
+                      <Button
+                        id='btn-10-percentage'
+                        className='w-full'
+                        size='lg'
+                        variant={'default'}
+                        disabled={!!error || isLoading}
+                        onClick={() => handleGenerateTip(10)}
+                      >
                         10%
                       </Button>
-                      <Button className='w-full' size='lg' variant={'default'} onClick={() => handleGenerateTip(15)}>
+                      <Button
+                        id='btn-15-percentage'
+                        className='w-full'
+                        size='lg'
+                        variant={'default'}
+                        disabled={!!error || isLoading}
+                        onClick={() => handleGenerateTip(15)}
+                      >
                         15%
                       </Button>
-                      <Button className='w-full' size='lg' variant={'default'} onClick={() => handleGenerateTip(20)}>
+                      <Button
+                        id='btn-20-percentage'
+                        className='w-full'
+                        size='lg'
+                        variant={'default'}
+                        disabled={!!error || isLoading}
+                        onClick={() => handleGenerateTip(20)}
+                      >
                         20%
                       </Button>
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className='flex items-center gap-2 text-red-600 text-sm'>
+                      <AlertCircle className='min-h-4 min-w-4' />
+                      <span>{error}</span>
                     </div>
                   )}
 
@@ -169,9 +259,41 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
                       </div>
                     ))}
 
-                  <Button variant='outline' size='lg' asChild>
-                    <DialogClose onClick={() => setPercentageTip(0)}>Cancel</DialogClose>
-                  </Button>
+                  {process.env.NODE_ENV === 'development' && invoice && (
+                    <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
+                      {copied ? (
+                        <>
+                          <CheckCircle className='h-4 w-4' />
+                          <span>Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className='h-4 w-4' />
+                          <span>Copy</span>
+                        </>
+                      )}
+                    </Button>
+                  )}
+
+                  <DialogClose asChild>
+                    <Button
+                      id='btn-cancel-tip'
+                      type='button'
+                      variant='outline'
+                      size='lg'
+                      onClick={() => {
+                        setIsOpen(false);
+                        setPercentageTip(0);
+                        setInvoice(null);
+                        setError(null);
+                        setIsPaid(false);
+                        clearPaymentListener();
+                        setIsLoading(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </DialogClose>
                 </DialogContent>
               </Dialog>
 
@@ -217,7 +339,7 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
           </Button>
         )}
 
-        <Button className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
+        <Button id='btn-go-back' className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
           Go back
         </Button>
       </AppFooter>
