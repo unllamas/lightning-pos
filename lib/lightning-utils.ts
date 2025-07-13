@@ -87,7 +87,9 @@ export async function convertToSatoshis(amount: number, currency: string): Promi
 }
 
 // Obtener información LNURL-pay de una Lightning Address
-export async function getLNURLPayInfo(lightningAddress: string): Promise<LNURLPayResponse> {
+export async function getLNURLPayInfo(
+  lightningAddress: string,
+): Promise<{ data?: any | null; ok: boolean; error?: string | null }> {
   const [username, domain] = lightningAddress.split('@');
   if (!username || !domain) {
     throw new Error('Invalid Lightning Address format');
@@ -95,17 +97,22 @@ export async function getLNURLPayInfo(lightningAddress: string): Promise<LNURLPa
 
   const lnurlpUrl = `https://${domain}/.well-known/lnurlp/${username}`;
 
-  const response = await fetch(lnurlpUrl, { headers: { Accept: 'application/json' } });
-  if (!response.ok) {
-    throw new Error(`LNURL-pay request failed: ${response.status}`);
-  }
+  try {
+    const response = await fetch(lnurlpUrl, { headers: { Accept: 'application/json' } });
 
-  const data: LNURLPayResponse = await response.json();
-  if (data.tag !== 'payRequest' || !data.callback || !data.metadata) {
-    throw new Error('Invalid LNURL-pay response');
-  }
+    if (!response.ok) {
+      throw new Error(`LNURL-pay request failed: ${response.status}`);
+    }
 
-  return data;
+    const data: LNURLPayResponse = await response.json();
+    if (data.tag !== 'payRequest' || !data.callback || !data.metadata) {
+      throw new Error('Invalid LNURL-pay response');
+    }
+
+    return { ok: true, data };
+  } catch (error: any) {
+    return { ok: false, error: 'Oops, something went wrong.' };
+  }
 }
 
 // Generar factura Lightning usando LUD-16/LUD-21
@@ -115,22 +122,20 @@ export async function generateLightningInvoice(
   comment?: string,
 ): Promise<LNURLPayCallbackResponse> {
   // Primero obtener la información LNURL-pay
-  const lnurlInfo = await getLNURLPayInfo(lightningAddress);
+  const { data } = await getLNURLPayInfo(lightningAddress);
 
   // Convertir satoshis a millisatoshis (1 sat = 1000 millisats)
   const amountMillisats = amountSats * 1000;
-  if (amountMillisats < lnurlInfo.minSendable || amountMillisats > lnurlInfo.maxSendable) {
+  if (amountMillisats < data.minSendable || amountMillisats > data.maxSendable) {
     throw new Error(
-      `Your wallet accepts a minimum of ${lnurlInfo.minSendable / 1000} and a maximum of ${
-        lnurlInfo.maxSendable / 1000
-      } SATs`,
+      `Your wallet accepts a minimum of ${data.minSendable / 1000} and a maximum of ${data.maxSendable / 1000} SATs`,
     );
   }
 
   // Preparar parámetros para el callback
-  const callbackUrl = new URL(lnurlInfo.callback);
+  const callbackUrl = new URL(data.callback);
   callbackUrl.searchParams.set('amount', amountMillisats.toString());
-  if (comment && lnurlInfo.commentAllowed && comment.length <= lnurlInfo.commentAllowed) {
+  if (comment && data.commentAllowed && comment.length <= data.commentAllowed) {
     callbackUrl.searchParams.set('comment', comment);
   }
 
@@ -166,4 +171,58 @@ export async function verifyLightningPayment(verifyUrl: string, paymentHash: str
   }
 
   return verifyData;
+}
+
+export function listenPayment({
+  verifyUrl,
+  intervalMs = 5000,
+  maxRetries = 12,
+  onPaymentConfirmed,
+  onPaymentFailed,
+}: {
+  verifyUrl: string; // URL to check payment status
+  intervalMs?: number; // Interval in milliseconds between checks
+  maxRetries?: number; // Maximum number of try
+  onPaymentConfirmed: (isPaid: boolean) => void; // Callback when payment is detected
+  onPaymentFailed?: () => void; // Callback if attempts are exhausted
+}) {
+  let retries = 0;
+
+  const cron = setInterval(async () => {
+    try {
+      // Verify state of payment
+      const response = await fetch(verifyUrl);
+      const data: {
+        settled: boolean;
+      } = await response.json();
+
+      // Is paid
+      if (response.ok && data.settled) {
+        clearInterval(cron);
+        onPaymentConfirmed(true);
+
+        return;
+      }
+
+      retries++;
+
+      // If the maximum number of attempts was reached, we return an error
+      if (retries >= maxRetries) {
+        console.warn('Max retries reached. Payment not confirmed.');
+
+        clearInterval(cron);
+        onPaymentFailed?.();
+      }
+    } catch (error) {
+      console.error('Error during payment status check:', error);
+      retries++;
+
+      if (retries >= maxRetries) {
+        console.warn('Max retries reached due to errors. Payment not confirmed.');
+
+        clearInterval(cron);
+        onPaymentFailed?.();
+      }
+    }
+  }, intervalMs);
 }
