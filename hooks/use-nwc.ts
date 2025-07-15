@@ -6,6 +6,7 @@ import { LN, webln } from '@getalby/sdk';
 
 import { convertToSatoshis } from '@/lib/lightning-utils';
 import { getLocal } from '@/lib/localStorage';
+import { trackPurchase } from '@/lib/gtag';
 
 type Status = 'pending' | 'paid' | 'error';
 
@@ -47,8 +48,11 @@ export function useNwc() {
         setStatus('paid');
         return;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('NWC payment verification error:', error);
+      setError(error.message ?? 'Error in verify invoice');
+      setStatus('error');
+      return;
     }
   }, [authData?.nwcString, hash, status]);
 
@@ -80,6 +84,14 @@ export function useNwc() {
 
         setInvoice(invoice?.paymentRequest);
         setHash(invoice?.paymentHash);
+
+        // Event for GA-4
+        trackPurchase({
+          transaction_id: invoice?.paymentHash,
+          value: Number(_amount),
+          currency: _currency as string,
+          items: [],
+        });
       } catch (error: any) {
         setError(error.message ?? 'Error generating invoice');
         setStatus('error');
@@ -90,7 +102,7 @@ export function useNwc() {
   );
 
   useEffect(() => {
-    if (!hash || status === 'paid') return;
+    if (!hash || status === 'paid' || status === 'error') return;
 
     const interval = setInterval(() => {
       verifyPayment();
