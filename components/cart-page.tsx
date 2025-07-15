@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import { usePOSData } from '@/hooks/use-pos-data';
 import { useSettings } from '@/hooks/use-settings';
+import { trackBeginCheckout } from '@/lib/gtag';
 
 import { CartView } from '@/components/cart-view';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -12,7 +13,7 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 export function CartPage() {
   const router = useRouter();
   const { settings } = useSettings();
-  const { products, cart, isLoading, error, updateCartQuantity } = usePOSData();
+  const { products, categories, cart, isLoading, error, updateCartQuantity } = usePOSData();
 
   useEffect(() => {
     if (!isLoading && cart?.length === 0) {
@@ -26,6 +27,26 @@ export function CartPage() {
   }, 0);
 
   const handleCheckout = () => {
+    const items = cart.map((item) => {
+      const product = products.find((p) => p.id === item.id);
+      const category = categories.find((category) => category.id === product?.categoryId);
+
+      return {
+        item_id: product?.id as string,
+        item_name: product?.name as string,
+        item_category: category?.name as string,
+        currency: settings?.currency,
+        price: product?.price,
+        quantity: item?.quantity,
+      };
+    });
+
+    trackBeginCheckout({
+      currency: settings?.currency,
+      value: totalAmount,
+      items,
+    });
+
     router.push(`/payment?src=shop&cur=${settings?.currency}&amt=${totalAmount}`);
   };
 
