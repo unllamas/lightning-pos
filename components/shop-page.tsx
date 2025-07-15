@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { ChevronLeft, Pencil } from 'lucide-react';
 
 import { usePOSData } from '@/hooks/use-pos-data';
+import { useSettings } from '@/hooks/use-settings';
+import { trackAddToCart } from '@/lib/gtag';
 
 import { Button } from '@/components/ui/button';
 import { ProductList } from '@/components/product-list';
@@ -12,7 +14,27 @@ import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 export function ShopPage() {
   const router = useRouter();
+  const { settings } = useSettings();
   const { categories, products, cart, isLoading, error, addToCart, updateCartQuantity, clearCart } = usePOSData();
+
+  const handleAddToCart = (id: string) => {
+    const product = products.find((prod) => prod.id === id);
+    const category = categories.find((category) => category.id === product?.categoryId);
+
+    trackAddToCart({
+      currency: settings?.currency,
+      value: Number(product?.price),
+      items: [
+        {
+          item_id: product?.id as string,
+          item_name: product?.name as string,
+          item_category: category?.name as string,
+        },
+      ],
+    });
+
+    addToCart(id);
+  };
 
   if (isLoading) {
     <div className='flex justify-center items-center w-screen h-screen'>
@@ -56,7 +78,7 @@ export function ShopPage() {
       <ProductList
         categories={categories}
         products={products}
-        onAddToCart={addToCart}
+        onAddToCart={handleAddToCart}
         cart={cart}
         updateQuantity={updateCartQuantity}
         onCartClick={() => router.push('/cart')}
