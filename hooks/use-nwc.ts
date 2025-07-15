@@ -84,14 +84,6 @@ export function useNwc() {
 
         setInvoice(invoice?.paymentRequest);
         setHash(invoice?.paymentHash);
-
-        // Event for GA-4
-        trackPurchase({
-          transaction_id: invoice?.paymentHash,
-          value: Number(_amount),
-          currency: _currency as string,
-          items: [],
-        });
       } catch (error: any) {
         setError(error.message ?? 'Error generating invoice');
         setStatus('error');
@@ -117,6 +109,7 @@ export function useNwc() {
   return {
     amount,
     invoice,
+    hash,
     status,
     error,
     createInvoice,
