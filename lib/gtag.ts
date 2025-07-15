@@ -1,12 +1,4 @@
 // gtag.ts
-
-declare global {
-  interface Window {
-    dataLayer: any[];
-    gtag: (...args: any[]) => void;
-  }
-}
-
 export const GOOGLE_TAG_ID = process.env.NEXT_PUBLIC_GOOGLE_TAG_ID || '';
 
 type GtagEventParams = Record<string, any>;
@@ -57,6 +49,12 @@ export interface GtagBeginCheckoutParams {
   coupon?: string;
 }
 
+export interface GtagViewCartParams {
+  currency: string;
+  value: number;
+  items: GtagItem[];
+}
+
 export interface GtagAddToCartParams {
   currency: string;
   value: number;
@@ -71,6 +69,10 @@ export function trackPurchase(params: GtagPurchaseParams) {
 
 export function trackBeginCheckout(params: GtagBeginCheckoutParams) {
   event('begin_checkout', params);
+}
+
+export function trackViewCart(params: GtagViewCartParams) {
+  event('view_cart', params);
 }
 
 export function trackAddToCart(params: GtagAddToCartParams) {
