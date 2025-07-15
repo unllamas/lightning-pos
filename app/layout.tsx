@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 import { Space_Mono } from 'next/font/google';
 
@@ -69,15 +70,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel='manifest' href='/manifest.json' />
         <link rel='shortcut icon' href='/iso.svg?height=32&width=32' />
 
+        <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID || ''} />
         <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}`} />
         <Script id='google-analytics'>
           {`
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-      
-        gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}');
-      `}
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+          
+            gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_TAG_ID}');
+          `}
         </Script>
       </head>
       <body className={`flex flex-col min-h-[100dvh] bg-black ${spaceMono.className} select-none`}>
