@@ -5,6 +5,8 @@ import { useSearchParams } from 'next/navigation';
 
 import { useNwc } from '@/hooks/use-nwc';
 import { usePrint } from '@/hooks/use-print';
+import { usePOSData } from '@/hooks/use-pos-data';
+import { trackPurchase } from '@/lib/gtag';
 
 import { AppViewport } from '@/components/app/app-viewport';
 import { PaymentView } from '@/components/payment-view';
@@ -19,7 +21,8 @@ export function PaymentPage() {
   const _amount = searchParams.get('amt');
   const _currency = searchParams.get('cur');
 
-  const { amount, invoice, createInvoice, status, error } = useNwc();
+  const { products, categories, cart } = usePOSData();
+  const { amount, invoice, hash, createInvoice, status, error } = useNwc();
   const { print } = usePrint();
 
   const handleCompletePayment = () => {
@@ -31,6 +34,28 @@ export function PaymentPage() {
         currency: _currency,
         totalSats: amount,
       };
+
+      const items = cart.map((item) => {
+        const product = products.find((p) => p.id === item.id);
+        const category = categories.find((category) => category.id === product?.categoryId);
+
+        return {
+          item_id: product?.id as string,
+          item_name: product?.name as string,
+          item_category: category?.name as string,
+          currency: _currency as string,
+          price: product?.price,
+          quantity: item?.quantity,
+        };
+      });
+
+      // Event for GA-4
+      trackPurchase({
+        transaction_id: hash as string,
+        value: Number(_amount),
+        currency: _currency as string,
+        items,
+      });
 
       setPrintOrder(printOrder as any);
       print(printOrder as any);
