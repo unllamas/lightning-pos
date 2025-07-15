@@ -6,7 +6,7 @@ import { ChevronLeft, Pencil } from 'lucide-react';
 
 import { usePOSData } from '@/hooks/use-pos-data';
 import { useSettings } from '@/hooks/use-settings';
-import { trackAddToCart } from '@/lib/gtag';
+import { trackAddToCart, trackViewCart } from '@/lib/gtag';
 
 import { Button } from '@/components/ui/button';
 import { ProductList } from '@/components/product-list';
@@ -34,6 +34,35 @@ export function ShopPage() {
     });
 
     addToCart(id);
+  };
+
+  const handleViewCart = () => {
+    const totalAmount = cart.reduce((sum, item) => {
+      const product = products.find((p) => p.id === item.id);
+      return sum + (product?.price || 0) * item.quantity;
+    }, 0);
+
+    const items = cart.map((item) => {
+      const product = products.find((p) => p.id === item.id);
+      const category = categories.find((category) => category.id === product?.categoryId);
+
+      return {
+        item_id: product?.id as string,
+        item_name: product?.name as string,
+        item_category: category?.name as string,
+        currency: settings?.currency,
+        price: product?.price,
+        quantity: item?.quantity,
+      };
+    });
+
+    trackViewCart({
+      currency: settings?.currency,
+      value: Number(totalAmount),
+      items,
+    });
+
+    router.push('/cart');
   };
 
   if (isLoading) {
@@ -81,7 +110,7 @@ export function ShopPage() {
         onAddToCart={handleAddToCart}
         cart={cart}
         updateQuantity={updateCartQuantity}
-        onCartClick={() => router.push('/cart')}
+        onCartClick={handleViewCart}
         onClearCart={clearCart}
       />
     </div>
