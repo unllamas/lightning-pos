@@ -11,10 +11,32 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { JoinCloud } from '@/components/join-cloud';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { getLocal } from '@/lib/localStorage';
+
+const dashboardCards = [
+  {
+    title: 'Shop',
+    description: 'Complete Point of Sale',
+    icon: Store,
+    href: '/shop',
+    color: 'bg-green-500',
+    status: 'ACTIVE',
+  },
+  {
+    title: 'Paydesk',
+    description: 'Lightning Payments',
+    icon: Calculator,
+    href: '/paydesk',
+    color: 'bg-blue-500',
+    status: 'ACTIVE',
+  },
+];
 
 export function AppDashboard() {
   const router = useRouter();
   const { logout, lightningAddress, isAuthenticated, isLoading, authMethod } = useAuth();
+
+  const waitlistEmail = getLocal('waitlist-email');
 
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
@@ -22,28 +44,9 @@ export function AppDashboard() {
     }
   }, [isAuthenticated, isLoading]);
 
-  const dashboardCards = [
-    {
-      title: 'Shop',
-      description: 'Complete Point of Sale',
-      icon: Store,
-      href: '/shop',
-      color: 'bg-green-500',
-      status: 'ACTIVE',
-    },
-    {
-      title: 'Paydesk',
-      description: 'Lightning Payments',
-      icon: Calculator,
-      href: '/paydesk',
-      color: 'bg-blue-500',
-      status: 'ACTIVE',
-    },
-  ];
-
   if (isLoading) {
     return (
-      <div className='flex justify-center items-center w-screen h-screen'>
+      <div className='flex justify-center items-center w-screen h-screen text-white'>
         <LoadingSpinner />
       </div>
     );
@@ -75,7 +78,7 @@ export function AppDashboard() {
       </header>
 
       <div className='flex flex-col gap-4 w-full max-w-md mx-auto p-4'>
-        {process.env.NODE_ENV === 'development' && <JoinCloud />}
+        {!waitlistEmail && <JoinCloud />}
 
         {/* Main Content */}
         <div className='flex-1 flex flex-col gap-4'>
