@@ -1,5 +1,6 @@
 'use server';
 
+const USEPLUNK_API_URL = 'https://api.useplunk.com/v1/track';
 const BEARER_TOKEN = process.env.USEPLUNK_BEARER_TOKEN || '';
 
 export async function sendEmail({ email }: { email: string }): Promise<{ error: any; status: number } | void> {
@@ -7,7 +8,7 @@ export async function sendEmail({ email }: { email: string }): Promise<{ error: 
     return { error: 'Email required', status: 401 };
   }
 
-  await fetch('https://api.useplunk.com/v1/track', {
+  await fetch(USEPLUNK_API_URL, {
     method: 'POST',
     body: JSON.stringify({
       event: 'user-waitlist',
