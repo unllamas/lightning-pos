@@ -92,6 +92,7 @@ export function WaitlistPage() {
             </Button>
 
             <Button
+              id='btn-join-waitlist'
               className='w-full'
               size='lg'
               variant='success'
