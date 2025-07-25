@@ -189,7 +189,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const isValid = await validateLightningAddress(lightningAddress);
 
         if (!isValid) {
-          const error = 'Invalid Lightning Address. Please check that the address exists and supports payments.';
+          const error = 'Invalid Lightning Address.';
           dispatch({ type: 'SET_ERROR', payload: error });
           return { success: false, error };
         }
@@ -269,12 +269,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = useCallback(
     async (credential: string): Promise<{ success: boolean; error?: string }> => {
       // Detect if it's a Lightning Address or NWC string
-      if (credential.startsWith('nostr+walletconnect://')) {
-        return loginWithNWC(credential);
-      } else if (credential.includes('@')) {
+      // if (credential.startsWith('nostr+walletconnect://')) {
+      //   return loginWithNWC(credential);
+      // }
+      if (credential.includes('@')) {
         return loginWithLightningAddress(credential);
       } else {
-        const error = 'Invalid credential format. Please enter a Lightning Address or NWC string.';
+        const error = 'Invalid credential format.';
         dispatch({ type: 'SET_ERROR', payload: error });
         return { success: false, error };
       }
@@ -331,6 +332,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       checkInitialization();
     });
   }, [state.isInitialized]);
+
+  if (state.isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const contextValue: AuthContextType = {
     ...state,
