@@ -107,6 +107,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (savedAuth) {
           const parsedAuth = JSON.parse(savedAuth);
 
+          if (parsedAuth.authMethod === 'nwc') {
+            logout();
+            return;
+          }
+
           // Validate the saved data structure
           if (parsedAuth.authMethod && (parsedAuth.lightningAddress || parsedAuth.nwcString)) {
             dispatch({
