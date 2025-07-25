@@ -22,21 +22,6 @@ El proyecto contiene **15 hooks personalizados** con diferentes niveles de uso y
 
 **Estado:** ✅ Bien implementado, usado extensivamente
 
-### 2. `useLightningAuth` - ⭐⭐⭐⭐⭐
-**Ubicación:** `hooks/use-lightning-auth.ts`
-**Uso:** Sistema de autenticación
-**Propósito:** Autenticación con Lightning Address
-
-```typescript
-// Funcionalidades:
-- Validación de Lightning Address via LNURL-pay
-- Persistencia en localStorage
-- Estados de loading/error
-- Login/logout
-```
-
-**Estado:** ✅ Crítico para el funcionamiento, bien implementado
-
 ### 3. `useSettings` - ⭐⭐⭐⭐
 **Ubicación:** `hooks/use-settings.ts`
 **Uso:** Configuración global
@@ -77,15 +62,6 @@ El proyecto contiene **15 hooks personalizados** con diferentes niveles de uso y
 
 **Estado:** ✅ Simple y efectivo
 
-## 📱 Hooks de UI/UX
-
-### 8. `usePWAInstall` - ⭐⭐⭐
-**Ubicación:** `hooks/use-pwa-install.ts`
-**Uso:** Instalación PWA
-**Propósito:** Gestión de instalación como PWA
-
-**Estado:** ✅ Importante para experiencia móvil
-
 ### 9. `useSwipeCarousel` - ⭐⭐
 **Ubicación:** `hooks/use-swipe-carousel.ts`
 **Uso:** Carrusel de onboarding
@@ -95,30 +71,15 @@ El proyecto contiene **15 hooks personalizados** con diferentes niveles de uso y
 
 ## ❌ Hooks NO UTILIZADOS (Candidatos para eliminación)
 
-### 1. `useCart` - ❌ NO USADO
-**Ubicación:** `hooks/use-cart.ts`
-**Problema:** Duplica funcionalidad de `usePOSData`
-**Recomendación:** 🗑️ **ELIMINAR** - La funcionalidad está en `usePOSData`
-
 ### 2. `useNFC` - ❌ NO USADO  
 **Ubicación:** `hooks/use-nfc.ts`
 **Problema:** Funcionalidad cubierta por `useCard`
 **Recomendación:** 🗑️ **ELIMINAR** - `useCard` es más completo
 
-
 ### 4. `useInjectedNFC` - ⚠️ USADO INDIRECTAMENTE
 **Ubicación:** `hooks/use-injected-nfc.ts`
 **Uso:** Solo por `useCard`
 **Recomendación:** ✅ **MANTENER** - Necesario para `useCard`
-
-## 🔄 Hooks Duplicados en UI
-
-### `useIsMobile` - ⚠️ DUPLICADO
-**Ubicaciones:** 
-- `hooks/use-mobile.tsx` 
-- `components/ui/use-mobile.tsx`
-
-**Recomendación:** 🔧 **CONSOLIDAR** - Mantener solo uno en `hooks/`
 
 ### `useToast` - ⚠️ DUPLICADO
 **Ubicaciones:**
