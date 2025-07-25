@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle, LoaderCircle, Trash2 } from 'lucide-react';
+import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
 
 import { useAuth } from '@/context/auth';
 import { useCamera } from '@/hooks/use-camera';
@@ -26,7 +26,7 @@ export function LoginView() {
   const [nwc, setNwc] = useState<string | null>(null);
 
   const [isValidating, setIsValidating] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
   const [showCameraModal, setShowCameraModal] = useState(false);
@@ -52,6 +52,13 @@ export function LoginView() {
   };
 
   const handleScan = (code: string) => {
+    setError(null);
+
+    if (!code.includes('@')) {
+      setError('Invalid Lightning Address');
+      return;
+    }
+
     stopCamera();
 
     login(code).then((res) => {
@@ -69,26 +76,26 @@ export function LoginView() {
     });
   };
 
-  const handlePaste = async () => {
-    setError('');
-    try {
-      const text = await navigator.clipboard.readText();
+  // const handlePaste = async () => {
+  //   setError('');
+  //   try {
+  //     const text = await navigator.clipboard.readText();
 
-      if (!isValidNWC(text)) {
-        setError('Invalid value');
-        return;
-      }
+  //     if (!isValidNWC(text)) {
+  //       setError('Invalid value');
+  //       return;
+  //     }
 
-      setNwc(text);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+  //     setNwc(text);
+  //   } catch (error) {
+  //     console.log('error', error);
+  //   }
+  // };
 
-  const isValidNWC = (value: string) => {
-    const prefix = 'nostr+walletconnect://';
-    return typeof value === 'string' && value.startsWith(prefix);
-  };
+  // const isValidNWC = (value: string) => {
+  //   const prefix = 'nostr+walletconnect://';
+  //   return typeof value === 'string' && value.startsWith(prefix);
+  // };
 
   // Mostrar loading mientras verifica sesión existente
   if (isLoading) {
