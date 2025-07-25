@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { AlertCircle, ArrowUpRight, ChevronLeft, Settings, ShieldAlert, X } from 'lucide-react';
+import { AlertCircle, ArrowUpRight, Settings, ShieldAlert } from 'lucide-react';
 
-import { useAuth } from '@/hooks/use-auth';
+import { useAuth } from '@/context/auth';
 import { useSettings } from '@/hooks/use-settings';
 import { useNumpad } from '@/hooks/use-numpad';
 import { useCurrencyConverter } from '@/hooks/use-currency-converter';
@@ -30,25 +30,25 @@ export default function PaydeskPage() {
 
   const [isValid, setIsValid] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   async function validateAndLogin() {
-  //     if (!lnaddress) return;
-  //     const decodeLnAddress = decodeURIComponent(String(lnaddress));
+  useEffect(() => {
+    async function validateAndLogin() {
+      if (!lnaddress) return;
+      const decodeLnAddress = decodeURIComponent(String(lnaddress));
 
-  //     const isValid = await validateLightningAddress(decodeLnAddress as string);
+      const isValid = await validateLightningAddress(decodeLnAddress as string);
 
-  //     if (isValid) {
-  //       setIsValid(true);
-  //       return;
-  //     }
-  //   }
+      if (isValid) {
+        setIsValid(true);
+        return;
+      }
+    }
 
-  //   validateAndLogin();
+    !isValid && validateAndLogin();
 
-  //   login(decodeURIComponent(String(lnaddress))).then((res) => {
-  //     if (res?.success) setIsValid(true);
-  //   });
-  // }, [lnaddress, isValid]);
+    login(decodeURIComponent(String(lnaddress))).then((res) => {
+      if (res?.success) setIsValid(true);
+    });
+  }, [lnaddress, isValid]);
 
   const value = Number(numpadData.intAmount[numpadData.usedCurrency] || 0);
   const amountInSats = convertCurrency(value, settings?.currency as AvailableCurrencies, 'SAT');
@@ -115,9 +115,9 @@ export default function PaydeskPage() {
             </div>
           </div>
           {!isValid && (
-            <div className='flex items-center gap-2 text-red-600 text-sm'>
+            <div className='flex items-center gap-2 w-full max-w-md mx-auto text-red-600 text-sm'>
               <AlertCircle className='min-h-4 min-w-4' />
-              <span>Invalid Lightning Address. Please check that the address exists and supports payments.</span>
+              <span>Invalid Lightning Address</span>
             </div>
           )}
           <div className='flex-1 flex flex-col items-center justify-center'>
@@ -136,10 +136,7 @@ export default function PaydeskPage() {
             onClick={() => {
               if (!isValid) return;
 
-              const orderId = `order-${Date.now()}`;
-              router.push(
-                `/payment?currency=${settings.currency}&&amount=${numpadData.intAmount[numpadData.usedCurrency]}`,
-              );
+              router.push(`/payment?cur=${settings.currency}&amt=${numpadData.intAmount[numpadData.usedCurrency]}`);
             }}
             disabled={!isValid || numpadData.intAmount[numpadData.usedCurrency] === 0}
           >
