@@ -1,119 +1,119 @@
-"use client"
+'use client';
 
-import { ChevronLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { useSettings } from "@/hooks/use-settings"
+import { ChevronLeft, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { useSettings } from '@/hooks/use-settings';
+
+import { useRouter } from 'next/navigation';
+import { AppFooter } from './app/app-footer';
+import { AppContent } from './app/app-content';
 
 interface TipSelectorProps {
-  subtotal: number
-  selectedOption: "with-tip" | "without-tip" | null
-  finalAmount: number
-  onSelectTip: (option: "with-tip" | "without-tip") => void
-  onGeneratePayment: () => void
-  onCancel: () => void
+  amount: number;
+  currency: string;
+  selectedOption: 'with-tip' | 'without-tip' | null;
+  onSelectTip: (option: 'with-tip' | 'without-tip') => void;
 }
 
-export function TipSelector({
-  subtotal,
-  selectedOption,
-  finalAmount,
-  onSelectTip,
-  onGeneratePayment,
-  onCancel,
-}: TipSelectorProps) {
-  const { settings, getCurrencySymbol } = useSettings()
-  const tipAmount = subtotal * 0.1
-  const totalWithTip = subtotal + tipAmount
+export function TipSelector({ amount, currency, selectedOption, onSelectTip }: TipSelectorProps) {
+  const router = useRouter();
+  const { getCurrencySymbol } = useSettings();
 
-  // Convertir a Bitcoin (simulado - en una app real esto vendría de una API)
-  const btcRate = 100000 // 1 BTC = $100,000 (ejemplo)
-  const subtotalBTC = (subtotal / btcRate).toFixed(6)
+  const tipAmount = amount * 0.1;
+  const totalWithTip = amount + tipAmount;
 
   const tipOptions = [
     {
-      id: "with-tip",
-      title: "With tip",
+      id: 'with-tip',
+      title: 'With tip',
       amount: totalWithTip,
-      description: "+10% tip",
-      selected: selectedOption === "with-tip",
+      description: '+10% tip',
+      selected: selectedOption === 'with-tip',
     },
     {
-      id: "without-tip",
-      title: "No tip",
-      amount: subtotal,
-      description: "Base price",
-      selected: selectedOption === "without-tip",
+      id: 'without-tip',
+      title: 'No tip',
+      amount: amount,
+      description: 'Base price',
+      selected: selectedOption === 'without-tip',
     },
-  ]
+  ];
 
   return (
-    <div className="flex flex-col h-screen">
-      <header className="py-4 bg-white border-b shadow-sm">
-        <div className="flex items-center w-full max-w-md mx-auto px-4">
-          <Button variant="secondary" size="icon" onClick={onCancel} className="mr-2">
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Back</span>
-          </Button>
-          <h1 className="text-xl font-medium">Payment process</h1>
+    <>
+      <header className='fixed top-0 z-10 flex w-full py-4 bg-background border-b shadow-sm'>
+        <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
+          <div className='flex items-center'>
+            <Button className='mr-2' variant='outline' size='icon' onClick={() => router.back()}>
+              <ChevronLeft className='h-4 w-4' />
+              <span className='sr-only'>Back</span>
+            </Button>
+            <h1 className='text-xl font-medium'>{'Summary'}</h1>
+          </div>
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col w-full max-w-md mx-auto p-4">
-        {/* Subtotal Section */}
-        <div className="flex-1 flex flex-col justify-center items-center text-center">
-          <h2 className="text-2xl">Subtotal</h2>
-          <div className="text-4xl font-bold">
-            {getCurrencySymbol()}
-            {subtotal.toLocaleString()} {settings.currency}
+      <AppContent className='pt-20'>
+        <div className='flex-1 flex flex-col w-full max-w-md mx-auto px-4'>
+          {/* Subtotal Section */}
+          <div className='flex-1 flex flex-col justify-center items-center text-center'>
+            <h2 className='text-xl'>Subtotal</h2>
+            <div className='text-4xl'>
+              <p>
+                {getCurrencySymbol()}
+                <strong>{amount.toLocaleString()}</strong>
+                <span className='ml-2 text-muted-foreground'>{currency}</span>
+              </p>
+            </div>
           </div>
-        </div>
 
-        {/* Total Section */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-xl font-semibold">Total</h3>
+          {/* Total Section */}
+          <div className='flex flex-col gap-4 w-full'>
+            <h3 className='text-xl font-semibold'>Total</h3>
 
-          <div className="grid grid-cols-2 gap-4">
-            {tipOptions.map((option) => (
-              <Card
-                key={option.id}
-                className={`cursor-pointer transition-all ${
-                  option.selected ? "ring-2 ring-blue-500 bg-blue-50" : "hover:shadow-md"
-                }`}
-                onClick={() => onSelectTip(option.id as "with-tip" | "without-tip")}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <h4 className="font-medium">{option.title}</h4>
-                    <div
-                      className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        option.selected ? "border-blue-500 bg-blue-500" : "border-gray-300"
-                      }`}
-                    >
-                      {option.selected && <div className="w-2 h-2 bg-white rounded-full"></div>}
+            <div className='grid grid-cols-2 gap-4 w-full'>
+              {tipOptions.map((option: any) => (
+                <Card
+                  key={option.id}
+                  className={`w-full cursor-pointer transition-all ${
+                    option.selected ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:shadow-md'
+                  }`}
+                  onClick={() => onSelectTip(option.id as 'with-tip' | 'without-tip')}
+                >
+                  <CardContent className='p-4'>
+                    <div className='flex items-start justify-between mb-3'>
+                      <h4 className='font-medium'>{option.title}</h4>
+                      <div
+                        className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                          option.selected ? 'border-blue-500 bg-blue-500' : 'border-gray-300'
+                        }`}
+                      >
+                        {option.selected && <div className='w-2 h-2 bg-white rounded-full'></div>}
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="text-2xl font-bold mb-1">
-                    {getCurrencySymbol()}
-                    {option.amount.toLocaleString()} {settings.currency}
-                  </div>
-                  <div className="text-sm text-gray-500">{option.description}</div>
-                </CardContent>
-              </Card>
-            ))}
+                    <div className='flex items-end gap-1 mb-1'>
+                      <p className='text-2xl'>
+                        {getCurrencySymbol()}
+                        <strong>{option.amount.toLocaleString()}</strong>
+                      </p>
+                    </div>
+                    <div className='text-sm text-gray-500'>{option.description}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </AppContent>
 
       {/* Generate Payment Button */}
-      <div className="w-full py-4 bg-white border-t">
-        <div className="flex flex-col gap-2 w-full max-w-md mx-auto px-4">
-          <Button className={`w-full`} disabled={!selectedOption} onClick={onGeneratePayment}>
-            Process payment
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
+      <AppFooter>
+        <Button className={`w-full`} size='lg' variant='success' disabled={!selectedOption} onClick={() => {}}>
+          Generate payment
+        </Button>
+      </AppFooter>
+    </>
+  );
 }
