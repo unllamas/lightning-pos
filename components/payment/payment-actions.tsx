@@ -6,13 +6,13 @@ import axios from 'axios';
 import { Check, CheckCircle, Copy, Nfc } from 'lucide-react';
 
 import { useCard } from '@/hooks/use-card';
+import { useToast } from '@/hooks/use-toast';
 
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 import { ScanAction, ScanCardStatus } from '@/types/card';
 import { LNURLResponse, LNURLWStatus } from '@/types/lnurl';
-import { useToast } from '@/hooks/use-toast';
 
 interface PaymentActionsProps {
   invoice: string | null;

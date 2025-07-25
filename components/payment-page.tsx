@@ -3,9 +3,9 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
-import { useNwc } from '@/hooks/use-nwc';
 import { usePrint } from '@/hooks/use-print';
 import { usePOSData } from '@/hooks/use-pos-data';
+import { useLightning } from '@/hooks/use-lightning';
 import { trackPurchase } from '@/lib/gtag';
 
 import { AppViewport } from '@/components/app/app-viewport';
@@ -20,9 +20,10 @@ export function PaymentPage() {
 
   const _amount = searchParams.get('amt');
   const _currency = searchParams.get('cur');
+  const _flow = searchParams.get('src');
 
   const { products, categories, cart } = usePOSData();
-  const { amount, invoice, hash, createInvoice, status, error } = useNwc();
+  const { amount, invoice, createInvoice, status, error } = useLightning();
   const { print } = usePrint();
 
   const handleCompletePayment = () => {
@@ -51,7 +52,7 @@ export function PaymentPage() {
 
       // Event for GA-4
       trackPurchase({
-        transaction_id: hash as string,
+        transaction_id: invoice as string,
         value: Number(_amount),
         currency: _currency as string,
         items,
@@ -65,7 +66,9 @@ export function PaymentPage() {
   const [printOrder, setPrintOrder] = useState<PrintOrder | null>(null);
 
   useEffect(() => {
-    !invoice && createInvoice();
+    if (!invoice) {
+      createInvoice(Number(_amount), _currency as string);
+    }
   }, [invoice]);
 
   useEffect(() => {

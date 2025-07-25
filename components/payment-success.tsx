@@ -1,12 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle, Copy, HandHeart, Printer } from 'lucide-react';
+import { HandHeart, Printer } from 'lucide-react';
 import ReactQRCode from 'react-qr-code';
 
-import { convertToSatoshis, generateLightningInvoice } from '@/lib/lightning-utils';
 import { useSettings } from '@/hooks/use-settings';
 import { usePrint } from '@/hooks/use-print';
 
@@ -34,12 +33,6 @@ interface PaymentSuccessProps {
   printOrder?: PrintOrder | null;
 }
 
-const TIPS = {
-  10: 0.1,
-  15: 0.15,
-  20: 0.2,
-};
-
 export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessProps) {
   const router = useRouter();
   const { settings, getCurrencySymbol } = useSettings();
@@ -47,49 +40,6 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
 
   const [isPrinting, setIsPrinting] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [percentageTip, setPercentageTip] = useState<number>(0);
-  const [invoice, setInvoice] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isPaid, setIsPaid] = useState<boolean>(false);
-  const [paymentListener, setPaymentListener] = useState<NodeJS.Timeout | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Función para limpiar el listener de pagos
-  const clearPaymentListener = useCallback(() => {
-    if (paymentListener) {
-      clearInterval(paymentListener);
-      setPaymentListener(null);
-    }
-  }, [paymentListener]);
-
-  // Función para iniciar la escucha de pagos
-  const startPaymentListener = useCallback(
-    (verifyUrl: string) => {
-      // Limpiar cualquier listener existente
-      clearPaymentListener();
-
-      const interval = setInterval(async () => {
-        try {
-          const response = await fetch(verifyUrl);
-          const data: { settled: boolean } = await response.json();
-
-          if (response.ok && data.settled) {
-            // Pago confirmado
-            clearInterval(interval);
-            setPaymentListener(null);
-            setIsPaid(true);
-            console.log('Payment confirmed!');
-          }
-        } catch (error) {
-          console.error('Error checking payment status:', error);
-        }
-      }, 1200); // Verificar cada 1200ms
-
-      setPaymentListener(interval);
-    },
-    [clearPaymentListener],
-  );
 
   const handlePrint = useCallback(() => {
     if (!isAvailable || isPrinting) {
@@ -104,64 +54,6 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
       setIsPrinting(false);
     }, 1200);
   }, [isAvailable, isPrinting]);
-
-  // Limpiar el listener cuando se cierra el modal
-  useEffect(() => {
-    if (!isOpen && paymentListener) {
-      clearPaymentListener();
-    }
-  }, [isOpen, paymentListener, clearPaymentListener]);
-
-  // Limpiar el listener cuando el componente se desmonta
-  useEffect(() => {
-    return () => {
-      if (paymentListener) {
-        clearPaymentListener();
-      }
-    };
-  }, [paymentListener, clearPaymentListener]);
-
-  const handleGenerateTip = async (value: number | 0) => {
-    if (!value || value === 0) {
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-    const percentageDiscount = TIPS[value as keyof typeof TIPS];
-
-    try {
-      const valueInSats = await convertToSatoshis(amount, currency);
-      const tipInSats = Number((valueInSats * percentageDiscount).toFixed(0));
-
-      const data = await generateLightningInvoice(settings?.operator, tipInSats, 'Tip!');
-
-      if (!data?.pr) {
-        return;
-      }
-
-      setInvoice(data?.pr);
-      if (data?.verify) {
-        startPaymentListener(data.verify);
-      }
-    } catch (error: any) {
-      setIsLoading(false);
-      setError(error?.message);
-      console.log('error', error?.message);
-    }
-  };
-
-  const copyInvoice = async () => {
-    if (invoice) {
-      try {
-        await navigator.clipboard.writeText(invoice);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Failed to copy invoice:', err);
-      }
-    }
-  };
 
   return (
     <>
@@ -178,7 +70,7 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
             </div>
           </div>
 
-          {settings?.operator && !isPaid && (
+          {settings?.operator && (
             <>
               <Dialog open={isOpen}>
                 <DialogTrigger asChild>
@@ -200,80 +92,17 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
                 >
                   <DialogHeader>
                     <DialogTitle>
-                      Purchase of {getCurrencySymbol(currency)} <b>{amount.toLocaleString()}</b> {currency}
+                      Total: {getCurrencySymbol(currency)} <b>{amount.toLocaleString()}</b> {currency}
                     </DialogTitle>
-                    <DialogDescription>Add tip to your purchase.</DialogDescription>
+                    <DialogDescription>
+                      Suggested tip of {getCurrencySymbol(currency)} <b>{(amount * 0.1).toLocaleString()}</b> {currency}{' '}
+                      (10%)
+                    </DialogDescription>
                   </DialogHeader>
-                  {percentageTip === 0 && !invoice && (
-                    <div className='flex gap-2 w-full'>
-                      <Button
-                        id='btn-10-percentage'
-                        className='w-full'
-                        size='lg'
-                        variant={'default'}
-                        disabled={!!error || isLoading}
-                        onClick={() => handleGenerateTip(10)}
-                      >
-                        10%
-                      </Button>
-                      <Button
-                        id='btn-15-percentage'
-                        className='w-full'
-                        size='lg'
-                        variant={'default'}
-                        disabled={!!error || isLoading}
-                        onClick={() => handleGenerateTip(15)}
-                      >
-                        15%
-                      </Button>
-                      <Button
-                        id='btn-20-percentage'
-                        className='w-full'
-                        size='lg'
-                        variant={'default'}
-                        disabled={!!error || isLoading}
-                        onClick={() => handleGenerateTip(20)}
-                      >
-                        20%
-                      </Button>
-                    </div>
-                  )}
 
-                  {error && (
-                    <div className='flex items-center gap-2 text-red-600 text-sm'>
-                      <AlertCircle className='min-h-4 min-w-4' />
-                      <span>{error}</span>
-                    </div>
-                  )}
-
-                  {percentageTip !== 0 ||
-                    (invoice && (
-                      <div className='flex flex-col items-center w-full'>
-                        {!isPaid ? (
-                          <ReactQRCode value={invoice} size={280} fgColor={'#000'} bgColor={'#fff'} />
-                        ) : (
-                          <div className='flex justify-center items-center w-40 h-40 mx-auto rounded-lg'>
-                            <Lottie animationData={animationCheck} loop={false} />
-                          </div>
-                        )}
-                      </div>
-                    ))}
-
-                  {process.env.NODE_ENV === 'development' && invoice && (
-                    <Button variant='outline' size='lg' onClick={copyInvoice} className='w-full'>
-                      {copied ? (
-                        <>
-                          <CheckCircle className='h-4 w-4' />
-                          <span>Copied!</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className='h-4 w-4' />
-                          <span>Copy</span>
-                        </>
-                      )}
-                    </Button>
-                  )}
+                  <div className='flex flex-col items-center w-full'>
+                    <ReactQRCode value={settings?.operator} size={280} fgColor={'#000'} bgColor={'#fff'} />
+                  </div>
 
                   <DialogClose asChild>
                     <Button
@@ -283,12 +112,6 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
                       size='lg'
                       onClick={() => {
                         setIsOpen(false);
-                        setPercentageTip(0);
-                        setInvoice(null);
-                        setError(null);
-                        setIsPaid(false);
-                        clearPaymentListener();
-                        setIsLoading(false);
                       }}
                     >
                       Cancel
@@ -300,8 +123,6 @@ export function PaymentSuccess({ amount, currency, printOrder }: PaymentSuccessP
               <div className='mt-2 text-sm text-gray-500 text-center'>For {settings?.operator}</div>
             </>
           )}
-
-          {isPaid && <div className='mt-2 text-sm text-green-600 text-center'>Tip received.</div>}
 
           {/* Información adicional si hay orden de impresión */}
           {/* {isAvailable && printOrder && (

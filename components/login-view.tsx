@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle, Trash2 } from 'lucide-react';
+import { AlertCircle, CheckCircle, LoaderCircle, Trash2 } from 'lucide-react';
 
 import { useAuth } from '@/context/auth';
 import { useCamera } from '@/hooks/use-camera';
@@ -13,7 +13,6 @@ import { AppFooter } from '@/components/app/app-footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { PWAInstallBanner } from '@/components/pwa-install-banner';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { CameraModal } from '@/components/camera-modal';
 import { InstallPrompt } from '@/components/install-prompt';
@@ -23,7 +22,7 @@ export function LoginView() {
   const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
   const { hasCamera } = useCamera(() => null);
 
-  // const [inputAddress, setInputAddress] = useState<string | null>(null);
+  const [inputAddress, setInputAddress] = useState<string | null>(null);
   const [nwc, setNwc] = useState<string | null>(null);
 
   const [isValidating, setIsValidating] = useState(false);
@@ -133,71 +132,73 @@ export function LoginView() {
         </div>
 
         <div className='w-full max-w-md mx-auto px-4 space-y-4'>
-          <Tabs className='w-full' defaultValue='nwc'>
-            {/* <TabsList className='w-full'>
-            <TabsTrigger className='w-full' value='lnaddress' disabled>
-              Lightning
-            </TabsTrigger>
-            <TabsTrigger className='w-full' value='nwc'>
-              NWC
-            </TabsTrigger>
-          </TabsList> */}
-            {/* <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
-            <Input
-              type='email'
-              placeholder='you@lightning.address'
-              defaultValue={inputAddress as string}
-              onChange={(e) => {
-                setInputAddress(e.target.value);
-                setError('');
-              }}
-              disabled={isValidating}
-              className={error ? 'border-red-500' : ''}
-            />
+          <Tabs className='w-full' defaultValue='lnaddress'>
+            <TabsList className='w-full'>
+              <TabsTrigger className='w-full' value='lnaddress'>
+                Lightning
+              </TabsTrigger>
+              <TabsTrigger className='w-full' value='nwc' disabled>
+                NWC (Soon)
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
+              <Input
+                type='email'
+                placeholder='you@lightning.address'
+                defaultValue={inputAddress as string}
+                onChange={(e) => {
+                  setInputAddress(e.target.value);
+                  setError('');
+                }}
+                disabled={isValidating}
+                className={error ? 'border-red-500' : ''}
+              />
 
-            {error && (
-              <div className='flex items-center gap-2 text-red-600 text-sm'>
-                <AlertCircle className='min-h-4 min-w-4' />
-                <span>{error}</span>
-              </div>
-            )}
-
-            <Button
-              className='w-full'
-              variant='default'
-              size='lg'
-              onClick={() => {
-                if (!inputAddress) return;
-
-                login(inputAddress).then((res) => {
-                  setIsValidating(true);
-
-                  if (!res?.success) {
-                    setError(res?.error as string);
-                    setIsValidating(false);
-                  }
-
-                  setShowSuccess(true);
-                  setTimeout(() => {
-                    router.push('/app');
-                  }, 1500);
-                });
-              }}
-              disabled={isValidating || !inputAddress?.trim()}
-            >
-              {isValidating ? (
-                <>
-                  <div className='animate-spin rounded-full h-4 w-4'>
-                    <LoaderCircle className='h-4 w-4' />
-                  </div>
-                  Validating...
-                </>
-              ) : (
-                'Setup'
+              {error && (
+                <div className='flex items-center gap-2 text-red-600 text-sm'>
+                  <AlertCircle className='min-h-4 min-w-4' />
+                  <span>{error}</span>
+                </div>
               )}
-            </Button>
-          </TabsContent> */}
-            <TabsContent className='space-y-2' value='nwc'>
+
+              <Button
+                className='w-full'
+                variant='default'
+                size='lg'
+                onClick={() => {
+                  if (!inputAddress) return;
+
+                  login(inputAddress).then((res) => {
+                    const { success, error } = res;
+                    setIsValidating(true);
+
+                    if (!success) {
+                      setError(error as string);
+                      setIsValidating(false);
+                      return;
+                    }
+
+                    setShowSuccess(true);
+                    setTimeout(() => {
+                      router.push('/app');
+                    }, 1500);
+                  });
+                }}
+                disabled={isValidating || !inputAddress?.trim()}
+              >
+                {isValidating ? (
+                  <>
+                    <div className='animate-spin rounded-full h-4 w-4'>
+                      <LoaderCircle className='h-4 w-4' />
+                    </div>
+                    Validating...
+                  </>
+                ) : (
+                  'Setup'
+                )}
+              </Button>
+            </TabsContent>
+            {/* <TabsContent className='space-y-2' value='nwc' aria-disabled={true}>
               <div className='relative'>
                 <Input
                   type='text'
@@ -256,7 +257,7 @@ export function LoginView() {
               >
                 {isValidating ? <LoadingSpinner /> : 'Setup'}
               </Button>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs>
 
           {hasCamera && (
