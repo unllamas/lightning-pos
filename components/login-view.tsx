@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
 
@@ -126,12 +127,14 @@ export function LoginView() {
       <AppContent>
         <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
           <div className='flex justify-center mb-4'>
-            <img
-              src='/logo.svg'
-              alt='Lightning PoS Logo'
-              className='h-[60px] w-auto'
-              style={{ filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2))' }}
-            />
+            <Link href='/'>
+              <img
+                src='/logo.svg'
+                alt='Lightning PoS Logo'
+                className='h-[60px] w-auto'
+                style={{ filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2))' }}
+              />
+            </Link>
           </div>
           <p className='text-gray-600'>
             Point of Sale System <br /> with Lightning Network
