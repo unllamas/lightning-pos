@@ -217,12 +217,19 @@ export function SettingsPage() {
           </Card> */}
 
           <div className='flex flex-col gap-2'>
-            <h6 className='text-xs text-muted-foreground'>Collaborate with us</h6>
-            <Link href='https://github.com/unllamas/lightning-pos/issues/new/choose' target='_blank' className='w-full'>
-              <Button size='lg' variant='outline' className='w-full'>
-                Report a bug or feature <ArrowUpRight className='size-4' />
+            <h6 className='text-xs text-muted-foreground'>Support</h6>
+            <div className='overflow-hidden flex flex-col gap-[1px] border border-input rounded-md bg-input'>
+              <Button size='lg' variant='ghost' className='justify-between w-full bg-white rounded-none' asChild>
+                <Link href='/support'>
+                  Chat with us <ArrowUpRight className='size-4' />
+                </Link>
               </Button>
-            </Link>
+              <Button size='lg' variant='ghost' className='justify-between w-full bg-white rounded-none' asChild>
+                <Link href='https://github.com/unllamas/lightning-pos/issues/new/choose' target='_blank'>
+                  Report a bug or feature <ArrowUpRight className='size-4' />
+                </Link>
+              </Button>
+            </div>
           </div>
 
           {/* Additional Settings Placeholder */}
