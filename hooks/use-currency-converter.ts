@@ -19,6 +19,7 @@ export const useCurrencyConverter = (): UseConverterReturns => {
     USD: 0,
     EUR: 0,
     SAT: 1,
+    UYU: 0,
   });
 
   const convertCurrency = (amount: number, currencyA: AvailableCurrencies, currencyB: AvailableCurrencies): number => {
@@ -42,6 +43,7 @@ export const useCurrencyConverter = (): UseConverterReturns => {
           ARS: BTCPrices.ARS / scaledBTC,
           USD: BTCPrices.USD / scaledBTC,
           EUR: BTCPrices.EUR / scaledBTC,
+          UYU: BTCPrices.UYU / scaledBTC,
           SAT: 1,
         };
 

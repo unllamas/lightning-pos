@@ -111,6 +111,7 @@ export function useSettings() {
           return '₿';
         case 'USD':
         case 'ARS':
+        case 'UYU':
           return '$';
         case 'EUR':
           return '€';
@@ -134,6 +135,8 @@ export function useSettings() {
           return 'Argentine Peso';
         case 'EUR':
           return 'Euro';
+        case 'UYU':
+          return 'Uruguayan Peso';
         default:
           return 'US Dollar';
       }

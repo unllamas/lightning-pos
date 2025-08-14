@@ -1,5 +1,5 @@
-export type AvailableCurrencies = 'SAT' | 'USD' | 'ARS' | 'EUR';
-export const CurrenciesList: AvailableCurrencies[] = ['SAT', 'USD', 'ARS'];
+export type AvailableCurrencies = 'SAT' | 'USD' | 'ARS' | 'EUR' | 'UYU';
+export const CurrenciesList: AvailableCurrencies[] = ['SAT', 'USD', 'ARS', 'UYU'];
 
 type CurrencyMetadata = {
   locale: string;
@@ -17,6 +17,9 @@ export const CurrenciesMetadata: Record<AvailableCurrencies, CurrencyMetadata> =
   },
   EUR: {
     locale: 'en-US',
+  },
+  UYU: {
+    locale: 'es-AR',
   },
 };
 

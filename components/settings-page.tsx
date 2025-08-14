@@ -42,7 +42,7 @@ export function SettingsPage() {
   const currencies = [
     { value: 'ARS', label: 'ARS (Argentine Peso)', symbol: '$' },
     { value: 'USD', label: 'USD (US Dollar)', symbol: '$' },
-    // { value: 'EUR', label: 'EUR (Euro)', symbol: '€' },
+    { value: 'UYU', label: 'UYU (Uruguayan Peso)', symbol: '$' },
   ];
 
   const showFeedback = (message?: string) => {

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useCurrencyConverter } from './use-currency-converter';
 
 type AmountType = Record<AvailableCurrencies, number>;
-const defaultIntAmount: AmountType = { SAT: 0, ARS: 0, USD: 0, EUR: 0 };
+const defaultIntAmount: AmountType = { SAT: 0, ARS: 0, USD: 0, EUR: 0, UYU: 0 };
 
 export interface IUseNumpad {
   usedCurrency: AvailableCurrencies;
