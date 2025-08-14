@@ -19,7 +19,7 @@ export const CurrenciesMetadata: Record<AvailableCurrencies, CurrencyMetadata> =
     locale: 'en-US',
   },
   UYU: {
-    locale: 'es-AR',
+    locale: 'en-US',
   },
 };
 
