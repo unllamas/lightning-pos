@@ -1,12 +1,12 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
 
 import { useSettings } from '@/hooks/use-settings';
 
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/auth';
 
 interface PaymentErrorProps {
   error: string;
@@ -17,7 +17,8 @@ interface PaymentErrorProps {
 export function PaymentError({ error, amount, currency }: PaymentErrorProps) {
   const router = useRouter();
 
-  const { settings, getCurrencySymbol } = useSettings();
+  const { getCurrencySymbol } = useSettings();
+  const { logout } = useAuth();
 
   return (
     <div className='flex-1 flex flex-col items-center justify-between w-full mx-auto'>
@@ -43,8 +44,16 @@ export function PaymentError({ error, amount, currency }: PaymentErrorProps) {
 
       <div className='w-full py-4 pb-8'>
         <div className='flex flex-col gap-2 w-full max-w-md mx-auto px-4'>
-          <Button className='w-full' size='lg' variant='success' asChild>
-            <Link href='/'>Setup Now</Link>
+          <Button
+            className='w-full'
+            size='lg'
+            variant='success'
+            onClick={() => {
+              logout();
+              router.push('/login');
+            }}
+          >
+            Setup Now
           </Button>
           <Button className='w-full' size='lg' variant='secondary' onClick={() => router.back()}>
             Cancel
