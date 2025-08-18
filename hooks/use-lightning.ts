@@ -50,7 +50,11 @@ export function useLightning() {
         const data = await generateLightningInvoice(lightningAddress as string, valueInSats);
 
         if (!data.pr) {
-          throw new Error(`Ooops`);
+          throw new Error(`The wallet provider does not have Lightning support for generating payments.`);
+        }
+
+        if (!data.verify) {
+          throw new Error(`The wallet provider does not have Lightning support to validate payments.`);
         }
 
         setInvoice(data.pr);
