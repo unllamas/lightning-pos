@@ -20,7 +20,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Logo } from '@/components/ui/logo';
 
 interface FAQItem {
   question: string;
@@ -282,86 +282,23 @@ export default function Home() {
         </section>
 
         {/* Lead Generation Form */}
-        {/* <section className='relative z-20 pt-20 bg-gradient-to-br from-orange-300 to-orange-500 text-black'>
-        <div className='flex flex-col items-center justify-center gap-8'>
-          <div className='max-w-md px-4 text-center'>
-            <h2 className='text-3xl lg:text-4xl font-bold mb-4'>Accepting Today</h2>
-            <p className='text-xl'>Get early access and join several of merchants already.</p>
+        <section className='relative z-20 pb-20 bg-background'>
+          <div className='flex flex-col items-center justify-center gap-8 max-w-xl mx-auto py-20 bg-gradient-to-br from-orange-300 to-orange-500 rounded-lg text-black'>
+            <div className='flex flex-col gap-8 max-w-md px-4 text-center'>
+              <div className='flex flex-col gap-2'>
+                <Logo className='h-10 mx-auto' />
+                <h2 className='text-3xl lg:text-4xl font-bold mb-4'>Cloud Soon</h2>
+                <p className='text-xl'>Get early access and join several of merchants already.</p>
+              </div>
+              <Button id='btn-cloud-more' className='w-full' type='submit' size='lg' asChild>
+                <Link href='/waitlist'>
+                  See more
+                  <ArrowUpRight />
+                </Link>
+              </Button>
+            </div>
           </div>
-          <div className='relative max-w-xl -mb-12 px-4'>
-            {!formSubmitted ? (
-              <form onSubmit={handleFormSubmit}>
-                <Card>
-                  <CardContent className='p-6'>
-                    <div className='grid md:grid-cols-2 gap-6 mb-6'>
-                      <div>
-                        <label htmlFor='name' className='block text-sm font-medium text-gray-700 mb-2'>
-                          Name *
-                        </label>
-                        <input
-                          type='text'
-                          id='name'
-                          name='name'
-                          required
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors duration-200'
-                          placeholder='Your full name'
-                        />
-                      </div>
-                      <div>
-                        <label htmlFor='email' className='block text-sm font-medium text-gray-700 mb-2'>
-                          Email *
-                        </label>
-                        <input
-                          type='email'
-                          id='email'
-                          name='email'
-                          required
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors duration-200'
-                          placeholder='your@email.com'
-                        />
-                      </div>
-                    </div>
-                    <div className='mb-6'>
-                      <label htmlFor='message' className='block text-sm font-medium text-gray-700 mb-2'>
-                        Message
-                      </label>
-                      <textarea
-                        id='message'
-                        name='message'
-                        rows={4}
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        className='w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-colors duration-200'
-                        placeholder='Tell us about your business and how you plan to use LightningPOS...'
-                      ></textarea>
-                    </div>
-                    <Button className='w-full' type='submit' size='lg'>
-                      Get Early Access
-                    </Button>
-                  </CardContent>
-                </Card>
-              </form>
-            ) : (
-              <Card>
-                <CardContent className='p-6'>
-                  <div className='size-6 text-muted-foreground mb-4'>
-                    <CheckCircle />
-                  </div>
-                  <h3 className='text-2xl font-bold text-gray-900 mb-4'>Thank you!</h3>
-                  <p className='text-gray-600 text-lg'>
-                    We've received your request and will get back to you within 24 hours. Welcome to the future of
-                    Bitcoin payments!
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-      </section> */}
+        </section>
 
         {/* FAQ */}
         <section className='relative z-10 overflow-hidden pb-20 bg-background border-b rounded-b-2xl'>
