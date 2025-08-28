@@ -10,6 +10,7 @@ import { InjectedNFCProvider } from '@/context/injected-nfc';
 import { Toaster } from '@/components/ui/toaster';
 
 import './globals.css';
+import { AuthProvider } from '@/context/auth';
 
 // Define Space Mono as the primary font
 const spaceMono = Space_Mono({
@@ -83,7 +84,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
       </head>
       <body className={`flex flex-col min-h-[100dvh] bg-black ${spaceMono.className} select-none`}>
-        <InjectedNFCProvider>{children}</InjectedNFCProvider>
+        <InjectedNFCProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </InjectedNFCProvider>
         <Toaster />
         {/* <script
           dangerouslySetInnerHTML={{
