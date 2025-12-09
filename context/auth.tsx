@@ -338,9 +338,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   }, [state.isInitialized]);
 
-  if (state.isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (state.isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   const contextValue: AuthContextType = {
     ...state,

@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Calculator, Store, Settings, X, User } from 'lucide-react';
+import { sha256 } from '@noble/hashes/sha2.js';
 
 import { useAuth } from '@/context/auth';
 
@@ -12,6 +13,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { JoinCloud } from '@/components/join-cloud';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getLocal } from '@/lib/localStorage';
+
+import { db } from '@/lib/database';
 
 const dashboardCards = [
   {
@@ -34,17 +37,20 @@ const dashboardCards = [
 
 export function AppDashboard() {
   const router = useRouter();
-  const { logout, lightningAddress, isAuthenticated, isLoading, authMethod } = useAuth();
 
-  const waitlistEmail = getLocal('waitlist-email');
+  const user = db.useAuth();
+  console.log('user', user);
+  // const { logout, lightningAddress, isAuthenticated, isLoading, authMethod } = useAuth();
 
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      router.push('/login');
-    }
-  }, [isAuthenticated, isLoading]);
+  // const waitlistEmail = getLocal('waitlist-email');
 
-  if (isLoading) {
+  // useEffect(() => {
+  //   if (!isAuthenticated && !isLoading) {
+  //     router.push('/login');
+  //   }
+  // }, [isAuthenticated, isLoading]);
+
+  if (user?.isLoading) {
     return (
       <div className='flex justify-center items-center w-screen h-screen text-white'>
         <LoadingSpinner />
@@ -57,14 +63,14 @@ export function AppDashboard() {
       {/* Header */}
       <header className='w-full py-4 bg-[#0F0F0F] border-b shadow-sm'>
         <div className='flex items-center justify-between w-full max-w-md mx-auto px-4'>
-          <Button variant='default' onClick={logout} className='mr-2'>
+          <Button variant='default' className='mr-2'>
             <div className='flex gap-2 items-center justify-center min-w-0'>
               <User className='h-4 w-4 flex-shrink-0' />
-              {authMethod === 'lnaddress' ? (
+              {/* {authMethod === 'lnaddress' ? (
                 <span className='truncate text-sm'>{lightningAddress}</span>
               ) : (
                 <span className='text-sm'>NWC Mode</span>
-              )}
+              )} */}
               <X className='h-4 w-4 text-destructive flex-shrink-0' />
               <span className='sr-only'>Log out</span>
             </div>
@@ -78,20 +84,20 @@ export function AppDashboard() {
       </header>
 
       <div className='flex flex-col gap-4 w-full max-w-md mx-auto p-4'>
-        {!waitlistEmail && <JoinCloud />}
+        {/* {!waitlistEmail && <JoinCloud />} */}
 
         {/* Main Content */}
         <div className='flex-1 flex flex-col gap-4'>
           <div className='flex flex-col gap-1'>
             <h2 className='text-lg font-medium text-gray-900'>Control Panel</h2>
-            {!isAuthenticated && (
+            {/* {!isAuthenticated && (
               <p className='text-sm text-gray-500'>
                 Running in guest mode.{' '}
                 <Link href='/' className='text-blue-600 hover:underline'>
                   Setup now
                 </Link>
               </p>
-            )}
+            )} */}
           </div>
 
           <div className='flex flex-col gap-2'>
