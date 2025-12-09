@@ -27,7 +27,7 @@ export const AppContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
         ref={ref}
         style={heightStyle}
         className={cn(
-          'overflow-x-hidden overflow-y-scroll relative flex flex-col items-center w-full py-4 bg-background rounded-b-2xl',
+          'overflow-x-hidden overflow-y-scroll relative flex flex-col items-center w-full py-4 bg-background',
           className,
           isMobile ? 'mx-auto' : 'flex-grow flex-shrink-0',
         )}

@@ -1,294 +1,141 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { AlertCircle, CheckCircle, LoaderCircle } from 'lucide-react';
-
-import { useAuth } from '@/context/auth';
-import { useCamera } from '@/hooks/use-camera';
 
 import { AppViewport } from '@/components/app/app-viewport';
 import { AppContent } from '@/components/app/app-content';
-import { AppFooter } from '@/components/app/app-footer';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
-import { CameraModal } from '@/components/camera-modal';
-import { InstallPrompt } from '@/components/install-prompt';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { AppFooter } from '@/components/app/app-footer';
+
+import { db } from '@/lib/database';
+import { useRouter } from 'next/navigation';
 
 export function LoginView() {
-  const router = useRouter();
-  const { lightningAddress, login, isLoading, isAuthenticated } = useAuth();
-  const { hasCamera } = useCamera(() => null);
+  const [sentEmail, setSentEmail] = useState('');
 
-  const [inputAddress, setInputAddress] = useState<string | null>(null);
-  const [nwc, setNwc] = useState<string | null>(null);
+  return <>{!sentEmail ? <EmailStep onSendEmail={setSentEmail} /> : <CodeStep sentEmail={sentEmail} />}</>;
+}
 
-  const [isValidating, setIsValidating] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
+function EmailStep({ onSendEmail }: { onSendEmail: (email: string) => void }) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const inputEl = inputRef.current!;
+    const email = inputEl.value;
+    onSendEmail(email);
 
-  const [showCameraModal, setShowCameraModal] = useState(false);
-
-  // Auto-login si ya está autenticado
-  useEffect(() => {
-    if (isAuthenticated) {
-      setShowSuccess(true);
-      setTimeout(() => {
-        router.push('/app');
-      }, 1500);
-    }
-  }, [isAuthenticated]);
-
-  const startCamera = () => {
-    if (typeof window !== 'undefined') {
-      setShowCameraModal(true);
-    }
-  };
-
-  const stopCamera = () => {
-    setShowCameraModal(false);
-  };
-
-  const handleScan = (code: string) => {
-    setError(null);
-
-    if (!code.includes('@')) {
-      setError('Invalid Lightning Address');
+    if (!email) {
+      alert('Please enter a valid email address.');
+      onSendEmail('');
       return;
     }
 
-    stopCamera();
-
-    login(code).then((res) => {
-      setIsValidating(true);
-
-      if (!res?.success) {
-        setError(res?.error as string);
-        setIsValidating(false);
-      }
-
-      setShowSuccess(true);
-      setTimeout(() => {
-        router.push('/app');
-      }, 1500);
+    db.auth.sendMagicCode({ email }).catch((err) => {
+      console.log('Error al enviar el código mágico:', err);
+      alert('Uh oh :' + err.body?.message);
+      onSendEmail('');
     });
   };
-
-  // const handlePaste = async () => {
-  //   setError('');
-  //   try {
-  //     const text = await navigator.clipboard.readText();
-
-  //     if (!isValidNWC(text)) {
-  //       setError('Invalid value');
-  //       return;
-  //     }
-
-  //     setNwc(text);
-  //   } catch (error) {
-  //     console.log('error', error);
-  //   }
-  // };
-
-  // const isValidNWC = (value: string) => {
-  //   const prefix = 'nostr+walletconnect://';
-  //   return typeof value === 'string' && value.startsWith(prefix);
-  // };
-
-  // Mostrar loading mientras verifica sesión existente
-  if (isLoading) {
-    return (
-      <div className='flex justify-center items-center w-screen h-screen text-white'>
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  // Mostrar pantalla de éxito
-  if (showSuccess) {
-    return (
-      <div className='w-full bg-white min-h-screen flex flex-col items-center justify-center p-8'>
-        <div className='max-w-md mx-auto text-center mb-8'>
-          <div className='w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4'>
-            <CheckCircle className='h-8 w-8 text-green-600' />
-          </div>
-          <h1 className='text-2xl font-bold mb-2'>Welcome!</h1>
-          {lightningAddress && <p className='text-gray-600'>Logged in as {lightningAddress}</p>}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <AppViewport>
-      <AppContent>
-        <div className='flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-4 text-center mb-8'>
-          <div className='flex justify-center mb-4'>
-            <Link href='/'>
-              <img
-                src='/logo.svg'
-                alt='Lightning PoS Logo'
-                className='h-[60px] w-auto'
-                style={{ filter: 'drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.2))' }}
-              />
-            </Link>
-          </div>
-          <p className='text-gray-600'>
-            Point of Sale System <br /> with Lightning Network
-          </p>
-        </div>
-
-        <div className='w-full max-w-md mx-auto px-4 space-y-4'>
-          <Tabs className='w-full' defaultValue='lnaddress'>
-            <TabsList className='w-full'>
-              <TabsTrigger className='w-full' value='lnaddress'>
-                Lightning
-              </TabsTrigger>
-              <TabsTrigger className='w-full' value='nwc' disabled>
-                NWC (Soon)
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent className='space-y-2' value='lnaddress' aria-disabled>
-              <Input
-                type='email'
-                placeholder='you@lightning.address'
-                defaultValue={inputAddress as string}
-                onChange={(e) => {
-                  setInputAddress(e.target.value);
-                  setError('');
-                }}
-                disabled={isValidating}
-                className={error ? 'border-red-500' : ''}
-              />
-
-              {error && (
-                <div className='flex items-center gap-2 text-red-600 text-sm'>
-                  <AlertCircle className='min-h-4 min-w-4' />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <Button
-                className='w-full'
-                variant='default'
-                size='lg'
-                onClick={() => {
-                  if (!inputAddress) return;
-
-                  login(inputAddress).then((res) => {
-                    const { success, error } = res;
-                    setIsValidating(true);
-
-                    if (!success) {
-                      setError(error as string);
-                      setIsValidating(false);
-                      return;
-                    }
-
-                    setShowSuccess(true);
-                    setTimeout(() => {
-                      router.push('/app');
-                    }, 1500);
-                  });
-                }}
-                disabled={isValidating || !inputAddress?.trim()}
-              >
-                {isValidating ? (
-                  <>
-                    <div className='animate-spin rounded-full h-4 w-4'>
-                      <LoaderCircle className='h-4 w-4' />
-                    </div>
-                    Validating...
-                  </>
-                ) : (
-                  'Setup'
-                )}
-              </Button>
-            </TabsContent>
-            {/* <TabsContent className='space-y-2' value='nwc' aria-disabled={true}>
-              <div className='relative'>
-                <Input
-                  type='text'
-                  placeholder='nostr+walletconnect://...'
-                  defaultValue={nwc as string}
-                  readOnly
-                  className={`${nwc ? 'pr-14' : 'pr-20'} ${error ? 'border-red-500' : ''}`}
-                />
-                <div className='absolute top-0 right-0 flex items-center h-full pr-[4px]'>
-                  {!!nwc ? (
-                    <Button variant='outline' size='icon' onClick={() => setNwc(null)}>
-                      <Trash2 />
-                    </Button>
-                  ) : (
-                    <Button variant='outline' onClick={handlePaste} disabled={!!nwc}>
-                      Paste
-                    </Button>
-                  )}
-                </div>
-              </div>
-
-              {error && (
-                <div className='flex items-center gap-2 text-red-600 text-sm'>
-                  <AlertCircle className='min-h-4 min-w-4' />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <Button
-                className='w-full'
-                variant='default'
-                size='lg'
-                onClick={() => {
-                  if (!nwc) return;
-
-                  if (!isValidNWC(nwc)) {
-                    setError('Invalid value');
-                    return;
-                  }
-
-                  setIsValidating(true);
-
-                  login(nwc).then((res) => {
-                    if (!res?.success) {
-                      setError(res?.error as string);
-                      setIsValidating(false);
-                    }
-
-                    setShowSuccess(true);
-                    setTimeout(() => {
-                      router.push('/app');
-                    }, 1500);
-                  });
-                }}
-                disabled={isValidating || !nwc}
-              >
-                {isValidating ? <LoadingSpinner /> : 'Setup'}
-              </Button>
-            </TabsContent> */}
-          </Tabs>
-
-          {hasCamera && (
-            <div className='text-center'>
-              <span className='text-gray-500'>or</span>
+    <form className='w-screen h-screen' key='email' onSubmit={handleSubmit}>
+      <AppViewport>
+        <AppContent className='justify-center'>
+          <div className='flex-1 flex flex-col justify-between gap-4 w-full max-w-md mx-auto px-4 mb-8'>
+            <div className='flex mb-4'>
+              <Link href='/' className='h-auto'>
+                <img src='/logo.svg' alt='Lightning PoS Logo' className='h-full max-h-[40px] w-auto' />
+              </Link>
             </div>
-          )}
-        </div>
-
-        {showCameraModal && <CameraModal onClose={stopCamera} onScan={handleScan} />}
-
-        {/* PWA Install Prompt */}
-        <InstallPrompt />
-      </AppContent>
-      {hasCamera && (
+            <div className='space-y-4'>
+              <h2 className='text-xl font-bold'>Let's log you in</h2>
+              <p className='text-sm text-muted-foreground'>
+                Enter your email, and we'll send you a verification code. We'll create an account for you too if you
+                don't already have one.
+              </p>
+              <Input ref={inputRef} type='email' placeholder='your@email.com' required autoFocus />
+            </div>
+          </div>
+        </AppContent>
         <AppFooter>
-          <Button variant='outline' className='w-full' size='lg' onClick={startCamera}>
-            Scan QR Code
+          <Button className='w-full' type='submit' variant='secondary'>
+            Send Code
           </Button>
         </AppFooter>
-      )}
-    </AppViewport>
+      </AppViewport>
+    </form>
+  );
+}
+
+function CodeStep({ sentEmail }: { sentEmail: string }) {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const inputEl = inputRef.current!;
+    const code = inputEl.value;
+
+    db.auth.signInWithMagicCode({ email: sentEmail, code }).catch((err) => {
+      inputEl.value = '';
+      alert('Uh oh :' + err.body?.message);
+      return;
+    });
+
+    router.push('/app');
+  };
+
+  return (
+    <form className='w-screen h-screen' key='code' onSubmit={handleSubmit}>
+      <AppViewport>
+        <AppContent className='justify-center'>
+          <div className='flex-1 flex flex-col justify-between gap-4 w-full max-w-md mx-auto px-4 mb-8'>
+            <div className='flex mb-4'>
+              <Link href='/'>
+                <img src='/logo.svg' alt='Lightning PoS Logo' className='h-[40px] w-auto' />
+              </Link>
+            </div>
+            <div className='space-y-4'>
+              <h2 className='text-xl font-bold'>Enter your code</h2>
+              <p className='text-sm text-muted-foreground'>
+                We sent an email to <strong className='text-foreground'>{sentEmail}</strong>. Check your email, and
+                paste the code you see.
+              </p>
+              <InputOTP ref={inputRef} maxLength={6} required autoFocus className='w-full'>
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                </InputOTPGroup>
+                <InputOTPGroup>
+                  <InputOTPSlot index={1} />
+                </InputOTPGroup>
+                <InputOTPGroup>
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                </InputOTPGroup>
+                <InputOTPGroup>
+                  <InputOTPSlot index={4} />
+                </InputOTPGroup>
+                <InputOTPGroup>
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
+              <Button className='w-full' variant='ghost'>
+                Paste
+              </Button>
+            </div>
+          </div>
+        </AppContent>
+        <AppFooter>
+          <Button className='w-full' type='submit' variant='secondary'>
+            Verify Code
+          </Button>
+        </AppFooter>
+      </AppViewport>
+    </form>
   );
 }
