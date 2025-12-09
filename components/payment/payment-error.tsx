@@ -50,7 +50,7 @@ export function PaymentError({ error, amount, currency }: PaymentErrorProps) {
             variant='success'
             onClick={() => {
               logout();
-              router.push('/login');
+              router.push('/');
             }}
           >
             Setup Now

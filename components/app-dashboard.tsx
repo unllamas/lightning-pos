@@ -40,7 +40,7 @@ export function AppDashboard() {
 
   useEffect(() => {
     if (!isAuthenticated && !isLoading) {
-      router.push('/login');
+      router.push('/');
     }
   }, [isAuthenticated, isLoading]);
 
@@ -60,11 +60,11 @@ export function AppDashboard() {
           <Button variant='default' onClick={logout} className='mr-2'>
             <div className='flex gap-2 items-center justify-center min-w-0'>
               <User className='h-4 w-4 flex-shrink-0' />
-              {authMethod === 'lnaddress' ? (
-                <span className='truncate text-sm'>{lightningAddress}</span>
+              <span className='truncate text-sm'>{lightningAddress}</span>
+              {/* {authMethod === 'lnaddress' ? (
               ) : (
                 <span className='text-sm'>NWC Mode</span>
-              )}
+              )} */}
               <X className='h-4 w-4 text-destructive flex-shrink-0' />
               <span className='sr-only'>Log out</span>
             </div>
