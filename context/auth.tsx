@@ -26,11 +26,11 @@ type AuthAction =
 interface AuthContextType extends AuthState {
   login: (credential: string) => Promise<{ success: boolean; error?: string }>;
   loginWithLightningAddress: (lightningAddress: string) => Promise<{ success: boolean; error?: string }>;
-  loginWithNWC: (nwcString: string) => Promise<{ success: boolean; error?: string }>;
+  // loginWithNWC: (nwcString: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   checkSession: () => { isValid: boolean; authMethod?: AuthMethod; lightningAddress?: string; nwcString?: string };
   validateLightningAddress: (address: string) => Promise<boolean>;
-  validateNWCString: (nwcString: string) => Promise<{ success: boolean; error?: string }>;
+  // validateNWCString: (nwcString: string) => Promise<{ success: boolean; error?: string }>;
   clearError: () => void;
   waitForInitialization: () => void;
 }
@@ -140,11 +140,37 @@ export function AuthProvider({ children }: AuthProviderProps) {
     loadSavedAuth();
   }, []);
 
-  // Validate Lightning Address using Alby Lightning Tools
+  // Validate Lightning Address
   const validateLightningAddress = useCallback(async (address: string): Promise<boolean> => {
     try {
-      const ln = new LightningAddress(address);
-      await ln.fetch();
+      // Validate format: username@domain
+      const addressRegex = /^[a-z0-9+._-]+@[a-z0-9.-]+$/i;
+      if (!addressRegex.test(address)) {
+        console.error('Invalid Lightning Address format');
+        return false;
+      }
+
+      const [username, domain] = address.toLowerCase().split('@');
+
+      // Construct the LUD-16 endpoint
+      // const protocol = domain.endsWith('.onion') ? 'http' : 'https';
+      const url = `https://${domain}/.well-known/lnurlp/${username}`;
+
+      // Fetch the LNURL metadata
+      const response = await fetch(url);
+      if (!response.ok) {
+        console.error('Failed to fetch Lightning Address metadata');
+        return false;
+      }
+
+      const data = await response.json();
+
+      // Validate response has required fields per LUD-06
+      if (!data.callback || !data.metadata) {
+        console.error('Invalid Lightning Address response');
+        return false;
+      }
+
       return true;
     } catch (error) {
       console.error('Error validating Lightning Address:', error);
@@ -153,35 +179,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   // Validate NWC string format using Alby SDK
-  const validateNWCString = useCallback(async (nwcString: string): Promise<{ success: boolean; error?: string }> => {
-    try {
-      // Basic format validation
-      if (!nwcString.startsWith('nostr+walletconnect://')) {
-        return {
-          success: false,
-          error: 'Invalid NWC string format. Must start with "nostr+walletconnect://"',
-        };
-      }
+  // const validateNWCString = useCallback(async (nwcString: string): Promise<{ success: boolean; error?: string }> => {
+  //   try {
+  //     // Basic format validation
+  //     if (!nwcString.startsWith('nostr+walletconnect://')) {
+  //       return {
+  //         success: false,
+  //         error: 'Invalid NWC string format. Must start with "nostr+walletconnect://"',
+  //       };
+  //     }
 
-      const nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcString });
-      await nwc.enable();
+  //     const nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcString });
+  //     await nwc.enable();
 
-      // Test basic functionality to ensure connection works
-      const info = await nwc.getInfo();
-      console.log('NWC connection successful:', info);
+  //     // Test basic functionality to ensure connection works
+  //     const info = await nwc.getInfo();
+  //     console.log('NWC connection successful:', info);
 
-      return {
-        success: true,
-        error: undefined,
-      };
-    } catch (error) {
-      console.error('Error validating NWC string:', error);
-      return {
-        success: false,
-        error: 'Failed to connect to NWC wallet. Please check your connection string and wallet status.',
-      };
-    }
-  }, []);
+  //     return {
+  //       success: true,
+  //       error: undefined,
+  //     };
+  //   } catch (error) {
+  //     console.error('Error validating NWC string:', error);
+  //     return {
+  //       success: false,
+  //       error: 'Failed to connect to NWC wallet. Please check your connection string and wallet status.',
+  //     };
+  //   }
+  // }, []);
 
   // Login with Lightning Address
   const loginWithLightningAddress = useCallback(
@@ -228,47 +254,47 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   // Login with NWC string
-  const loginWithNWC = useCallback(
-    async (nwcString: string): Promise<{ success: boolean; error?: string }> => {
-      try {
-        dispatch({ type: 'SET_LOADING', payload: true });
-        dispatch({ type: 'SET_ERROR', payload: null });
+  // const loginWithNWC = useCallback(
+  //   async (nwcString: string): Promise<{ success: boolean; error?: string }> => {
+  //     try {
+  //       dispatch({ type: 'SET_LOADING', payload: true });
+  //       dispatch({ type: 'SET_ERROR', payload: null });
 
-        // Validate NWC string format
-        const validation = await validateNWCString(nwcString);
+  //       // Validate NWC string format
+  //       const validation = await validateNWCString(nwcString);
 
-        if (!validation.success) {
-          dispatch({ type: 'SET_ERROR', payload: validation.error || 'Invalid NWC string' });
-          return { success: false, error: validation.error };
-        }
+  //       if (!validation.success) {
+  //         dispatch({ type: 'SET_ERROR', payload: validation.error || 'Invalid NWC string' });
+  //         return { success: false, error: validation.error };
+  //       }
 
-        // Save to localStorage
-        const authData = {
-          authMethod: 'nwc' as AuthMethod,
-          nwcString,
-          timestamp: Date.now(),
-        };
+  //       // Save to localStorage
+  //       const authData = {
+  //         authMethod: 'nwc' as AuthMethod,
+  //         nwcString,
+  //         timestamp: Date.now(),
+  //       };
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+  //       localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
 
-        // Update state
-        dispatch({
-          type: 'LOGIN_SUCCESS',
-          payload: {
-            authMethod: 'nwc',
-            nwcString,
-          },
-        });
+  //       // Update state
+  //       dispatch({
+  //         type: 'LOGIN_SUCCESS',
+  //         payload: {
+  //           authMethod: 'nwc',
+  //           nwcString,
+  //         },
+  //       });
 
-        return { success: true };
-      } catch (error) {
-        const errorMessage = 'Error connecting with NWC. Please try again.';
-        dispatch({ type: 'SET_ERROR', payload: errorMessage });
-        return { success: false, error: errorMessage };
-      }
-    },
-    [validateNWCString],
-  );
+  //       return { success: true };
+  //     } catch (error) {
+  //       const errorMessage = 'Error connecting with NWC. Please try again.';
+  //       dispatch({ type: 'SET_ERROR', payload: errorMessage });
+  //       return { success: false, error: errorMessage };
+  //     }
+  //   },
+  //   [validateNWCString],
+  // );
 
   // Generic login function that detects the type
   const login = useCallback(
@@ -285,7 +311,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return { success: false, error };
       }
     },
-    [loginWithLightningAddress, loginWithNWC],
+    [loginWithLightningAddress],
   );
 
   // Logout function
@@ -346,11 +372,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
     ...state,
     login,
     loginWithLightningAddress,
-    loginWithNWC,
+    // loginWithNWC,
     logout,
     checkSession,
     validateLightningAddress,
-    validateNWCString,
+    // validateNWCString,
     clearError,
     waitForInitialization,
   };
